@@ -1,6 +1,7 @@
 // app/layout.tsx
 import './globals.css';
 import Dashboard from './dashboard/Dashboard';
+import BookPage from './BookPage/BookPage';
 
 export const metadata = {
   title: 'My Dashboard',
@@ -11,7 +12,8 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <html lang="en">
       <body>
-        <Dashboard />
+        {/* <Dashboard /> */}
+        <BookPage />
         {/* {children} */}
       </body>
     </html>
