@@ -2,6 +2,8 @@
 import './globals.css';
 import Login from '../Login/Login';
 import Dashboard from '../dashboard/dashboard';
+import BookPage from './BookPage/BookPage';
+
 
 export const metadata = {
   title: 'My Login',
@@ -13,6 +15,8 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
     <html lang="en">
       <body>
         <Login />
+        {/* <Dashboard /> */}
+        <BookPage />
         {/* {children} */}
       </body>
     </html>
