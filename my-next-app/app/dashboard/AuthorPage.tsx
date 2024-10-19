@@ -1,34 +1,36 @@
 import { FaPlus, FaEdit, FaTrash } from 'react-icons/fa';
 import React, { useEffect, useState } from 'react';
-import { getAuthors, deleteAuthor } from '../../service/authorService'; // Import hàm getAuthors từ AuthorService
+import { getAuthors, deleteAuthor } from '../../service/authorService';
+import UpdateAuthorModal from '@/components/UpdateAuthorModal';
 
 const AuthorPage = () => {
-    const [authors, setAuthors] = useState([]);  // State để lưu trữ danh sách tác giả
-    const [loading, setLoading] = useState(true); // State để kiểm soát trạng thái loading
-    const [error, setError] = useState(''); // State để lưu lỗi nếu có
+    const [authors, setAuthors] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
+    const [showModal, setShowModal] = useState(false);
+    const [selectedAuthor, setSelectedAuthor] = useState(null);
+    const [sortOrder, setSortOrder] = useState('asc'); // State for sorting order
+
+    const fetchAuthors = async (sortOrder) => {
+        setLoading(true);
+        try {
+            const response = await getAuthors(sortOrder);
+            setAuthors(response);
+            setLoading(false);
+        } catch (err) {
+            setError('Đã xảy ra lỗi khi lấy dữ liệu.');
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
-        const fetchAuthors = async () => {
-            try {
-                const response = await getAuthors();
-                console.log(response);
-
-                setAuthors(response); // Lưu dữ liệu vào state
-                setLoading(false); // Đặt trạng thái loading là false
-            } catch (err) {
-                setError('Đã xảy ra lỗi khi lấy dữ liệu.');
-                setLoading(false); // Đặt trạng thái loading là false
-            }
-        };
-
-        fetchAuthors(); // Gọi hàm fetchAuthors khi component được mount
-    }, []); // Chạy một lần khi component được mount
+        fetchAuthors(sortOrder); // Fetch with the selected sort order
+    }, [sortOrder]);
 
     const handleDelete = async (id) => {
         if (window.confirm('Bạn có chắc chắn muốn xóa tác giả này không?')) {
             try {
-                await deleteAuthor(id); // Gọi hàm xóa
-                // Cập nhật lại danh sách tác giả sau khi xóa
+                await deleteAuthor(id);
                 setAuthors((prevAuthors) => prevAuthors.filter((author) => author.id !== id));
             } catch (err) {
                 setError('Đã xảy ra lỗi khi xóa tác giả.');
@@ -36,24 +38,29 @@ const AuthorPage = () => {
         }
     };
 
-    if (loading) return <p>Đang tải dữ liệu...</p>; // Hiển thị thông báo tải dữ liệu
-    if (error) return <p>{error}</p>; // Hiển thị lỗi nếu có
+    const handleEdit = (author) => {
+        setSelectedAuthor(author);
+        setShowModal(true);
+    };
+
+    const handleSuccess = () => {
+        fetchAuthors(sortOrder); // Fetch authors after successful update
+    };
+
+    if (loading) return <p>Đang tải dữ liệu...</p>;
+    if (error) return <p>{error}</p>;
 
     return (
         <div className="flex flex-col h-screen p-4">
-            {/* Header section with Avatar and Search */}
             <div className="flex justify-between mb-4">
-                {/* Search Input */}
                 <input
                     type="text"
                     placeholder="Tìm kiếm..."
-                    className="p-2 border border-gray-300 rounded w-1/3 h-10" // Fixed height for the search bar
+                    className="p-2 border border-gray-300 rounded w-1/3 h-10"
                 />
-
-                {/* Avatar */}
                 <div className="flex items-center">
                     <img
-                        src="https://via.placeholder.com/50" // Placeholder image
+                        src="https://via.placeholder.com/50"
                         alt="Avatar"
                         className="rounded-full border border-gray-300 h-10 w-10 mr-2"
                     />
@@ -61,15 +68,33 @@ const AuthorPage = () => {
                 </div>
             </div>
 
-            {/* Title and Create button */}
-            <div className="flex justify-between items-center mb-4">
+            <div className="mb-4 flex justify-between items-center">
                 <h1 className="text-2xl font-bold">Tác giả</h1>
-                <button className="bg-green-500 text-white p-2 rounded flex items-center h-10">
-                    <FaPlus className="mr-2" /> Tạo mới
-                </button>
+
+                <div className="flex space-x-4">
+                    {/* Sorting Dropdown */}
+                    <select
+                        className="p-2 border border-gray-300 rounded"
+                        value={sortOrder}
+                        onChange={(e) => setSortOrder(e.target.value)} // Update sort order
+                    >
+                        <option value="desc">Sắp xếp theo tên A-Z</option>
+                        <option value="asc">Sắp xếp theo tên Z-A</option>
+                    </select>
+
+                    {/* Tạo mới button */}
+                    <button
+                        className="bg-green-500 text-white p-2 rounded flex items-center h-10"
+                        onClick={() => {
+                            setSelectedAuthor(null);
+                            setShowModal(true);
+                        }}
+                    >
+                        <FaPlus className="mr-2" /> Tạo mới
+                    </button>
+                </div>
             </div>
 
-            {/* Table */}
             <div className="overflow-x-auto flex-grow">
                 <table className="min-w-full bg-white">
                     <thead>
@@ -82,7 +107,6 @@ const AuthorPage = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {/* Sample data */}
                         {authors.map((author) => (
                             <tr key={author.id}>
                                 <td className="border py-2 text-center">{author.id}</td>
@@ -90,8 +114,10 @@ const AuthorPage = () => {
                                 <td className="border py-2">{author.description}</td>
                                 <td className="border py-2">{author.slug}</td>
                                 <td className="border py-2 text-center flex space-x-2">
-                                    {/* Updated to ensure equal height */}
-                                    <button className="bg-yellow-500 text-white p-2 rounded flex items-center h-10">
+                                    <button
+                                        className="bg-yellow-500 text-white p-2 rounded flex items-center h-10"
+                                        onClick={() => handleEdit(author)}
+                                    >
                                         <FaEdit className="mr-1" /> Sửa
                                     </button>
                                     <button
@@ -107,12 +133,18 @@ const AuthorPage = () => {
                 </table>
             </div>
 
-            {/* Pagination */}
             <div className="flex justify-center my-4">
                 <button className="border p-2">‹</button>
                 <span className="mx-2">1</span>
                 <button className="border p-2">›</button>
             </div>
+
+            <UpdateAuthorModal
+                show={showModal}
+                onClose={() => setShowModal(false)}
+                onSuccess={handleSuccess}
+                initialData={selectedAuthor}
+            />
         </div>
     );
 };
