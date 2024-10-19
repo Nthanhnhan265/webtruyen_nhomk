@@ -1,11 +1,11 @@
-// next.config.mjs
-export default {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   reactStrictMode: true,
   env: {
-    CUSTOM_KEY: "my-value",
+    CUSTOM_KEY: 'my-value',
   },
   images: {
-    domains: ["example.com"],
+    domains: ['localhost'],
   },
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
     // Thêm các tùy chỉnh webpack ở đây
@@ -14,11 +14,13 @@ export default {
   async redirects() {
     return [
       {
-        source: "/old-path",
-        destination: "/new-path",
+        source: '/old-path',
+        destination: '/new-path',
         permanent: true,
       },
     ];
   },
 };
+
+export default nextConfig;
 
