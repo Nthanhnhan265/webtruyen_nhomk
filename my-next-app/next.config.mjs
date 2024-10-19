@@ -1,47 +1,24 @@
-// // next.config.js
-// module.exports = {
-//     reactStrictMode: true,
-//     env: {
-//         CUSTOM_KEY: 'my-value',
-//     },
-//     images: {
-//         domains: ['example.com'],
-//     },
-//     webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
-//         // Thêm các tùy chỉnh webpack ở đây
-//         return config;
-//     },
-//     async redirects() {
-//         return [
-//             {
-//                 source: '/old-path',
-//                 destination: '/new-path',
-//                 permanent: true,
-//             },
-//         ];
-//     },
-// };
 // next.config.mjs
 export default {
   reactStrictMode: true,
   env: {
-    CUSTOM_KEY: 'my-value',
-  },
-
-  webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
-    // Thêm các tùy chỉnh webpack ở đây
-    return config
+    CUSTOM_KEY: 'my-value', // Giữ lại giá trị của CUSTOM_KEY
   },
   images: {
-    domains: ['localhost'], // Add your allowed domains here
+    // Kết hợp các domain từ cả hai nhánh
+    domains: ['localhost', 'example.com'], 
+  },
+  webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
+    // Thêm các tùy chỉnh webpack ở đây
+    return config;
   },
   async redirects() {
     return [
       {
-        source: '/old-path',
+        source: '/old-path', // Cả hai nhánh đều có cùng đường dẫn
         destination: '/new-path',
         permanent: true,
       },
-    ]
+    ];
   },
-}
+};
