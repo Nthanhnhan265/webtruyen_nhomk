@@ -1,5 +1,6 @@
 // app/layout.tsx
 import './globals.css';
+import BookPage from './BookPage/BookPage';
 import Login from '../Login/Login';
 import Dashboard from '../dashboard/dashboard';
 
@@ -12,7 +13,10 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <html lang="en">
       <body>
+        {/* <Dashboard /> */}
+        <BookPage />
         <Login />
+
         {/* {children} */}
       </body>
     </html>
