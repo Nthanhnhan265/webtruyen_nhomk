@@ -2,7 +2,8 @@
 import './globals.css';
 import BookPage from './BookPage/BookPage';
 import Login from '../Login/Login';
-import Dashboard from '../dashboard/dashboard';
+import GenrePage from './dashboard/GenrePage';
+import Dashboard from './dashboard/Dashboard';
 
 export const metadata = {
   title: 'My Login',
@@ -13,9 +14,10 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <html lang="en">
       <body>
-        {/* <Dashboard /> */}
-        <BookPage />
-        <Login />
+        {<Dashboard />}
+        {/* <BookPage /> */}
+        {/* <Login /> */}
+        {/* <GenrePage /> */}
 
         {/* {children} */}
       </body>
