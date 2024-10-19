@@ -12,6 +12,24 @@ const api = axios.create({
   timeout: 10000, // Thời gian chờ (mili giây)
 })
 
+export const createUsers = async (userData) => {
+  try {
+    const response = await api.post('/users', userData) // Gọi API để thêm người dùng
+    const data = response.data
+    console.log(data.message) // In ra thông báo thành công
+    if (!data.success) {
+      throw new Error(data.message) // Ném lỗi nếu API trả về lỗi
+    }
+    return data.data // Trả về dữ liệu người dùng mới được thêm
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log(error.response?.data.message || error.message)
+    } else {
+      console.log('Lỗi khi thêm người dùng:', error.message)
+    }
+  }
+}
+
 // Hàm để gọi API lấy danh sách người dùng
 export const getUsers = async () => {
   try {

@@ -1,6 +1,5 @@
 // app/dashboard/Dashboard.tsx
-'use client' // This line indicates that the component should be treated as a Client Component
-
+'use client'
 import { useState } from 'react'
 import Sidebar from '../sidebar/Sidebar'
 import AuthorPage from './AuthorPage'
