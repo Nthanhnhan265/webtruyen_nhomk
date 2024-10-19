@@ -7,9 +7,11 @@ const api = axios.create({
 });
 
 // Hàm để gọi API lấy danh sách tác giả
-export const getAuthors = async () => {
+export const getAuthors = async (sortOrder) => {
+    console.log('check soroder', sortOrder);
+
     try {
-        const response = await api.get('/authors');
+        const response = await api.get('/authors', { params: { sort: sortOrder } });
         return response.data; // Trả về dữ liệu
     } catch (error) {
         console.error('Lỗi khi lấy danh sách tác giả:', error);
@@ -27,8 +29,33 @@ export const deleteAuthor = async (id) => {
 };
 
 
+export const createAuthor = async (authorData) => {
+    try {
+        const response = await api.post('/authors/create', authorData); // Adjust the endpoint if necessary
+        return response.data; // Return the response data
+    } catch (error) {
+        console.error('Error creating author:', error);
+        throw error; // Throw error for handling in the calling function
+    }
+};
+export const updateAuthor = async (id, authorData) => {
+    try {
+        const response = await api.put(`/authors/update/${id}`, authorData); // Adjust the endpoint if necessary
+        return response.data; // Return the response data
+    } catch (error) {
+        console.error('Error updating author:', error);
+        throw error; // Throw error for handling in the calling function
+    }
+};
+
+
 // Bạn có thể thêm nhiều hàm gọi API khác ở đây (thêm, sửa, xóa tác giả)
 
-export default getAuthors;
+export default {
+    getAuthors,
+    updateAuthor,
+    createAuthor,
+    deleteAuthor,
+};
 
 // Bạn có thể thêm nhiều hàm gọi API khác ở đây (thêm, sửa, xóa tác giả)
