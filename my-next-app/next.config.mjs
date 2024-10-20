@@ -1,39 +1,15 @@
-// // next.config.js
-// module.exports = {
-//     reactStrictMode: true,
-//     env: {
-//         CUSTOM_KEY: 'my-value',
-//     },
-//     images: {
-//         domains: ['example.com'],
-//     },
-//     webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
-//         // Thêm các tùy chỉnh webpack ở đây
-//         return config;
-//     },
-//     async redirects() {
-//         return [
-//             {
-//                 source: '/old-path',
-//                 destination: '/new-path',
-//                 permanent: true,
-//             },
-//         ];
-//     },
-// };
-// next.config.mjs
-export default {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   reactStrictMode: true,
   env: {
     CUSTOM_KEY: 'my-value',
   },
-
+  images: {
+    domains: ['localhost'],
+  },
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
     // Thêm các tùy chỉnh webpack ở đây
     return config
-  },
-  images: {
-    domains: ['localhost'], // Add your allowed domains here
   },
   async redirects() {
     return [
@@ -45,3 +21,5 @@ export default {
     ]
   },
 }
+
+export default nextConfig
