@@ -6,7 +6,7 @@ const api = axios.create({
 });
 
 // Function to fetch the list of stories
-export const getStories = async (id) => {
+export const getStories = async (id: number) => {
   try {
     // Use backticks for template literals
     const response = await api.get(`/story/${id}`); // Adjust endpoint to fetch stories

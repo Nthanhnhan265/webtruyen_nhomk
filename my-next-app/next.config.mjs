@@ -5,7 +5,13 @@ export default {
     CUSTOM_KEY: "my-value",
   },
   images: {
-    domains: ["example.com"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**",
+      },
+    ],
+    domains: ["http://localhost:4000", "https://upload.wikimedia.org/*"],
   },
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
     // Thêm các tùy chỉnh webpack ở đây

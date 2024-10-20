@@ -3,12 +3,22 @@
 import React, { useEffect, useState } from "react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline"; // Import icon từ Heroicons
 import { getStories } from "../../service/storyService"; // Import StoryService
+// import Image from "next/image";
+
+interface Story {
+  story_name: string;
+  author_name: string;
+  keywords: string;
+  total_chapters: number;
+  source?: string;
+  cover: string;
+}
 
 const BookPage = () => {
   // Removed storyId prop and used a hardcoded value (2) directly in fetch function
-  const [story, setStory] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [story, setStory] = useState<Story | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
   const [isDanhSachOpen, setDanhSachOpen] = useState(false);
   const [isTheLoaiOpen, setTheLoaiOpen] = useState(false);
 
@@ -17,7 +27,8 @@ const BookPage = () => {
       try {
         const data = await getStories(2); // Call the function to fetch the story by ID (hardcoded as 2)
         setStory(data);
-      } catch (error) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      } catch (_error: unknown) {
         setError("Error fetching story");
       } finally {
         setLoading(false);
@@ -136,18 +147,31 @@ const BookPage = () => {
         <div className="w-2/3 bg-white p-6 rounded-lg shadow">
           {/* Book Details */}
           <div className="flex space-x-4">
-            <img
-              src={story.cover || "/default-cover.jpg"} // Use the story cover or a default image
-              alt="Book Cover"
-              className="w-48 h-64 object-cover rounded"
-            />
+            <div className="rounded w-48 h-64">
+              {/* <Image
+                className="absolute"
+                src={story?.cover || "/default-cover.jpg"}
+                alt="cover"
+                fill
+                style={{
+                  objectFit: "cover",
+                }}
+              /> */}
+              <img
+                src={story?.cover || "/default-cover.jpg"} // Use the story cover or a default image
+                alt="Book Cover"
+                className="w-48 h-64 object-cover rounded"
+              />
+            </div>
             <div className="space-y-4">
-              <h1 className="text-3xl font-bold">{story.story_name}</h1>
-              <p className="text-gray-600">Tác giả: {story.author}</p>
-              <p className="text-gray-600">Thể loại: {story.keywords}</p>
-              <p className="text-gray-600">Số chương: {story.total_chapters}</p>
+              <h1 className="text-3xl font-bold">{story?.story_name}</h1>
+              <p className="text-gray-600">Tác giả: {story?.author_name}</p>
+              <p className="text-gray-600">Thể loại: {story?.keywords}</p>
               <p className="text-gray-600">
-                Nguồn: {story.source || "Sưu tầm"}
+                Số chương: {story?.total_chapters}
+              </p>
+              <p className="text-gray-600">
+                Nguồn: {story?.source || "Sưu tầm"}
               </p>
               <button className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
                 Đọc truyện
