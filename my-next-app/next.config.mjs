@@ -1,5 +1,4 @@
-// next.config.js
-module.exports = {
+export default {
     reactStrictMode: true,
     env: {
         CUSTOM_KEY: 'my-value',
