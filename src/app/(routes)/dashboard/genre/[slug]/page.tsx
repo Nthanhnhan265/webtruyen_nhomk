@@ -35,7 +35,7 @@ const GenrePage = () => {
   if (!genre) {
     return <div>Thể loại không tồn tại</div>;
   }
-  if (genre.id== 1) {
+  if (genre.slug =='tien-hiep') {
 
     return (
       //   <div>
