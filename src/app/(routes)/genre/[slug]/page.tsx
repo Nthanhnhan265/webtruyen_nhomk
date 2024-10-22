@@ -49,7 +49,7 @@ const GenrePage = () => {
       <div className="container">
         <div className="flex justify-center items-center h-screen">
 
-
+        <GenreDropdown />
           <p className='nav'>Truyện plus / {genre.name} / Trang 1</p>
 
           <h2>{genre.name}</h2>
@@ -111,7 +111,9 @@ const GenrePage = () => {
     );
   
   }
-  if(genre.id == 2){
+  if(genre.slug =='kiem-hiep'){
+    return (
+
     <div className="container">
     <div className="flex justify-center items-center h-screen">
       <GenreDropdown />
@@ -170,67 +172,9 @@ const GenrePage = () => {
       </div>
     </div>
   </div>
+    );
   }
-  if(genre.id == 3){
-    <div className="container">
-    <div className="flex justify-center items-center h-screen">
-      <GenreDropdown />
-
-
-      <p className='nav'>Truyện plus / {genre.name} / Trang 1</p>
-
-      <h2>{genre.name}</h2>
-      <hr />
-      <p>Truyện tiên hiệp thường kể về quá trình tu luyện và khám phá thế giới tu sĩ thần tiên đầy bí ẩn của nhân vật chính.</p>
-      <div className="background-body">
-        <div className="container">
-          <div className="row">
-            <div className="col-3">
-              <Image
-                src="https://truyenplus.vn/media/book/lang-thien-kiem-than.jpg" // Đường dẫn đến hình ảnh trong thư mục public
-                alt="Mô tả hình ảnh"
-                width={300} // Chiều rộng của hình ảnh
-                height={150} // Chiều cao của hình ảnh
-              />
-            </div>
-            <div className="col-9">
-              <Link href={''}>
-                Trận Hỏi Trường Sinh
-              </Link>
-              <br />
-              <span>Tác giả:</span><Link href={''}>Quan Hư</Link>
-              <br />
-              <span>Thể Loại:</span><Link href={''}>Tiên Hiệp , Ngôn Tình , Huyền Huyễn, Khác</Link>
-              <br />
-              <span>Số chương:</span><Link href={''}>205</Link>
-            </div>
-          </div>
-          <div className="row">
-            <div className="col-3">
-              <Image
-                src="https://truyenplus.vn/media/book/dai-su-huynh-khong-co-gi-la-khong-co-gi-la-dai-su-huynh.jpg"// Đường dẫn đến hình ảnh trong thư mục public
-                alt="Mô tả hình ảnh"
-                width={300} // Chiều rộng của hình ảnh
-                height={150} // Chiều cao của hình ảnh
-              />
-            </div>
-            <div className="col-9">
-              <Link href={''}>
-                Xuất Lung Ký
-              </Link>
-              <br />
-              <span>Tác giả:</span><Link href={''}>Hạch Động Lực Chiến Liệt Hạm</Link>
-              <br />
-              <span>Thể Loại:</span><Link href={''}> Tiên Hiệp , Võng Du , Khoa Huyễn , Dã Sử , Hệ Thống , Khác</Link>
-              <br />
-              <span>Số chương:</span><Link href={''}>1484</Link>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  }
+  
 };
 
 export default GenrePage;
