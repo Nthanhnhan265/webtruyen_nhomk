@@ -39,7 +39,7 @@ const GenreDropdown = () => {
       {isOpen && (
         <div className={styles.dropdownContent}>
           {genres.map((genre, index) => (
-            <Link className={styles.genreItem} key={index} href={`/the-loai/${genre.slug}`}>
+            <Link className={styles.genreItem} key={index} href={`/genre/${genre.slug}`}>
               {genre.name}
             </Link>
           ))}
