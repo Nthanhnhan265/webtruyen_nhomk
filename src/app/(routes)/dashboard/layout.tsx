@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import Sidebar from './_components/sidebar'
-import 'bootstrap/dist/css/bootstrap.min.css'; 
+// import 'bootstrap/dist/css/bootstrap.min.css';
 
 export const metadata: Metadata = {
   title: 'Dashboard',
@@ -17,13 +17,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <div className="layout grid grid-cols-12">
+        <div className="layout grid grid-cols-12 bg-[#f8f8f8]">
           {/* Render sidebar for dashboard */}
-          <div className="col-span-3">
+          <div className="col-span-2">
             <Sidebar></Sidebar>
           </div>
           {/* header and container */}
-          <div className="col-span-9 container px-4 py-2">
+          <div className="col-span-10 container px-4 py-2">
             <div className="w-full">header here</div>
             <ToastContainer
               position="top-left"

@@ -2,7 +2,7 @@ import Link from 'next/link'
 import LABEL from '../label'
 const Sidebar: React.FC = () => {
   return (
-    <div className="bg-white text-gray-800 w-64 h-screen flex flex-col shadow-lg">
+    <div className="bg-white text-gray-800 h-screen flex flex-col shadow-lg">
       <h2 className="text-xl font-bold p-4 border-b text-blue-500 border-gray-700 text-center">
         <Link href={'/dashboard'}>{LABEL.sys.appName}</Link>
       </h2>

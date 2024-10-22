@@ -1,9 +1,11 @@
 'use client'
 import formatDate from '@/components/ulti/formatDate'
-import { Button } from 'flowbite-react'
+import { Button, Pagination } from 'flowbite-react'
 import Image from 'next/image'
 import { useState } from 'react'
+import { CiImageOff } from 'react-icons/ci'
 import LABEL from '../../label'
+
 interface Iprops {
   users: IUser[]
   openUModal: (user: IUser) => void
@@ -13,6 +15,10 @@ interface Iprops {
 }
 export default function UserTable(props: Iprops) {
   //====Declare variables, hooks==========//
+  const [currentPage, setCurrentPage] = useState(1)
+
+  const onPageChange = (page: number) => setCurrentPage(page)
+
   const [imageErrors, setImageErrors] = useState<{ [key: number]: boolean }>({})
 
   //==========Handle Function============//
@@ -54,10 +60,8 @@ export default function UserTable(props: Iprops) {
               <td className="py-2 px-3  text-center text-sm">{user.id}</td>
               <td className="py-2 px-2 flex justify-center items-center">
                 {imageErrors[user.id] ? (
-                  <div className="rounded-full bg-black/5 w-7 h-7 text-center leading-7">
-                    <span className="material-symbols-outlined !text-xs">
-                      hide_image
-                    </span>
+                  <div className="rounded-full bg-black/5 w-7 h-7 flex justify-center items-center leading-7">
+                    <CiImageOff />
                   </div>
                 ) : (
                   <Image
@@ -97,6 +101,14 @@ export default function UserTable(props: Iprops) {
           ))}
         </tbody>
       </table>
+
+      <div className="flex overflow-x-auto sm:justify-center">
+        <Pagination
+          currentPage={currentPage}
+          totalPages={100}
+          onPageChange={onPageChange}
+        />
+      </div>
     </>
   )
 }
