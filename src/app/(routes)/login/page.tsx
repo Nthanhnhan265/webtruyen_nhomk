@@ -1,12 +1,14 @@
-"use client"
+// src/app/login/page.tsx
 
-import axios from 'axios';
+"use client";
+
+import { loginUser } from '../../_api/login.api';
 import Image from "next/image";
 import { FaGoogle } from 'react-icons/fa';
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-const Login = () => {
+const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
@@ -17,14 +19,11 @@ const Login = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:3000/api/login', {
-        username,
-        password,
-      });
+      const response = await loginUser(username, password);
       if (response.status === 200) {
-        // Hiển thị thông báo thành công
         setSuccessMessage('Đăng nhập thành công!');
         setErrorMessage('');
+        // Điều hướng hoặc logic khác ở đây
       }
     } catch (error) {
       setErrorMessage('Đăng nhập thất bại, vui lòng kiểm tra lại tài khoản và mật khẩu.');
@@ -36,7 +35,7 @@ const Login = () => {
       <div className="bg-white rounded-lg p-6 flex">
         {/* Form Đăng Nhập */}
         <div className="w-96 p-6">
-        <h1 className="text-gray-700 text-2xl font-bold mb-6 text-center">Đăng nhập</h1>
+          <h1 className="text-gray-700 text-2xl font-bold mb-6 text-center">Đăng nhập</h1>
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
               <label className="block text-gray-700">Tên đăng nhập:</label>
@@ -96,4 +95,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default LoginPage;
