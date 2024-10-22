@@ -9,7 +9,8 @@ import Image from 'next/image';
 // import Image from './';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import GenreDropdown from '@/app/components/GenreDropdown';
+import GenreDropdown from '@/app/(routes)/_component/GenreDropdown';
+
 const genres = [
   { id: 1, name: 'Tiên Hiệp', slug: 'tien-hiep' },
   { id: 2, name: 'Kiếm Hiệp', slug: 'kiem-hiep' },
