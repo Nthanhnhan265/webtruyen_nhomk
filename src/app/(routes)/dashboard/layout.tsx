@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import Sidebar from './_components/sidebar'
+import 'bootstrap/dist/css/bootstrap.min.css'; 
 
 export const metadata: Metadata = {
   title: 'Dashboard',
