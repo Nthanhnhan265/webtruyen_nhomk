@@ -96,17 +96,10 @@ const UserPage = () => {
         </div>
       </div>
 
-      <div className="mb-4 flex justify-between items-center">
+      <div className="mb-4 mt-2 flex justify-between items-center">
         <h1 className="text-2xl font-bold">Tác giả</h1>
         <div className="flex space-x-4">
-          <select
-            className="p-2 border border-gray-300 rounded"
-            value={sortOrder}
-            onChange={(e) => setSortOrder(e.target.value)}
-          >
-            <option value="asc">Sắp xếp theo tên A-Z</option>
-            <option value="desc">Sắp xếp theo tên Z-A</option>
-          </select>
+
           <button
             className="bg-green-500 text-white p-2 rounded flex items-center h-10"
             onClick={() => {
@@ -118,6 +111,16 @@ const UserPage = () => {
           </button>
         </div>
       </div>
+      <div className=' mb-4'>
+        <select
+          className="p-2 border border-gray-300 rounded"
+          value={sortOrder}
+          onChange={(e) => setSortOrder(e.target.value)}
+        >
+          <option value="asc">Sắp xếp theo tên A-Z</option>
+          <option value="desc">Sắp xếp theo tên Z-A</option>
+        </select></div>
+
 
       <div className="overflow-x-auto flex-grow">
         <table className="min-w-full bg-white">
