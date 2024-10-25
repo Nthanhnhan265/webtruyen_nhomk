@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { updateAuthor } from '@/app/_api/authorService'
+import { updateAuthor } from '@/app/_api/authorService';
 
 const UpdateAuthorModal = ({ show, onClose, onSuccess, initialData = null }) => {
     const [authorName, setAuthorName] = useState('');
@@ -7,6 +7,7 @@ const UpdateAuthorModal = ({ show, onClose, onSuccess, initialData = null }) => 
     const [slug, setSlug] = useState('');
     const [errors, setErrors] = useState({});
 
+    // When initialData changes, set form values
     useEffect(() => {
         if (initialData) {
             setAuthorName(initialData.author_name || '');
@@ -19,6 +20,7 @@ const UpdateAuthorModal = ({ show, onClose, onSuccess, initialData = null }) => 
         }
     }, [initialData]);
 
+    // Validate the form before submitting
     const validateForm = () => {
         let isValid = true;
         let formErrors = {};
@@ -27,7 +29,10 @@ const UpdateAuthorModal = ({ show, onClose, onSuccess, initialData = null }) => 
         if (!authorName) {
             formErrors.authorName = 'Bạn không được để trống tên tác giả.';
             isValid = false;
-        } else if (authorName.length < 1 || authorName.length > 255 || /[^a-zA-Z0-9\sàáạảãâầấậẩẫèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữđ]/.test(authorName)) {
+        } else if (
+            authorName.length < 1 || authorName.length > 255 ||
+            /[^a-zA-Z0-9\sàáạảãâầấậẩẫèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữđ]/.test(authorName)
+        ) {
             formErrors.authorName = 'Vui lòng nhập tên tác giả hợp lệ (1 - 255 ký tự và không chứa ký tự đặc biệt).';
             isValid = false;
         }
@@ -49,13 +54,24 @@ const UpdateAuthorModal = ({ show, onClose, onSuccess, initialData = null }) => 
         return isValid;
     };
 
+    // Handle the form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        // Validate the form
         if (!validateForm()) return;
 
         try {
-            const updatedAuthor = { author_name: authorName, description, slug };
+            const updatedAuthor = {
+                author_name: authorName,
+                description,
+                slug,
+            };
+
+            // Call the updateAuthor API and pass the author ID and updated data
             await updateAuthor(initialData.id, updatedAuthor);
+
+            // Success handling
             alert('Tác giả đã được cập nhật thành công!');
             onSuccess();
             onClose();
@@ -70,6 +86,7 @@ const UpdateAuthorModal = ({ show, onClose, onSuccess, initialData = null }) => 
         }
     };
 
+    // Return null if modal is not supposed to be shown
     if (!show) return null;
 
     return (
