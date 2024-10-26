@@ -36,18 +36,23 @@ function UserModal(prop: IModalProps) {
     reset,
   } = useForm<IDashboardUserForm>()
 
-  // Fill out the form with the value when editing
   useEffect(() => {
-    if (prop.user && prop.isEdit) {
-      // Fill form fields with existing user data when editing
-      setValue('username', prop.user.username)
-      setValue('email', prop.user.email)
-      setValue('status', prop.user.status)
+    if (prop.isEdit && prop.user) {
+      // Nếu đang ở chế độ chỉnh sửa và có thông tin người dùng, điền thông tin vào form
+      setValue('username', prop.user.username || '')
+      setValue('email', prop.user.email || '')
+      setValue('status', prop.user.status === true ? 'true' : 'false')
       setValue('role_id', prop.user.role_id)
     } else {
-      reset() // Reset form when creating new
+      // Nếu ở chế độ tạo mới, reset form về trạng thái ban đầu
+      reset({
+        username: '', // Giá trị mặc định là rỗng
+        email: '',
+        status: 'true', // Mặc định là 'active'
+        role_id: 1, // Mặc định là rỗng
+      })
     }
-  }, [prop.user, prop.isEdit])
+  }, [prop.isEdit, prop.user, reset, setValue])
 
   // Validate file upload
   const validateFile = (file: File) => {
@@ -76,7 +81,6 @@ function UserModal(prop: IModalProps) {
       setAvatarFile(file)
     }
   }
-
   const clearModal = () => {
     prop.closeModal()
     reset()
@@ -95,9 +99,10 @@ function UserModal(prop: IModalProps) {
 
       <form
         className="gap-4"
-        onSubmit={handleSubmit((data) =>
-          prop.handleSubmit(data, prop.user?.id),
-        )}
+        onSubmit={handleSubmit((data) => {
+          console.log('submit clicked')
+          prop.handleSubmit(data, prop.user?.id)
+        })}
       >
         <Modal.Body className="grid grid-cols-2 gap-4">
           <div className="col-span-1 space-y-4">
@@ -120,11 +125,13 @@ function UserModal(prop: IModalProps) {
                   },
                 })}
               />
-              {errors.username && (
-                <p className="text-red-500 text-xs">
-                  {errors.username.message}
-                </p>
-              )}
+              <div className="h-3">
+                {errors.username && (
+                  <p className="text-red-500 text-xs">
+                    {errors.username.message}
+                  </p>
+                )}
+              </div>
             </div>
 
             {/* Email Field */}
@@ -144,9 +151,11 @@ function UserModal(prop: IModalProps) {
                   },
                 })}
               />
-              {errors.email && (
-                <p className="text-red-500 text-xs">{errors.email.message}</p>
-              )}
+              <div className="h-3">
+                {errors.email && (
+                  <p className="text-red-500 text-xs">{errors.email.message}</p>
+                )}
+              </div>
             </div>
 
             {/* Password Field */}
@@ -177,59 +186,73 @@ function UserModal(prop: IModalProps) {
                     },
                   })}
                 />
-                {errors.password && (
-                  <p className="text-red-500 text-xs">
-                    {errors.password.message}
-                  </p>
-                )}
+                <div className="h-3">
+                  {errors.password && (
+                    <p className="text-red-500 text-xs">
+                      {errors.password.message}
+                    </p>
+                  )}
+                </div>
               </div>
             )}
           </div>
 
           {/* Second Column */}
-          <div className="col-span-1 space-y-4">
-            {/* Role Selection */}
-            <div className="max-w-md">
-              <Label
-                htmlFor="role_id"
-                value={LABEL.user.roleLabel}
-              />
-              <Select
-                id="role_id"
-                {...register('role_id', {
-                  required: MESSAGE.user.roleNotFound,
-                })}
-              >
-                <option value="1">{LABEL.sys.role.admin}</option>
-                <option value="2">{LABEL.sys.role.user}</option>
-              </Select>
-              {errors.role_id && (
-                <p className="text-red-500 text-xs">{errors.role_id.message}</p>
-              )}
-            </div>
+          <div className="grid grid-cols-3 gap-x-1 col-span-1 space-y-4">
+            <div className="col-span-2 space-y-4">
+              {/* Role Selection */}
+              <div className="max-w-md">
+                <Label
+                  htmlFor="role_id"
+                  value={LABEL.user.roleLabel}
+                />
+                <Select
+                  id="role_id"
+                  {...register('role_id', {
+                    required: MESSAGE.user.roleNotFound,
+                  })}
+                >
+                  <option value="1">{LABEL.sys.role.admin}</option>
+                  <option value="2">{LABEL.sys.role.user}</option>
+                </Select>
 
-            {/* Status Selection */}
-            <div className="max-w-md">
-              <Label
-                htmlFor="status"
-                value={LABEL.user.statusLabel}
-              />
-              <Select
-                id="status"
-                {...register('status', {
-                  required: MESSAGE.user.statusNotFound,
-                })}
-              >
-                <option value="1">{LABEL.sys.statusAccount.active}</option>
-                <option value="0">{LABEL.sys.statusAccount.banned}</option>
-              </Select>
-              {errors.status && (
-                <p className="text-red-500 text-xs">{errors.status.message}</p>
-              )}
-            </div>
+                <div className="h-3">
+                  {errors.role_id && (
+                    <p className="text-red-500 text-xs">
+                      {errors.role_id.message}
+                    </p>
+                  )}
+                </div>
+              </div>
 
+              {/* Status Selection */}
+              <div className="max-w-md">
+                <Label
+                  htmlFor="status"
+                  value={LABEL.user.statusLabel}
+                />
+                <Select
+                  id="status"
+                  {...register('status', {
+                    required: MESSAGE.user.statusNotFound,
+                  })}
+                >
+                  <option value="true">{LABEL.sys.statusAccount.active}</option>
+                  <option value="false">
+                    {LABEL.sys.statusAccount.banned}
+                  </option>
+                </Select>
+                <div className="h-3">
+                  {errors.status && (
+                    <p className="text-red-500 text-xs">
+                      {errors.status.message}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
             {/* Avatar Upload */}
-            <div className="col-span-1 flex items-end">
+            <div className="col-span-1 flex items-center">
               <Label
                 htmlFor="dropzone-file"
                 className="flex w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100"
@@ -253,17 +276,18 @@ function UserModal(prop: IModalProps) {
                   <p className="mb-2 text-sm text-gray-500">
                     {LABEL.user.avatarLabel}
                   </p>
-                  {!avatarFile ||
-                    (validateFile(avatarFile) !== true && (
-                      <p className="text-red-500 text-xs">
-                        {validateFile(avatarFile)}
-                      </p>
-                    ))}
+                  <div className="h-3">
+                    {!avatarFile ||
+                      (validateFile(avatarFile) !== true && (
+                        <p className="text-red-500 text-xs">
+                          {validateFile(avatarFile)}
+                        </p>
+                      ))}
+                  </div>
                 </div>
                 <FileInput
                   id="dropzone-file"
                   className="hidden"
-                  onChange={handleFileChange}
                 />
               </Label>
             </div>
@@ -288,29 +312,31 @@ function UserModal(prop: IModalProps) {
                     },
                   })}
                 />
-                {errors.confirmPassword && (
-                  <p className="text-red-500 text-xs">
-                    {errors.confirmPassword.message}
-                  </p>
-                )}
+                <div className="h-3">
+                  {errors.confirmPassword && (
+                    <p className="text-red-500 text-xs">
+                      {errors.confirmPassword.message}
+                    </p>
+                  )}
+                </div>
               </div>
             )}
           </div>
         </Modal.Body>
 
         {/* Modal Footer */}
-        <Modal.Footer>
-          <Button
-            color="gray"
-            onClick={clearModal}
-          >
-            {LABEL.sys.cancel}
-          </Button>
+        <Modal.Footer className="justify-end">
           <Button
             type="submit"
             color="blue"
           >
             {LABEL.sys.save}
+          </Button>
+          <Button
+            color="gray"
+            onClick={clearModal}
+          >
+            {LABEL.sys.cancel}
           </Button>
         </Modal.Footer>
       </form>
@@ -681,12 +707,7 @@ function UserDModal(prop: IDModalProps) {
               {MESSAGE.user.confirmDelete}
             </h3>
             <div className="flex justify-center gap-4">
-              <Button
-                color="failure"
-                onClick={() => prop.onDelete(prop.isOpenDModal)}
-              >
-                {LABEL.sys.confirm}
-              </Button>
+              <Button color="failure">{LABEL.sys.confirm}</Button>
               <Button
                 color="gray"
                 onClick={() => prop.closeDModal()}
