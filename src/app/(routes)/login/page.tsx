@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import Image from "next/image";
 import Navbar from '../../../components/navbar';
 import { FaGoogle } from 'react-icons/fa';
@@ -29,14 +29,19 @@ const Login = () => {
     e.preventDefault();
     setLoading(true);  // Bắt đầu loading
     try {
-      const response = await axios.post('/api/login', {
+      const response = await axios.post('http://localhost:3000/api/login', {
         username,
         password,
       });
+
       if (response.status === 200) {
+        const { token } = response.data;
         setSuccessMessage('Đăng nhập thành công!');
         setErrorMessage('');
-        
+
+        // Lưu token vào localStorage để sử dụng sau này
+        localStorage.setItem('token', token);
+
         // Nếu "rememberMe" được chọn, lưu username vào localStorage
         if (rememberMe) {
           localStorage.setItem('username', username);
@@ -44,13 +49,17 @@ const Login = () => {
           localStorage.removeItem('username');
         }
 
-        // Chuyển hướng tới trang chính sau khi đăng nhập thành công
+        // Chuyển hướng tới trang dashboard sau khi đăng nhập thành công
         setTimeout(() => {
           router.push('/dashboard');
         }, 1000);  // Chuyển hướng sau 1 giây
       }
     } catch (error) {
-      setErrorMessage('Đăng nhập thất bại, vui lòng kiểm tra lại tài khoản và mật khẩu.');
+      if (error instanceof AxiosError && error.response) {
+        setErrorMessage(error.response.data.message || 'Đăng nhập thất bại, vui lòng kiểm tra lại tài khoản và mật khẩu.');
+      } else {
+        setErrorMessage('Có lỗi xảy ra, vui lòng thử lại sau.');
+      }
       setSuccessMessage('');
     } finally {
       setLoading(false);  // Kết thúc loading
@@ -115,7 +124,7 @@ const Login = () => {
         {/* Hình ảnh */}
         <div>
           <Image
-            src=""
+            src="/anhnenlogin.png"
             alt="Login Background"
             width={500}
             height={300}
