@@ -5,7 +5,7 @@ import { FaEdit, FaPlus, FaSearch, FaTrash } from 'react-icons/fa'
 import AuthorModal from '../../_components/author/AuthorModal'
 import UpdateAuthorModal from '../../_components/author/UpdateAuthorModal'
 
-const UserPage = () => {
+const AuthorPage = () => {
   //============ Declare variables and hooks ================//
   const [authors, setAuthors] = useState([])
   const [loading, setLoading] = useState(true)
@@ -209,4 +209,4 @@ const UserPage = () => {
   )
 }
 
-export default UserPage
+export default AuthorPage
