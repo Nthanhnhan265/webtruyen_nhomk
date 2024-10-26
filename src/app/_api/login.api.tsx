@@ -1,25 +1,23 @@
-// src/app/_api/login.api.ts
+import { NextApiRequest, NextApiResponse } from 'next';
 
-export const loginUser = async (username: string, password: string) => {
-    try {
-      const response = await fetch('http://localhost:3000/api/login', { // Gọi tới API Next.js
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, password }),
-      });
-  
-      if (!response.ok) {
-        // Xử lý các lỗi từ server
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Đăng nhập thất bại');
-      }
-  
-      return await response.json(); // Trả về dữ liệu JSON
-    } catch (error) {
-      console.error('Login error:', error);
-      throw error; // Bỏ qua lỗi để xử lý sau
+// Một ví dụ về dữ liệu tài khoản mặc định để test
+const DEFAULT_USER = {
+  username: 'admin',
+  password: 'admin123',
+};
+
+export default function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method === 'POST') {
+    const { username, password } = req.body;
+
+    // Kiểm tra thông tin đăng nhập
+    if (username === DEFAULT_USER.username && password === DEFAULT_USER.password) {
+      return res.status(200).json({ message: 'Login successful', token: 'fake-jwt-token' });
+    } else {
+      return res.status(401).json({ message: 'Invalid username or password' });
     }
-  };
-  
+  } else {
+    res.setHeader('Allow', ['POST']);
+    res.status(405).end(`Method ${req.method} Not Allowed`);
+  }
+}
