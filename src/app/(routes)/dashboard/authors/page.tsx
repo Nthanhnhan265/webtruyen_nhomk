@@ -19,12 +19,12 @@ import AuthorModal from '../_components/author/AuthorModal';
 
 const UserPage = () => {
     //============ Declare variables and hooks ================//
-    const [authors, setAuthors] = useState([]);
+    const [authors, setAuthors] = useState<IAuthor[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [showUpdateModal, setShowUpdateModal] = useState(false);
     const [showCreateModal, setShowCreateModal] = useState(false); // New state for Create Modal
-    const [selectedAuthor, setSelectedAuthor] = useState(null);
+    const [selectedAuthor, setSelectedAuthor] = useState<IAuthor | null>(null);
     const [sortOrder, setSortOrder] = useState('asc');
     const [searchTerm, setSearchTerm] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
@@ -51,7 +51,7 @@ const UserPage = () => {
         fetchAuthors();
     }, [sortOrder, currentPage]);
 
-    const handleDelete = async (id) => {
+    const handleDelete = async (id: number) => {
         if (window.confirm('Bạn có chắc chắn muốn xóa tác giả này không?')) {
             try {
                 await deleteAuthor(id);
@@ -62,7 +62,7 @@ const UserPage = () => {
         }
     };
 
-    const handleEdit = (author) => {
+    const handleEdit = (author: IAuthor) => {
         setSelectedAuthor(author);
         setShowUpdateModal(true);
     };
@@ -143,7 +143,7 @@ const UserPage = () => {
                     <tbody>
                         {authors.length === 0 ? (
                             <tr>
-                                <td colSpan="5" className="py-1 text-center">Không tìm thấy tác giả nào.</td>
+                                <td colSpan={5} className="py-1 text-center">Không tìm thấy tác giả nào.</td>
                             </tr>
                         ) : (
                             authors.map((author) => (

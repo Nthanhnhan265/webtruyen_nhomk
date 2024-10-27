@@ -1,12 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { createAuthor } from '@/app/_api/authorService'
-
-const AuthorModal = ({ show, onClose, onSuccess }) => {
+interface FormErrors {
+    authorName?: string;
+    description?: string;
+    slug?: string;
+}
+interface Erorr {
+    authorName?: string;
+    description?: string;
+    slug?: string;
+}
+interface AuthorModalProps {
+    show: boolean;         // Indicates whether the modal is visible
+    onClose: () => void;  // Function to call when closing the modal
+    onSuccess: (data: { authorName: string; description: string; slug: string }) => void; // Function to call on successful author creation
+}
+const AuthorModal: React.FC<AuthorModalProps> = ({ show, onClose, onSuccess }) => {
     const [authorName, setAuthorName] = useState('');
     const [description, setDescription] = useState('');
     const [slug, setSlug] = useState('');
-    const [errors, setErrors] = useState({}); // Lưu trữ lỗi cho từng trường
-    let formErrors = {};
+    const [errors, setErrors] = useState<Erorr>({}); // Lưu trữ lỗi cho từng trường
+    let formErrors: FormErrors = {};
+    useEffect(() => {
+        if (show) {
+            // Reset form fields and errors when the modal is opened
+            setAuthorName('');
+            setDescription('');
+            setSlug('');
+            setErrors({});
+        }
+    }, [show]);
     // Kiểm tra dữ liệu nhập
     const validateForm = () => {
 
@@ -39,7 +62,7 @@ const AuthorModal = ({ show, onClose, onSuccess }) => {
         return isValid;
     };
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         // alert(formErrors)
         // Nếu validate thất bại thì không cho phép lưu
@@ -49,7 +72,7 @@ const AuthorModal = ({ show, onClose, onSuccess }) => {
             const newAuthor = { author_name: authorName, description, slug };
             await createAuthor(newAuthor);
             alert('Tác giả đã được thêm thành công!');
-            onSuccess(); // Làm mới danh sách tác giả
+            onSuccess({ authorName, description, slug }); // Làm mới danh sách tác giả
             onClose();   // Đóng modal
         } catch (error) {
             alert('Đã xảy ra lỗi khi thêm tác giả.');
@@ -98,7 +121,7 @@ const AuthorModal = ({ show, onClose, onSuccess }) => {
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
                             className={`w-full p-2 border ${errors.description ? 'border-red-500' : 'border-gray-300'} rounded`}
-                            rows="5"
+                            rows={5}
                             placeholder="Mô tả không vượt quá 500 ký tự"
                         ></textarea>
                         {errors.description && <p className="text-red-500">{errors.description}</p>}

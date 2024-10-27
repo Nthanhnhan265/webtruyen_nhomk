@@ -12,6 +12,18 @@ const LABEL = {
     roleLabel: 'Vai trò',
     avatarLabel: 'Tải lên avatar',
   },
+  author: {
+    label: 'Tác Giả',
+    createLabel: 'Thêm tác giả',
+    editLabel: 'Sửa tác giả ',
+    deleteLabel: 'Xóa tác giả',
+    usernameLabel: 'Tên tác giả',
+    describeLabel: "Mô tả",
+    act: "Hành động",
+    createdAtLabel: 'Ngày tạo',
+    url: "URL"
+
+  },
   sys: {
     appName: 'Web Truyện',
     edit: 'Sửa',
