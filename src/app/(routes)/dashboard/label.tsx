@@ -11,6 +11,10 @@ const LABEL = {
     statusLabel: 'Trạng thái',
     roleLabel: 'Vai trò',
     avatarLabel: 'Tải lên avatar',
+    createdAtLabel: 'Ngày tạo',
+    enterEmail: 'Nhập email',
+    enterPassword: 'Nhập mật khẩu',
+    checkboxRememerMe: 'Ghi nhớ mật khẩu',
   },
   author: {
     label: 'Tác Giả',
@@ -25,7 +29,17 @@ const LABEL = {
 
   },
   sys: {
+    forgotPasswordLabel: 'Quên mật khẩu?',
+    loginLabel: 'Đăng nhập',
+    loginToDashboardLabel: 'Đăng nhập vào trang quản lý',
+    ASC: 'Tăng dần',
+    DESC: 'Giảm dần',
+    actionLabel: 'Hành động',
+    id: 'ID',
+    sortLabel: 'Sắp xếp',
+    orderLabel: 'Thứ tự',
     appName: 'Web Truyện',
+    searchLabel: 'Tìm kiếm ...',
     edit: 'Sửa',
     delete: 'Xóa',
     create: 'Tạo mới',
@@ -38,7 +52,7 @@ const LABEL = {
     },
     statusAccount: {
       active: 'Hoạt động',
-      banned: 'Bị khóa',
+      banned: 'Khóa',
     },
   },
 }

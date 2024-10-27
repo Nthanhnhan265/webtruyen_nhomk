@@ -100,7 +100,7 @@ const AuthorModal: React.FC<AuthorModalProps> = ({ show, onClose, onSuccess }) =
                             onChange={(e) => setAuthorName(e.target.value)}
                             className={`w-full p-2 border ${errors.authorName ? 'border-red-500' : 'border-gray-300'} rounded`}
                             placeholder="Nhập tên tác giả"
-                            required
+
                         />
                         {errors.authorName && <p className="text-red-500">{errors.authorName}</p>}
                     </div>
@@ -111,7 +111,7 @@ const AuthorModal: React.FC<AuthorModalProps> = ({ show, onClose, onSuccess }) =
                             onChange={(e) => setSlug(e.target.value)}
                             className={`w-full p-2 border ${errors.slug ? 'border-red-500' : 'border-gray-300'} rounded`}
                             placeholder="tac-gia/..."
-                            required
+
                         />
                         {errors.slug && <p className="text-red-500">{errors.slug}</p>}
                     </div>

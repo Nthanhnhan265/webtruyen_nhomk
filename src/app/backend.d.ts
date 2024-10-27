@@ -29,5 +29,5 @@ interface IDashboardUserForm {
   password: string
   confirmPassword: string
   role_id: number
-  status: boolean
+  status: string
 }
