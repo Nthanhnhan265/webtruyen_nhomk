@@ -1,33 +1,45 @@
 'use client'
 import { deleteAuthor, getAuthors } from '@/app/_api/authorService'
 import { useEffect, useState } from 'react'
+import { Pagination } from "flowbite-react";
+
 import { FaEdit, FaPlus, FaSearch, FaTrash } from 'react-icons/fa'
 import AuthorModal from '../../_components/author/AuthorModal'
 import UpdateAuthorModal from '../../_components/author/UpdateAuthorModal'
-
+import Header from '../../_components/header'
+interface Author {
+  id: number;
+  author_name: string;
+  description: string;
+  slug: string;
+}
 const AuthorPage = () => {
   //============ Declare variables and hooks ================//
-  const [authors, setAuthors] = useState([])
+  const [authors, setAuthors] = useState<Author[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [showUpdateModal, setShowUpdateModal] = useState(false)
   const [showCreateModal, setShowCreateModal] = useState(false) // New state for Create Modal
-  const [selectedAuthor, setSelectedAuthor] = useState(null)
+  const [selectedAuthor, setSelectedAuthor] = useState<Author | null>(null)
   const [sortOrder, setSortOrder] = useState('asc')
   const [searchTerm, setSearchTerm] = useState('')
-  const [currentPage, setCurrentPage] = useState(1)
+  const [keyword, setKeyWord] = useState<string>('')
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, settotalPages] = useState(1);
+
   const limit = 4
 
   const fetchAuthors = async () => {
     setLoading(true)
     try {
       const response = await getAuthors({
-        author_name: searchTerm,
-        description: searchTerm,
+        author_name: keyword,
+        description: keyword,
         sort: sortOrder,
         page: currentPage,
       })
-      setAuthors(response)
+      setAuthors(response.authors)
+      settotalPages(response.totalPages)
       setLoading(false)
     } catch (err) {
       setError('Đã xảy ra lỗi khi lấy dữ liệu.')
@@ -39,7 +51,7 @@ const AuthorPage = () => {
     fetchAuthors()
   }, [sortOrder, currentPage])
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (id: number) => {
     if (window.confirm('Bạn có chắc chắn muốn xóa tác giả này không?')) {
       try {
         await deleteAuthor(id)
@@ -51,37 +63,41 @@ const AuthorPage = () => {
       }
     }
   }
+  const handleSuccess = (data: Author) => {
+    // Handle success, maybe update state or refetch data
+  };
 
-  const handleEdit = (author) => {
+  const handleEdit = (author: Author) => {
     setSelectedAuthor(author)
     setShowUpdateModal(true)
   }
 
-  const handleSuccess = () => {
+  const handleSearch = async (keyword: string) => {
+    console.log('checked>>', keyword)
+    setKeyWord(keyword)
+  }
+  const search = () => {
     fetchAuthors()
-  }
+    setKeyWord('')
 
-  const handleSearch = () => {
-    fetchAuthors() // Gọi hàm fetchAuthors khi nhấn nút tìm kiếm
   }
+  const onPageChange = (page: number) => setCurrentPage(page);
+
 
   if (loading) return <p>Đang tải dữ liệu...</p>
   if (error) return <p>{error}</p>
 
-  return (
-    <div className="flex flex-col h-screen p-4">
-      <div className="flex justify-between mb-4">
-        <div className="flex items-center w-1/3">
-          <input
-            type="text"
-            placeholder="Tìm kiếm..."
-            className="p-2 border border-gray-300 rounded w-full h-10"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
+  return (<>
+
+
+    <div className="flex flex-col h-screen ">
+      <div className="flex justify-between mb-2">
+        <div className="flex items-center ">
+          <Header handleSearch={handleSearch}></Header>
+
           <button
-            className="text-black p-2 rounded ml-2"
-            onClick={handleSearch} // Gọi hàm tìm kiếm khi nhấn nút
+            className="text-black p-2 rounded ml-2 mb-2"
+            onClick={() => search()} // Gọi hàm tìm kiếm khi nhấn nút
           >
             <FaSearch className="mr-2" /> {/* Biểu tượng tìm kiếm */}
           </button>
@@ -96,7 +112,7 @@ const AuthorPage = () => {
         </div>
       </div>
 
-      <div className="mb-4 mt-2 flex justify-between items-center">
+      <div className="  flex justify-between items-center">
         <h1 className="text-2xl font-bold">Tác giả</h1>
         <div className="flex space-x-4">
 
@@ -137,7 +153,7 @@ const AuthorPage = () => {
             {authors.length === 0 ? (
               <tr>
                 <td
-                  colSpan="5"
+                  colSpan={5}
                   className="py-1 text-center"
                 >
                   Không tìm thấy tác giả nào.
@@ -176,22 +192,8 @@ const AuthorPage = () => {
           </tbody>
         </table>
       </div>
-
-      <div className="flex justify-center my-4">
-        <button
-          className="border p-2"
-          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-          disabled={currentPage === 1}
-        >
-          ‹
-        </button>
-        <span className="mx-2">{currentPage}</span>
-        <button
-          className="border p-2"
-          onClick={() => setCurrentPage((prev) => prev + 1)}
-        >
-          ›
-        </button>
+      <div className="flex overflow-x-auto sm:justify-center">
+        <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={onPageChange} />
       </div>
 
       <UpdateAuthorModal
@@ -206,6 +208,7 @@ const AuthorPage = () => {
         onSuccess={handleSuccess} // Handle success after creation
       />
     </div>
+  </>
   )
 }
 
