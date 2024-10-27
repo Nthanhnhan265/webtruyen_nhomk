@@ -1,12 +1,36 @@
 import React, { useState, useEffect } from 'react';
-import { updateAuthor } from '@/app/_api/authorService'
+import { updateAuthor } from '@/app/_api/authorService';
+interface FormErrors {
+    authorName?: string;
+    description?: string;
+    slug?: string;
+}
+interface Author {
+    id: number;
+    author_name: string;
+    description: string;
+    slug: string;
+}
+interface Erorr {
+    id?: number,
+    authorName?: string;
+    description?: string;
+    slug?: string;
+}
+interface AuthorModalProps {
+    show: boolean;         // Indicates whether the modal is visible
+    onClose: () => void;  // Function to call when closing the modal
+    onSuccess: (data: Author) => void; // Function to call on successful author creation
+    initialData?: Author | null; // Optional initial data for editing
 
-const UpdateAuthorModal = ({ show, onClose, onSuccess, initialData = null }) => {
+}
+const UpdateAuthorModal: React.FC<AuthorModalProps> = ({ show, onClose, onSuccess, initialData = null }) => {
     const [authorName, setAuthorName] = useState('');
     const [description, setDescription] = useState('');
     const [slug, setSlug] = useState('');
-    const [errors, setErrors] = useState({});
+    const [errors, setErrors] = useState<Erorr>({});
 
+    // When initialData changes, set form values
     useEffect(() => {
         if (initialData) {
             setAuthorName(initialData.author_name || '');
@@ -19,15 +43,19 @@ const UpdateAuthorModal = ({ show, onClose, onSuccess, initialData = null }) => 
         }
     }, [initialData]);
 
+    // Validate the form before submitting
     const validateForm = () => {
         let isValid = true;
-        let formErrors = {};
+        let formErrors: FormErrors = {};
 
         // Allow Vietnamese characters in authorName
         if (!authorName) {
             formErrors.authorName = 'Bạn không được để trống tên tác giả.';
             isValid = false;
-        } else if (authorName.length < 1 || authorName.length > 255 || /[^a-zA-Z0-9\sàáạảãâầấậẩẫèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữđ]/.test(authorName)) {
+        } else if (
+            authorName.length < 1 || authorName.length > 255 ||
+            /[^a-zA-Z0-9\sàáạảãâầấậẩẫèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữđ]/.test(authorName)
+        ) {
             formErrors.authorName = 'Vui lòng nhập tên tác giả hợp lệ (1 - 255 ký tự và không chứa ký tự đặc biệt).';
             isValid = false;
         }
@@ -49,15 +77,27 @@ const UpdateAuthorModal = ({ show, onClose, onSuccess, initialData = null }) => 
         return isValid;
     };
 
-    const handleSubmit = async (e) => {
+    // Handle the form submission
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        // Validate the form
         if (!validateForm()) return;
 
         try {
-            const updatedAuthor = { author_name: authorName, description, slug };
-            await updateAuthor(initialData.id, updatedAuthor);
+            const updatedAuthor = {
+                id: initialData?.id || 0, // Include the ID for updating
+                author_name: authorName,
+                description,
+                slug,
+            };
+
+            // Call the updateAuthor API and pass the author ID and updated data
+            await updateAuthor(initialData?.id, updatedAuthor);
+
+            // Success handling
             alert('Tác giả đã được cập nhật thành công!');
-            onSuccess();
+            onSuccess(updatedAuthor);
             onClose();
         } catch (error) {
             alert('Đã xảy ra lỗi khi cập nhật tác giả.');
@@ -70,6 +110,7 @@ const UpdateAuthorModal = ({ show, onClose, onSuccess, initialData = null }) => 
         }
     };
 
+    // Return null if modal is not supposed to be shown
     if (!show) return null;
 
     return (
@@ -105,7 +146,7 @@ const UpdateAuthorModal = ({ show, onClose, onSuccess, initialData = null }) => 
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
                             className={`w-full p-2 border ${errors.description ? 'border-red-500' : 'border-gray-300'} rounded`}
-                            rows="5"
+                            rows={5}
                             placeholder="Mô tả không vượt quá 500 ký tự"
                         ></textarea>
                         {errors.description && <p className="text-red-500">{errors.description}</p>}

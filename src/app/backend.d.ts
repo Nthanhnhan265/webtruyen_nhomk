@@ -7,6 +7,13 @@ interface IUser {
   status: boolean
   created_at: string
 }
+interface IAuthor {
+  id: number
+  author_name: string
+  description: string
+  slug: string
+  created_at: string
+}
 
 interface IResponse {
   status: number
