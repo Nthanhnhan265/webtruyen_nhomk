@@ -1,51 +1,52 @@
-"use client";
+// components/Pagination.js
+{/* <i class="fa-solid fa-angle-left"></i> */}
+{/* <i class="fa-solid fa-angle-right"></i> */}
+import Link from 'next/link';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons';
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons";
-
-const Pagination = ({ currentPage, totalPages, onPageChange }) => {
-  const handlePageChange = (page) => {
-    if (page >= 1 && page <= totalPages) {
-      onPageChange(page);
-    }
-  };
-
-  const renderPageNumbers = () => {
-    const pages = [];
-    for (let i = 1; i <= totalPages; i++) {
-      pages.push(
-        <button
-          key={i}
-          onClick={() => handlePageChange(i)}
-          className={`px-3 py-1 border ${currentPage === i ? "bg-blue-500 text-white" : "text-blue-500"} rounded hover:bg-blue-600 hover:text-white`}
-        >
-          {i}
-        </button>
-      );
-    }
-    return pages;
-  };
+const Pagination = ({ currentPage, totalPages }) => {
+  const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   return (
-    <div className="flex items-center justify-center space-x-2">
-      <button
-        onClick={() => handlePageChange(currentPage - 1)}
-        disabled={currentPage === 1}
-        className="flex items-center px-3 py-1 border text-blue-500 rounded hover:bg-blue-600 hover:text-white"
-      >
-        <FontAwesomeIcon icon={faAngleLeft} />
-      </button>
-      
-      {renderPageNumbers()}
-
-      <button
-        onClick={() => handlePageChange(currentPage + 1)}
-        disabled={currentPage === totalPages}
-        className="flex items-center px-3 py-1 border text-blue-500 rounded hover:bg-blue-600 hover:text-white"
-      >
-        <FontAwesomeIcon icon={faAngleRight} />
-      </button>
-    </div>
+    <nav aria-label="Page navigation example">
+      <ul className="inline-flex -space-x-px text-sm">
+        <li>
+          <Link
+            href={`?page=${currentPage - 1}`}
+            className={`flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white ${
+              currentPage === 1 && 'pointer-events-none opacity-50'
+            }`}
+          >
+             <FontAwesomeIcon icon={faAngleLeft} /> {/* Icon Next */}
+          </Link>
+        </li>
+        {pageNumbers.map((page) => (
+          <li key={page}>
+            <Link
+              href={`?page=${page}`}
+              className={`flex items-center justify-center px-3 h-8 leading-tight ${
+                page === currentPage
+                  ? 'text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white'
+                  : 'text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'
+              }`}
+            >
+              {page}
+            </Link>
+          </li>
+        ))}
+        <li>
+          <Link
+            href={`?page=${currentPage + 1}`}
+            className={`flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white ${
+              currentPage === totalPages && 'pointer-events-none opacity-50'
+            }`}
+          >
+             <FontAwesomeIcon icon={faAngleRight} /> {/* Icon Next */}
+          </Link>
+        </li>
+      </ul>
+    </nav>
   );
 };
 

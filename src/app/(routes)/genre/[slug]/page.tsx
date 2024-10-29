@@ -9,7 +9,10 @@ import Image from 'next/image';
 // import Image from './';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import GenreDropdown from '@/app/(routes)/_component/GenreDropdown';
+// import GenreDropdown from '@/app/(routes)/_component/GenreDropdown';
+import Navbar from '@/app/(routes)/_component/Navbar';
+import Pagination from '@/app/(routes)/_component/Pagination';
+import CustomButton from '@/app/(routes)/_component/CustomButton';
 
 const genres = [
   { id: 1, name: 'Tiên Hiệp', slug: 'tien-hiep' },
@@ -22,7 +25,8 @@ const genres = [
 
 const GenrePage = () => {
   const { slug } = useParams(); // Lấy slug từ URL
-
+  const currentPage = 1; // Bạn có thể thay thế bằng giá trị thực tế từ props hoặc query
+  const totalPages = 5; // Số trang tối đa
   const [genre, setGenre] = useState(null);
 
   useEffect(() => {
@@ -36,42 +40,28 @@ const GenrePage = () => {
   if (!genre) {
     return <div>Thể loại không tồn tại</div>;
   }
-  if (genre.slug =='tien-hiep') {
+  if (genre.slug == 'tien-hiep') {
 
     return (
-      //   <div>
-
-      //     <h1>Thể loại: {genreName}</h1>
-      //     <p>Đây là trang của thể loại {genreName} với slugs "{formattedSlug}".</p>
-
-      //     {/* Nội dung khác cho trang thể loại */}
-
-      //   </div>
-      <div className="container">
-        <div className="flex justify-center items-center h-screen">
-
-        <GenreDropdown />
-          <p className='nav'>Truyện plus / {genre.name} / Trang 1</p>
-
+      <div className="min-h-screen flex flex-col container mx-auto p-4">
+        <div className="flex-grow justify-center items-center">
+          <Navbar />
+          {/* <GenreDropdown /> */}
+         
+          <p className="nav">Truyện plus / {genre.name} / Trang 1</p>
+  
           <h2>{genre.name}</h2>
           <hr />
           <p>Truyện tiên hiệp thường kể về quá trình tu luyện và khám phá thế giới tu sĩ thần tiên đầy bí ẩn của nhân vật chính.</p>
+  
           <div className="background-body">
             <div className="container">
-              {/* <GenreDropdown /> */}
-              <div className="row">
-                <div className="col-3">
-                  <Image
-                    src="https://truyenplus.vn/media/book/tran-hoi-truong-sinh.jpeg" // Đường dẫn đến hình ảnh trong thư mục public
-                    alt="Mô tả hình ảnh"
-                    width={300} // Chiều rộng của hình ảnh
-                    height={150} // Chiều cao của hình ảnh
-                  />
+              <div className="grid grid-cols-12 gap-4 mb-4">
+                <div className="col-span-3">
+                  <Image src="https://truyenplus.vn/media/book/tran-hoi-truong-sinh.jpeg" alt="Mô tả hình ảnh" width={300} height={150} />
                 </div>
-                <div className="col-9">
-                  <Link href={''}>
-                    Trận Hỏi Trường Sinh
-                  </Link>
+                <div className="col-span-9">
+                  <Link href={''}>Trận Hỏi Trường Sinh</Link>
                   <br />
                   <span>Tác giả:</span><Link href={''}>Quan Hư</Link>
                   <br />
@@ -80,102 +70,107 @@ const GenrePage = () => {
                   <span>Số chương:</span><Link href={''}>205</Link>
                 </div>
               </div>
-              <div className="row">
-                  <div className="col-3">
-                    <Image
-                      src="https://truyenplus.vn/media/book/xuat-lung-ky.jpeg"// Đường dẫn đến hình ảnh trong thư mục public
-                      alt="Mô tả hình ảnh"
-                      width={300} // Chiều rộng của hình ảnh
-                      height={150} // Chiều cao của hình ảnh
-                    />
-                  </div>
-                  <div className="col-9">
-                    <Link href={''}>
-                      Xuất Lung Ký
-                    </Link>
-                    <br />
-                    <span>Tác giả:</span><Link href={''}>Hạch Động Lực Chiến Liệt Hạm</Link>
-                    <br />
-                    <span>Thể Loại:</span><Link href={''}> Tiên Hiệp , Võng Du , Khoa Huyễn , Dã Sử , Hệ Thống , Khác</Link>
-                    <br />
-                    <span>Số chương:</span><Link href={''}>1484</Link>
-                  </div>
+  
+              <div className="grid grid-cols-12 gap-4 mb-5">
+                <div className="col-span-3">
+                  <Image src="https://truyenplus.vn/media/book/xuat-lung-ky.jpeg" alt="Mô tả hình ảnh" width={300} height={150} />
                 </div>
-
+                <div className="col-span-9">
+                  <Link href={''}>Xuất Lung Ký</Link>
+                  <br />
+                  <span>Tác giả:</span><Link href={''}>Hạch Động Lực Chiến Liệt Hạm</Link>
+                  <br />
+                  <span>Thể Loại:</span><Link href={''}>Tiên Hiệp , Võng Du , Khoa Huyễn , Dã Sử , Hệ Thống , Khác</Link>
+                  <br />
+                  <span>Số chương:</span><Link href={''}>1484</Link>
+                </div>
+              </div>
             </div>
           </div>
+          <Pagination currentPage={currentPage} totalPages={totalPages} />
         </div>
-        
-    
-      </div>
-      
-    );
   
+        {/* Footer */}
+        <footer className="bg-gray-100 p-4 grid grid-cols-2 mt-5">
+          <div>
+            Truyện Plus – Trang đọc truyện online, thường xuyên cập nhật những bộ truyện hay nhất thuộc các thể loại đặc sắc như: truyện ngôn tình, truyện tiên hiệp, truyện kiếm hiệp, truyện đam mỹ, light novel…
+            <br />
+            Mọi vấn đề vi phạm bản quyền vui lòng liên hệ qua email: truyenplusonline@gmail.com
+          </div>
+          <div> 
+        <CustomButton title="Nhấn vào đây" link="/link-page" />
+      </div>
+        </footer>
+      </div>
+    );
   }
-  if(genre.slug =='kiem-hiep'){
+
+  // https://truyenplus.vn/media/book/lang-thien-kiem-than.jpg
+  // https://truyenplus.vn/media/book/dai-su-huynh-khong-co-gi-la-khong-co-gi-la-dai-su-huynh.jpg
+  if (genre.slug == 'kiem-hiep') {
     return (
-
-    <div className="container">
-    <div className="flex justify-center items-center h-screen">
-      <GenreDropdown />
-
-
-      <p className='nav'>Truyện plus / {genre.name} / Trang 1</p>
-
-      <h2>{genre.name}</h2>
-      <hr />
-      <p>Truyện tiên hiệp thường kể về quá trình tu luyện và khám phá thế giới tu sĩ thần tiên đầy bí ẩn của nhân vật chính.</p>
-      <div className="background-body">
-        <div className="container">
-          <div className="row">
-            <div className="col-3">
-              <Image
-                src="https://truyenplus.vn/media/book/lang-thien-kiem-than.jpg" // Đường dẫn đến hình ảnh trong thư mục public
-                alt="Mô tả hình ảnh"
-                width={300} // Chiều rộng của hình ảnh
-                height={150} // Chiều cao của hình ảnh
-              />
-            </div>
-            <div className="col-9">
-              <Link href={''}>
-                Trận Hỏi Trường Sinh
-              </Link>
-              <br />
-              <span>Tác giả:</span><Link href={''}>Quan Hư</Link>
-              <br />
-              <span>Thể Loại:</span><Link href={''}>Tiên Hiệp , Ngôn Tình , Huyền Huyễn, Khác</Link>
-              <br />
-              <span>Số chương:</span><Link href={''}>205</Link>
-            </div>
-          </div>
-          <div className="row">
-            <div className="col-3">
-              <Image
-                src="https://truyenplus.vn/media/book/dai-su-huynh-khong-co-gi-la-khong-co-gi-la-dai-su-huynh.jpg"// Đường dẫn đến hình ảnh trong thư mục public
-                alt="Mô tả hình ảnh"
-                width={300} // Chiều rộng của hình ảnh
-                height={150} // Chiều cao của hình ảnh
-              />
-            </div>
-            <div className="col-9">
-              <Link href={''}>
-                Xuất Lung Ký
-              </Link>
-              <br />
-              <span>Tác giả:</span><Link href={''}>Hạch Động Lực Chiến Liệt Hạm</Link>
-              <br />
-              <span>Thể Loại:</span><Link href={''}> Tiên Hiệp , Võng Du , Khoa Huyễn , Dã Sử , Hệ Thống , Khác</Link>
-              <br />
-              <span>Số chương:</span><Link href={''}>1484</Link>
+      <div className="min-h-screen flex flex-col container mx-auto p-4">
+        <div className="flex-grow justify-center items-center">
+          <Navbar />
+          {/* <GenreDropdown /> */}
+         
+          <p className="nav">Truyện plus / {genre.name} / Trang 1</p>
+  
+          <h2>{genre.name}</h2>
+          <hr />
+          <p>Truyện tiên hiệp thường kể về quá trình tu luyện và khám phá thế giới tu sĩ thần tiên đầy bí ẩn của nhân vật chính.</p>
+  
+          <div className="background-body">
+            <div className="container">
+              <div className="grid grid-cols-12 gap-4 mb-4">
+                <div className="col-span-3">
+                  <Image src="https://truyenplus.vn/media/book/lang-thien-kiem-than.jpg" alt="Mô tả hình ảnh" width={300} height={150} />
+                </div>
+                <div className="col-span-9">
+                  <Link href={''}>Trận Hỏi Trường Sinh</Link>
+                  <br />
+                  <span>Tác giả:</span><Link href={''}>Quan Hư</Link>
+                  <br />
+                  <span>Thể Loại:</span><Link href={''}>Tiên Hiệp , Ngôn Tình , Huyền Huyễn, Khác</Link>
+                  <br />
+                  <span>Số chương:</span><Link href={''}>205</Link>
+                </div>
+              </div>
+  
+              <div className="grid grid-cols-12 gap-4 mb-5">
+                <div className="col-span-3">
+                  <Image src=" https://truyenplus.vn/media/book/dai-su-huynh-khong-co-gi-la-khong-co-gi-la-dai-su-huynh.jpg" alt="Mô tả hình ảnh" width={300} height={150} />
+                </div>
+                <div className="col-span-9">
+                  <Link href={''}>Xuất Lung Ký</Link>
+                  <br />
+                  <span>Tác giả:</span><Link href={''}>Hạch Động Lực Chiến Liệt Hạm</Link>
+                  <br />
+                  <span>Thể Loại:</span><Link href={''}>Tiên Hiệp , Võng Du , Khoa Huyễn , Dã Sử , Hệ Thống , Khác</Link>
+                  <br />
+                  <span>Số chương:</span><Link href={''}>1484</Link>
+                </div>
+              </div>
             </div>
           </div>
+          <Pagination  currentPage={currentPage} totalPages={totalPages} />
         </div>
+  
+        {/* Footer */}
+        <footer className="bg-gray-100 p-4 grid grid-cols-2 mt-5">
+          <div>
+            Truyện Plus – Trang đọc truyện online, thường xuyên cập nhật những bộ truyện hay nhất thuộc các thể loại đặc sắc như: truyện ngôn tình, truyện tiên hiệp, truyện kiếm hiệp, truyện đam mỹ, light novel…
+            <br />
+            Mọi vấn đề vi phạm bản quyền vui lòng liên hệ qua email: truyenplusonline@gmail.com
+          </div>
+          <div> 
+        <CustomButton title="Nhấn vào đây" link="/link-page" />
       </div>
-    </div>
-  </div>
+        </footer>
+      </div>
     );
   }
-  
+
 };
 
 export default GenrePage;
