@@ -12,7 +12,6 @@ const checkUsername = async (username: string) => {
   try {
     const response = await api.post('/check-username', { username });
     const result = response.data;
-
     if (!result.success) {
       throw new Error(result.message);
     }
@@ -28,12 +27,33 @@ const checkUsername = async (username: string) => {
   }
 };
 
+//======= Check Email =======//
+const checkEmail = async (email: string) => {
+  try {
+    const response = await api.post('/check-email', { email });
+    const result = response.data;
+
+    if (!result.success) {
+      throw new Error(result.message);
+    }
+
+    return true; // Email does not exist
+  } catch (error: any) {
+    if (error instanceof AxiosError) {
+      throw new Error(error?.response?.data?.message || "Email check failed.");
+    } else {
+      console.error(error);
+      throw new Error(Message.sys.unknownError);
+    }
+  }
+};
+
 //======= Login =======//
 const loginUser = async (data: { username: string; password: string }) => {
   try {
     const response = await api.post('/login', data);
     const result = response.data;
-
+    await checkUsername(data.username);
     if (!result.success) {
       throw new Error(result.message); // Nếu không thành công, ném lỗi với thông điệp
     }
@@ -60,12 +80,14 @@ const loginUser = async (data: { username: string; password: string }) => {
 //======= Register =======//
 const registerUser = async (data: { username: string; email: string; password: string; confirmPassword: string }) => {
   try {
+    await checkUsername(data.username);
+    await checkEmail(data.email);
     if (data.password !== data.confirmPassword) {
       throw new Error(Message.auth.passwordNotMatch);
     }
 
-    // Kiểm tra tên đăng nhập trước khi đăng ký
-    await checkUsername(data.username);
+    // Kiểm tra tính duy nhất của username và email trước khi đăng ký
+    
 
     // Thêm giá trị mặc định cho role_id, status, và avatar
     const userPayload = {
@@ -103,4 +125,4 @@ const registerUser = async (data: { username: string; email: string; password: s
   }
 };
 
-export { loginUser, registerUser, checkUsername };
+export { loginUser, registerUser, checkUsername, checkEmail };

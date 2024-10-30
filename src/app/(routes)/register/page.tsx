@@ -1,10 +1,11 @@
 "use client";
 
-import Navbar from "../../../components/navbar";
+import axios, { AxiosError } from "axios";
 import Image from "next/image";
+import Navbar from "../../../components/navbar";
 import Message from "../../message";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { registerUser } from "../../_api/login.api";
 import { Button, Label, TextInput } from "flowbite-react";
 
 const Register = () => {
@@ -12,31 +13,69 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
+
+  // Trạng thái lỗi riêng cho từng trường
+  const [usernameError, setUsernameError] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [loading, setLoading] = useState(false); // Trạng thái loading
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
+    setUsernameError("");
+    setEmailError("");
+    setPasswordError("");
+    setConfirmPasswordError("");
 
+    // Kiểm tra tính hợp lệ của mật khẩu
     if (password !== confirmPassword) {
-      setErrorMessage(Message.auth.passwordNotMatch);
+      setConfirmPasswordError(Message.auth.passwordNotMatch);
+      setLoading(false); // Kết thúc trạng thái loading
       return;
     }
 
     try {
-      const newUser = await registerUser({
+      // Kiểm tra tính duy nhất của username
+      
+
+      
+
+      // Tiến hành đăng ký
+      const newUserResponse = await axios.post("http://localhost:3000/api/register", {
         username,
         email,
         password,
         confirmPassword,
       });
-      if (newUser) {
+
+      if (newUserResponse.status === 201) {
         setSuccessMessage(Message.auth.createSusses);
-        setErrorMessage("");
+        setTimeout(() => {
+          router.push("/login"); // Chuyển hướng đến trang đăng nhập sau khi đăng ký thành công
+        }, 2000);
       }
-    } catch (error: any) {
-      setErrorMessage(error.message || Message.auth.registrationfailed);
-      setSuccessMessage("");
+    } catch (error) {
+      if (error instanceof AxiosError && error.response) {
+        const errorMsg = error.response.data.message;
+
+        if (errorMsg.includes("Tên đăng nhập đã tồn tại")) {
+          setUsernameError(Message.auth.nameExists);
+        } else if (errorMsg.includes("Email đã tồn tại")) {
+          setEmailError(Message.auth.emailExists);
+        } else if (errorMsg.includes("Mật khẩu không chính xác")) {
+          setPasswordError("Mật khẩu không chính xác");
+        } else {
+          setUsernameError("Đăng ký thất bại, vui lòng kiểm tra lại thông tin.");
+        }
+      } else {
+        setUsernameError("Đăng ký thất bại, vui lòng kiểm tra lại thông tin.");
+      }
+    } finally {
+      setLoading(false); // Kết thúc trạng thái loading
     }
   };
 
@@ -64,6 +103,7 @@ const Register = () => {
                   className="text-gray-700 w-full mt-2"
                   required
                 />
+                {usernameError && <p className="text-red-500 mt-1 text-sm">{usernameError}</p>}
               </div>
               <div className="mb-4">
                 <Label
@@ -79,6 +119,7 @@ const Register = () => {
                   className="text-gray-700 w-full mt-2"
                   required
                 />
+                {emailError && <p className="text-red-500 mt-1 text-sm">{emailError}</p>}
               </div>
               <div className="mb-4">
                 <Label
@@ -94,6 +135,7 @@ const Register = () => {
                   className="text-gray-700 w-full mt-2"
                   required
                 />
+                {passwordError && <p className="text-red-500 mt-1 text-sm">{passwordError}</p>}
               </div>
               <div className="mb-4">
                 <Label
@@ -109,18 +151,17 @@ const Register = () => {
                   className="text-gray-700 w-full mt-2"
                   required
                 />
+                {confirmPasswordError && <p className="text-red-500 mt-1 text-sm">{confirmPasswordError}</p>}
               </div>
               <button
                 type="submit"
-                className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
+                className={`w-full p-2 rounded ${loading ? 'bg-gray-400' : 'bg-blue-500 text-white hover:bg-blue-600'}`}
+                disabled={loading} // Vô hiệu hóa nút khi đang loading
               >
-                Đăng ký
+                {loading ? 'Đang đăng ký...' : 'Đăng ký'}
               </button>
-              {errorMessage && (
-                <p className="text-red-500 mt-2">{errorMessage}</p>
-              )}
               {successMessage && (
-                <p className="text-green-500 mt-2">{successMessage}</p>
+                <p className="text-green-500 mt-2 text-base">{successMessage}</p>
               )}
             </form>
             <div className="flex justify-between mt-4 text-sm text-blue-500">
