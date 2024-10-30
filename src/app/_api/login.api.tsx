@@ -1,23 +1,106 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import axios, { AxiosError } from 'axios';
+import Message from "../message";
 
-// Một ví dụ về dữ liệu tài khoản mặc định để test
-const DEFAULT_USER = {
-  username: 'admin',
-  password: 'admin123',
+// Tạo instance axios
+const api = axios.create({
+  baseURL: 'http://localhost:3000/api',
+  timeout: 5000,
+});
+
+//======= Check Username =======//
+const checkUsername = async (username: string) => {
+  try {
+    const response = await api.post('/check-username', { username });
+    const result = response.data;
+
+    if (!result.success) {
+      throw new Error(result.message);
+    }
+
+    return true; // Username exists
+  } catch (error: any) {
+    if (error instanceof AxiosError) {
+      throw new Error(error?.response?.data?.message || "Username check failed.");
+    } else {
+      console.error(error);
+      throw new Error(Message.sys.unknownError);
+    }
+  }
 };
 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method === 'POST') {
-    const { username, password } = req.body;
+//======= Login =======//
+const loginUser = async (data: { username: string; password: string }) => {
+  try {
+    const response = await api.post('/login', data);
+    const result = response.data;
 
-    // Kiểm tra thông tin đăng nhập
-    if (username === DEFAULT_USER.username && password === DEFAULT_USER.password) {
-      return res.status(200).json({ message: 'Login successful', token: 'fake-jwt-token' });
-    } else {
-      return res.status(401).json({ message: 'Invalid username or password' });
+    if (!result.success) {
+      throw new Error(result.message); // Nếu không thành công, ném lỗi với thông điệp
     }
-  } else {
-    res.setHeader('Allow', ['POST']);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
+
+    const user = {
+      id: result.data.id,
+      username: result.data.username,
+      email: result.data.email,
+      token: result.data.token,
+    };
+
+    return user;
+  } catch (error: any) {
+    if (error instanceof AxiosError) {
+      throw new Error(error?.response?.data?.message || "Lỗi đăng nhập."); // Thêm thông điệp mặc định
+    } else {
+      console.error(error);
+      throw new Error(Message.sys.unknownError);
+    }
   }
-}
+};
+
+
+//======= Register =======//
+const registerUser = async (data: { username: string; email: string; password: string; confirmPassword: string }) => {
+  try {
+    if (data.password !== data.confirmPassword) {
+      throw new Error(Message.auth.passwordNotMatch);
+    }
+
+    // Kiểm tra tên đăng nhập trước khi đăng ký
+    await checkUsername(data.username);
+
+    // Thêm giá trị mặc định cho role_id, status, và avatar
+    const userPayload = {
+      ...data,
+      role_id: 2,          // Quyền của người dùng mặc định
+      status: true,        // Trạng thái mặc định là active
+      avatar: 'default.jpg', // Đường dẫn avatar mặc định
+    };
+
+    const response = await api.post('/register', userPayload);
+    const result = response.data;
+
+    if (!result.success) {
+      throw new Error(result.message);
+    }
+
+    // Nếu thành công, trả về dữ liệu người dùng đã đăng ký
+    const newUser = {
+      id: result.data.id,
+      username: result.data.username,
+      email: result.data.email,
+      role_id: result.data.role_id,
+      status: result.data.status,
+      created_at: result.data.created_at,
+    };
+
+    return newUser;
+  } catch (error: any) {
+    if (error instanceof AxiosError) {
+      throw new Error(error?.response?.data?.message);
+    } else {
+      console.error(error);
+      throw new Error(Message.sys.unknownError);
+    }
+  }
+};
+
+export { loginUser, registerUser, checkUsername };
