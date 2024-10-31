@@ -7,7 +7,17 @@ interface IUser {
   status: boolean
   created_at: string
 }
-
+interface IChapter {
+  id: number
+  order: number
+  name: string
+  status: string
+  views: number
+  reviews: number
+  comments: number
+  create_at: string
+  published_at: string
+}
 interface IResponse {
   status: number
   success: boolean

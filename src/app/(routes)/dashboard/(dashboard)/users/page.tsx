@@ -64,7 +64,7 @@ const UserPage = () => {
         }
       } catch (err) {
         console.log(err)
-        // toast.error(MESSAGE.sys.fetchError)
+        toast.error(MESSAGE.sys.fetchError)
       }
       //  finally {
       //   setLoading(false)
@@ -169,7 +169,7 @@ const UserPage = () => {
 
   //================= Render component ======================//
   return (
-    <div className="">
+    <>
       {/* header */}
       <Header handleSearch={handleSearch}></Header>
 
@@ -243,7 +243,7 @@ const UserPage = () => {
         openDModal={openDModal}
         closeDModal={closeDModal}
       ></UserTable>
-      <div className="flex overflow-x-auto sm:justify-center">
+      <div className="flex overflow-x-auto justify-center">
         <Pagination
           currentPage={currentPage}
           totalPages={totalPages}
@@ -251,7 +251,7 @@ const UserPage = () => {
           className="mt-8"
         />
       </div>
-    </div>
+    </>
   )
 }
 

@@ -1,7 +1,6 @@
 'use client'
 import { Button, Checkbox, Label, TextInput } from 'flowbite-react'
 import Link from 'next/link'
-import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { HiMail } from 'react-icons/hi'
 import { MdOutlineLockPerson } from 'react-icons/md'
@@ -19,7 +18,6 @@ interface ILoginAdminProps {
 }
 export default function LoginAdminPage(prop: ILoginAdminProps) {
   //================= Declares vars, hooks ==============//
-  const [email, setEmail] = useState('')
   const {
     getValues,
     setValue,
@@ -29,13 +27,15 @@ export default function LoginAdminPage(prop: ILoginAdminProps) {
     handleSubmit,
   } = useForm<ILoginForm>()
   //=================Handle function ====================//
+  /**
+   *
+   * @param data
+   */
   const onSubmit = (data: ILoginForm) => {
     console.log(data)
     // prop.onSubmit(data) // Gọi hàm handleSubmit được truyền từ props với dữ liệu form
   }
-  /**
-   * OnCloseModal: Close login modal
-   */
+  //=================Render page=========================//
   return (
     <div className="flex justify-center">
       <form

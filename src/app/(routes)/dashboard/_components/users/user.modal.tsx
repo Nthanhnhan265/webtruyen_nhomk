@@ -104,7 +104,7 @@ function UserModal(prop: IModalProps) {
           prop.handleSubmit(data, prop.user?.id)
         })}
       >
-        <Modal.Body className="grid grid-cols-2 gap-4">
+        <Modal.Body className="md:grid grid-cols-2 gap-4">
           <div className="col-span-1 space-y-4">
             {/* Username Field */}
             <div>

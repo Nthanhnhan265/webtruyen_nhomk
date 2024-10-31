@@ -40,6 +40,9 @@ const MESSAGE = {
     sizeError: 'Vui lòng chọn ảnh có kích thước hợp lệ (tối đa 5MB).',
     uploadFail: 'Tải lên ảnh bìa thất bại, vui lòng thử lại sau.',
   },
+  chapter: {
+    confirmDelete: 'Bạn có muốn xóa chương này không',
+  },
 }
 
 export default MESSAGE

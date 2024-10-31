@@ -30,10 +30,10 @@ export default function UserTable(props: Iprops) {
   }
 
   return (
-    <>
+    <div className="overflow-x-auto w-full">
       <table
         style={{ borderCollapse: 'separate', borderSpacing: '0 3px' }}
-        className="border-separate min-w-full "
+        className=" border-separate min-w-full "
       >
         <thead>
           <tr className="bg-white">
@@ -43,7 +43,7 @@ export default function UserTable(props: Iprops) {
             <th className="py-4 px-2 text-sm">{LABEL.user.emailLabel}</th>
             <th className="py-4 px-2 text-sm">{LABEL.user.roleLabel}</th>
             <th className="py-4 px-2 text-sm">{LABEL.user.statusLabel}</th>
-            <th className="py-4 px-2 text-sm">{LABEL.user.createdAtLabel}</th>
+            <th className="py-4 px-2 text-sm">{LABEL.sys.createdAtLabel}</th>
             <th className="py-4 px-2 text-sm">{LABEL.sys.actionLabel}</th>
           </tr>
         </thead>
@@ -111,6 +111,6 @@ export default function UserTable(props: Iprops) {
           {MESSAGE.sys.noRecord}
         </div>
       ) : null}
-    </>
+    </div>
   )
 }

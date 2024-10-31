@@ -14,6 +14,9 @@ const config: Config = {
         background: 'var(--background)',
         foreground: 'var(--foreground)',
       },
+      lineClamp: {
+        10: '10',
+      },
     },
   },
   plugins: [flowbite.plugin()],
