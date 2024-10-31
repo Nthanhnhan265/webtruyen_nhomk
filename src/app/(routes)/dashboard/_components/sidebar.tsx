@@ -31,16 +31,16 @@ const Sidebar = () => {
             className={`${CENTER}`}
           >
             <LuUserCircle2 />
-            tác giả
+            Tác giả
           </Link>
         </li>
         <li className={`ps-8`}>
           <Link
-            href={'/dashboard/authors'}
+            href={'/dashboard/stories'}
             className={`${CENTER}`}
           >
             <LuUserCircle2 />
-            tác giả
+            Truyện
           </Link>
         </li>
         <li className={`ps-8`}>
