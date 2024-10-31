@@ -5,77 +5,57 @@ import Image from "next/image";
 import Navbar from "../../../components/navbar";
 import Message from "../../message";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { Button, Label, TextInput } from "flowbite-react";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { Label, TextInput } from "flowbite-react";
+
+// Định nghĩa kiểu cho dữ liệu biểu mẫu
+interface FormData {
+  username: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+}
 
 const Register = () => {
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-
-  // Trạng thái lỗi riêng cho từng trường
-  const [usernameError, setUsernameError] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-  const [confirmPasswordError, setConfirmPasswordError] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
-  const [loading, setLoading] = useState(false); // Trạng thái loading
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors, isSubmitting },
+    setError,
+  } = useForm<FormData>(); // Sử dụng FormData làm kiểu cho useForm
   const router = useRouter();
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setUsernameError("");
-    setEmailError("");
-    setPasswordError("");
-    setConfirmPasswordError("");
-
-    // Kiểm tra tính hợp lệ của mật khẩu
-    if (password !== confirmPassword) {
-      setConfirmPasswordError(Message.auth.passwordNotMatch);
-      setLoading(false); // Kết thúc trạng thái loading
-      return;
-    }
-
+  const password = watch("password");
+  // Định nghĩa hàm onSubmit với kiểu SubmitHandler của FormData
+  const onSubmit: SubmitHandler<FormData> = async (data) => {
     try {
-      // Kiểm tra tính duy nhất của username
-      
-
-      
-
-      // Tiến hành đăng ký
-      const newUserResponse = await axios.post("http://localhost:3000/api/register", {
-        username,
-        email,
-        password,
-        confirmPassword,
-      });
+      const newUserResponse = await axios.post(
+        "http://localhost:3000/api/register",
+        data
+      );
 
       if (newUserResponse.status === 201) {
-        setSuccessMessage(Message.auth.createSusses);
         setTimeout(() => {
-          router.push("/login"); // Chuyển hướng đến trang đăng nhập sau khi đăng ký thành công
+          router.push("/login");
         }, 2000);
       }
     } catch (error) {
       if (error instanceof AxiosError && error.response) {
         const errorMsg = error.response.data.message;
-
-        if (errorMsg.includes("Tên đăng nhập đã tồn tại")) {
-          setUsernameError(Message.auth.nameExists);
+        if (errorMsg.includes("Tên đăng nhập không được quá 50 ký tự.")) {
+          setError("username", {
+            message: "Tên đăng nhập không được quá 50 ký tự.",
+          });
+        } else if (errorMsg.includes("Tên đăng nhập đã tồn tại")) {
+          setError("username", { message: Message.auth.nameExists });
         } else if (errorMsg.includes("Email đã tồn tại")) {
-          setEmailError(Message.auth.emailExists);
-        } else if (errorMsg.includes("Mật khẩu không chính xác")) {
-          setPasswordError("Mật khẩu không chính xác");
+          setError("email", { message: Message.auth.emailExists });
         } else {
-          setUsernameError("Đăng ký thất bại, vui lòng kiểm tra lại thông tin.");
+          setError("username", {
+            message: "Đăng ký thất bại, vui lòng kiểm tra lại thông tin.",
+          });
         }
-      } else {
-        setUsernameError("Đăng ký thất bại, vui lòng kiểm tra lại thông tin.");
       }
-    } finally {
-      setLoading(false); // Kết thúc trạng thái loading
     }
   };
 
@@ -88,7 +68,7 @@ const Register = () => {
             <h1 className="text-gray-700 text-2xl font-bold mb-6 text-center">
               Đăng ký
             </h1>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit(onSubmit)}>
               <div className="mb-4">
                 <Label
                   htmlFor="username"
@@ -98,12 +78,20 @@ const Register = () => {
                 <TextInput
                   id="username"
                   type="text"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  {...register("username", {
+                    required: "Tên đăng nhập là bắt buộc",
+                    maxLength: {
+                      value: 50,
+                      message: "Tên đăng nhập không được quá 50 ký tự",
+                    },
+                  })}
                   className="text-gray-700 w-full mt-2"
-                  required
                 />
-                {usernameError && <p className="text-red-500 mt-1 text-sm">{usernameError}</p>}
+                {errors.username && (
+                  <p className="text-red-500 mt-1 text-sm">
+                    {errors.username.message}
+                  </p>
+                )}
               </div>
               <div className="mb-4">
                 <Label
@@ -114,12 +102,16 @@ const Register = () => {
                 <TextInput
                   id="email"
                   type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  {...register("email", { required: "Email là bắt buộc",
+                    maxLength: { value: 50, message: "Email không được quá 50 ký tự" }
+                   })}
                   className="text-gray-700 w-full mt-2"
-                  required
                 />
-                {emailError && <p className="text-red-500 mt-1 text-sm">{emailError}</p>}
+                {errors.email && (
+                  <p className="text-red-500 mt-1 text-sm">
+                    {errors.email.message}
+                  </p>
+                )}
               </div>
               <div className="mb-4">
                 <Label
@@ -130,12 +122,25 @@ const Register = () => {
                 <TextInput
                   id="password"
                   type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  {...register("password", {
+                    required: "Mật khẩu là bắt buộc",
+                    maxLength: {
+                      value: 50,
+                      message: "Mật khẩu không được quá 50 ký tự",
+                    },
+                    pattern: {
+                      value:
+                        /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/,
+                      message: "Mật khẩu phải có chữ hoa, số, ký tự đặc biệt",
+                    },
+                  })}
                   className="text-gray-700 w-full mt-2"
-                  required
                 />
-                {passwordError && <p className="text-red-500 mt-1 text-sm">{passwordError}</p>}
+                {errors.password && (
+                  <p className="text-red-500 mt-1 text-sm">
+                    {errors.password.message}
+                  </p>
+                )}
               </div>
               <div className="mb-4">
                 <Label
@@ -146,23 +151,30 @@ const Register = () => {
                 <TextInput
                   id="confirmPassword"
                   type="password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  {...register("confirmPassword", {
+                    required: "Xác nhận mật khẩu là bắt buộc",
+                    validate: (value) =>
+                      value === password || "Mật khẩu xác nhận không khớp.",
+                  })}
                   className="text-gray-700 w-full mt-2"
-                  required
                 />
-                {confirmPasswordError && <p className="text-red-500 mt-1 text-sm">{confirmPasswordError}</p>}
+                {errors.confirmPassword && (
+                  <p className="text-red-500 mt-1 text-sm">
+                    {errors.confirmPassword.message}
+                  </p>
+                )}
               </div>
               <button
                 type="submit"
-                className={`w-full p-2 rounded ${loading ? 'bg-gray-400' : 'bg-blue-500 text-white hover:bg-blue-600'}`}
-                disabled={loading} // Vô hiệu hóa nút khi đang loading
+                className={`w-full p-2 rounded ${
+                  isSubmitting
+                    ? "bg-gray-400"
+                    : "bg-blue-500 text-white hover:bg-blue-600"
+                }`}
+                disabled={isSubmitting}
               >
-                {loading ? 'Đang đăng ký...' : 'Đăng ký'}
+                {isSubmitting ? "Đang đăng ký..." : "Đăng ký"}
               </button>
-              {successMessage && (
-                <p className="text-green-500 mt-2 text-base">{successMessage}</p>
-              )}
             </form>
             <div className="flex justify-between mt-4 text-sm text-blue-500">
               <a href="/login">Đăng nhập</a>

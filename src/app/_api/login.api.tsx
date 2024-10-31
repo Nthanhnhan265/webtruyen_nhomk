@@ -80,14 +80,12 @@ const loginUser = async (data: { username: string; password: string }) => {
 //======= Register =======//
 const registerUser = async (data: { username: string; email: string; password: string; confirmPassword: string }) => {
   try {
+
     await checkUsername(data.username);
     await checkEmail(data.email);
     if (data.password !== data.confirmPassword) {
       throw new Error(Message.auth.passwordNotMatch);
     }
-
-    // Kiểm tra tính duy nhất của username và email trước khi đăng ký
-    
 
     // Thêm giá trị mặc định cho role_id, status, và avatar
     const userPayload = {

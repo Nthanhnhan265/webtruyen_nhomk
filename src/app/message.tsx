@@ -13,6 +13,7 @@ const MESSAGE = {
       passwordNotMatch: 'Mật khẩu không khớp.',
       emailExists: 'Email đã tồn tại',
       nameExists: 'Tên đăng nhập đã tồn tại',
+      passwordConditions: 'Mật khẩu phải có ký tự đặc biệt, chữ in hoa và số.'
     },
   }
   

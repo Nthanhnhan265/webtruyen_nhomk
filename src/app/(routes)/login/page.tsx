@@ -6,32 +6,31 @@ import Navbar from "../../../components/navbar";
 import Message from "../../message";
 import { FaGoogle } from "react-icons/fa";
 import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
-import { Button, Checkbox, Label, TextInput } from "flowbite-react";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { Checkbox, Label, TextInput } from "flowbite-react";
+
+// Định nghĩa kiểu cho dữ liệu biểu mẫu
+interface FormData {
+  username: string;
+  password: string;
+  rememberMe: boolean;
+}
 
 const Login = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [rememberMe, setRememberMe] = useState(false);
-  const [usernameError, setUsernameError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    setError,
+  } = useForm<FormData>(); // Sử dụng FormData làm kiểu cho useForm
   const router = useRouter();
 
-  useEffect(() => {
-    const savedUsername = localStorage.getItem("username");
-    if (savedUsername) {
-      setUsername(savedUsername);
-      setRememberMe(true);
-    }
-  }, []);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setUsernameError("");
-    setPasswordError("");
-
+  // Định nghĩa hàm onSubmit với kiểu SubmitHandler của FormData
+  const onSubmit: SubmitHandler<FormData> = async ({
+    username,
+    password,
+    rememberMe,
+  }) => {
     try {
       const response = await axios.post("http://localhost:3000/api/login", {
         username,
@@ -57,17 +56,15 @@ const Login = () => {
         const errorMsg = error.response.data.message;
 
         if (errorMsg === "Tên đăng nhập không tồn tại") {
-          setUsernameError(Message.auth.nameError);
+          setError("username", { message: Message.auth.nameError });
         } else if (errorMsg === "Mật khẩu không chính xác") {
-          setPasswordError("Mật khẩu không chính xác");
+          setError("password", { message: "Mật khẩu không chính xác" });
         } else {
-          setUsernameError(
-            "Đăng nhập thất bại, vui lòng kiểm tra lại thông tin."
-          );
+          setError("username", {
+            message: "Đăng nhập thất bại, vui lòng kiểm tra lại thông tin.",
+          });
         }
       }
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -81,7 +78,7 @@ const Login = () => {
             <h1 className="text-gray-700 text-2xl font-bold mb-6 text-center">
               Đăng nhập
             </h1>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit(onSubmit)}>
               <div className="mb-4">
                 <Label
                   htmlFor="username"
@@ -91,13 +88,19 @@ const Login = () => {
                 <TextInput
                   id="username"
                   type="text"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  className="text-gray-700 w-full  "
-                  required
+                  {...register("username", {
+                    required: "Tên đăng nhập là bắt buộc",
+                    maxLength: {
+                      value: 50,
+                      message: "Tên đăng nhập không được quá 50 ký tự",
+                    },
+                  })}
+                  className="text-gray-700 w-full"
                 />
-                {usernameError && (
-                  <p className="text-red-500">{usernameError}</p>
+                {errors.username && (
+                  <p className="text-red-500 mt-1 text-sm">
+                    {errors.username.message}
+                  </p>
                 )}
               </div>
               <div className="mb-4">
@@ -109,31 +112,40 @@ const Login = () => {
                 <TextInput
                   id="password"
                   type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  {...register("password", {
+                    required: "Mật khẩu là bắt buộc",
+                    maxLength: {
+                      value: 50,
+                      message: "Mật khẩu không được quá 50 ký tự",
+                    },
+                    
+                  })}
                   className="text-gray-700 w-full"
-                  required
                 />
-                {passwordError && (
-                  <p className="text-red-500">{passwordError}</p>
+                {errors.password && (
+                  <p className="text-red-500 mt-1 text-sm">
+                    {errors.password.message}
+                  </p>
                 )}
               </div>
-              <div className="text-gray-700 flex items-center gap-2 mb-4 ">
+              <div className="text-gray-700 flex items-center gap-2 mb-4">
                 <Checkbox
                   id="rememberMe"
-                  checked={rememberMe}
-                  onChange={(e) => setRememberMe(e.target.checked)}
-                  className=" checked:bg-blue-500 focus-visible:outline-none"
+                  {...register("rememberMe")}
+                  className="checked:bg-blue-500 focus-visible:outline-none"
                 />
                 <Label htmlFor="rememberMe">Ghi nhớ mật khẩu</Label>
               </div>
-
               <button
                 type="submit"
-                className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
-                disabled={loading} // Vô hiệu hóa nút khi đang loading
+                className={`w-full p-2 rounded ${
+                  isSubmitting
+                    ? "bg-gray-400"
+                    : "bg-blue-500 text-white hover:bg-blue-600"
+                }`}
+                disabled={isSubmitting}
               >
-                {loading ? "Đang đăng nhập..." : "Đăng nhập"}
+                {isSubmitting ? "Đang đăng nhập..." : "Đăng nhập"}
               </button>
             </form>
             <div className="flex justify-between mt-4 text-sm text-blue-500">
