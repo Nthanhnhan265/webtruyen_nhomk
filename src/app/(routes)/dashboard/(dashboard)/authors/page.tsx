@@ -2,6 +2,7 @@
 import { deleteAuthor, getAuthors } from '@/app/_api/authorService'
 import { useEffect, useState } from 'react'
 import { Pagination } from "flowbite-react";
+import { Button } from 'flowbite-react'
 
 import { FaEdit, FaPlus, FaSearch, FaTrash } from 'react-icons/fa'
 import AuthorModal from '../../_components/author/AuthorModal'
@@ -87,19 +88,16 @@ const AuthorPage = () => {
   if (loading) return <p>Đang tải dữ liệu...</p>
   if (error) return <p>{error}</p>
 
-  return (<>
-
-
-    <div className="flex flex-col h-screen ">
-      <div className="flex justify-between mb-2">
-        <div className="flex items-center ">
-          <Header handleSearch={handleSearch}></Header>
-
+  return (
+    <div className="flex flex-col h-screen">
+      <div className="flex justify-between mb-2 p-4">
+        <div className="flex items-center">
+          <Header handleSearch={handleSearch} />
           <button
             className="text-black p-2 rounded ml-2 mb-2"
-            onClick={() => search()} // Gọi hàm tìm kiếm khi nhấn nút
+            onClick={() => search()}
           >
-            <FaSearch className="mr-2" /> {/* Biểu tượng tìm kiếm */}
+            <FaSearch className="mr-2" />
           </button>
         </div>
         <div className="flex items-center">
@@ -112,22 +110,19 @@ const AuthorPage = () => {
         </div>
       </div>
 
-      <div className="  flex justify-between items-center">
+      <div className="flex justify-between items-center px-4">
         <h1 className="text-2xl font-bold">Tác giả</h1>
-        <div className="flex space-x-4">
-
-          <button
-            className="bg-green-500 text-white p-2 rounded flex items-center h-10"
-            onClick={() => {
-              setSelectedAuthor(null) // Reset selected author
-              setShowCreateModal(true) // Open Create Author Modal
-            }}
-          >
-            <FaPlus className="mr-2" /> Tạo mới
-          </button>
-        </div>
+        <Button
+          color="success"
+          onClick={() => {
+            setSelectedAuthor(null);
+            setShowCreateModal(true);
+          }}
+        >
+          + Tạo mới
+        </Button>
       </div>
-      <div className=' mb-4'>
+      <div className="mb-4 px-4">
         <select
           className="p-2 border border-gray-300 rounded"
           value={sortOrder}
@@ -135,55 +130,42 @@ const AuthorPage = () => {
         >
           <option value="asc">Sắp xếp theo tên A-Z</option>
           <option value="desc">Sắp xếp theo tên Z-A</option>
-        </select></div>
+        </select>
+      </div>
 
-
-      <div className="overflow-x-auto flex-grow">
-        <table className="min-w-full bg-white">
+      <div className="flex-grow px-4 overflow-y-auto">
+        <table className="min-w-full border-separate border-spacing-y-1">
           <thead>
-            <tr className="bg-gray-200">
-              <th className="py-2 border">ID</th>
-              <th className="py-2 border">Tên tác giả</th>
-              <th className="py-2 border">Mô tả</th>
-              <th className="py-2 border">URL</th>
-              <th className="py-2 border">Hành động</th>
+            <tr className="bg-white">
+              <th className="py-4 px-3">ID</th>
+              <th className="py-2">Tên tác giả</th>
+              <th className="py-2">Mô tả</th>
+              <th className="py-2">URL</th>
+              <th className="py-2">Hành động</th>
             </tr>
           </thead>
           <tbody>
             {authors.length === 0 ? (
               <tr>
-                <td
-                  colSpan={5}
-                  className="py-1 text-center"
-                >
+                <td colSpan={5} className="py-4 text-center">
                   Không tìm thấy tác giả nào.
                 </td>
               </tr>
             ) : (
               authors.map((author) => (
-                <tr key={author.id}>
-                  <td className="border py-1 text-center">{author.id}</td>
-                  <td className="border py-1">{author.author_name}</td>
-                  <td className="border py-1">{author.description}</td>
-                  <td className="border py-1">{author.slug}</td>
-                  <td className="border py-1 text-center">
+                <tr className="bg-white" key={author.id}>
+                  <td className="py-2 px-1 text-center">{author.id}</td>
+                  <td className="py-2 px-1 text-center">{author.author_name}</td>
+                  <td className="py-2 px-1 text-center">{author.description}</td>
+                  <td className="py-2 px-1 text-center">{author.slug}</td>
+                  <td className="py-2 px-1 text-center">
                     <div className="flex justify-center space-x-1">
-                      {' '}
-                      {/* Centering buttons */}
-                      <button
-                        className="bg-yellow-500 text-white px-3 py-1 rounded flex items-center h-8" // Increased padding
-                        onClick={() => handleEdit(author)}
-                      >
-                        <FaEdit className="mr-1 text-xs" />
+                      <Button color="warning" onClick={() => handleEdit(author)}>
                         Sửa
-                      </button>
-                      <button
-                        className="bg-red-500 text-white px-3 py-1 rounded flex items-center h-8" // Increased padding
-                        onClick={() => handleDelete(author.id)}
-                      >
-                        <FaTrash className="mr-1 text-xs" />
+                      </Button>
+                      <Button color="failure" onClick={() => handleDelete(author.id)}>
                         Xóa
-                      </button>
+                      </Button>
                     </div>
                   </td>
                 </tr>
@@ -191,9 +173,9 @@ const AuthorPage = () => {
             )}
           </tbody>
         </table>
-      </div>
-      <div className="flex overflow-x-auto sm:justify-center">
-        <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={onPageChange} />
+        <div className="flex justify-center mt-4">
+          <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={onPageChange} />
+        </div>
       </div>
 
       <UpdateAuthorModal
@@ -203,13 +185,12 @@ const AuthorPage = () => {
         initialData={selectedAuthor}
       />
       <AuthorModal
-        show={showCreateModal} // Show Create Author Modal
-        onClose={() => setShowCreateModal(false)} // Close Create Author Modal
-        onSuccess={handleSuccess} // Handle success after creation
+        show={showCreateModal}
+        onClose={() => setShowCreateModal(false)}
+        onSuccess={handleSuccess}
       />
     </div>
-  </>
-  )
+  );
 }
 
-export default AuthorPage
+export default AuthorPage;

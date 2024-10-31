@@ -1,19 +1,19 @@
-// StoryModal.js
-
 import React, { useState } from 'react';
+import { TagInput } from 'reactjs-tag-input'; // Import gói TagInput
 
 const StoryModal = ({ show, onClose, onSuccess }) => {
     if (!show) return null;
 
     // Define state variables for each story attribute
+    const [tags, setTags] = useState([]); // State cho tags
     const [status, setStatus] = useState('');
     const [authorId, setAuthorId] = useState('');
     const [description, setDescription] = useState('');
     const [storyName, setStoryName] = useState('');
     const [totalChapters, setTotalChapters] = useState(0);
     const [views, setViews] = useState(0);
-    const [cover, setCover] = useState(null); // Modified for file upload
-    const [coverPreview, setCoverPreview] = useState(null); // For previewing the uploaded image
+    const [cover, setCover] = useState(null);
+    const [coverPreview, setCoverPreview] = useState(null);
     const [keywords, setKeywords] = useState('');
     const [slug, setSlug] = useState('');
 
@@ -22,8 +22,6 @@ const StoryModal = ({ show, onClose, onSuccess }) => {
         const file = e.target.files[0];
         if (file) {
             setCover(file);
-
-            // Generate a preview URL for the uploaded image
             const previewUrl = URL.createObjectURL(file);
             setCoverPreview(previewUrl);
         }
@@ -39,12 +37,18 @@ const StoryModal = ({ show, onClose, onSuccess }) => {
             story_name: storyName,
             total_chapters: totalChapters,
             views,
-            cover, // This will contain the uploaded file
+            cover,
             keywords,
             slug,
+            tags // Include tags in the newStory object
         };
         onSuccess(newStory);
         onClose();
+    };
+
+    // On tags changed
+    const onTagsChanged = (newTags) => {
+        setTags(newTags); // Cập nhật state tags
     };
 
     return (
@@ -65,7 +69,7 @@ const StoryModal = ({ show, onClose, onSuccess }) => {
                                 className="w-full border p-2 rounded"
                                 value={storyName}
                                 onChange={(e) => setStoryName(e.target.value)}
-                                required
+
                             />
                         </div>
                         <div>
@@ -75,7 +79,7 @@ const StoryModal = ({ show, onClose, onSuccess }) => {
                                 className="w-full border p-2 rounded"
                                 value={authorId}
                                 onChange={(e) => setAuthorId(e.target.value)}
-                                required
+
                             />
                         </div>
                         <div>
@@ -97,10 +101,10 @@ const StoryModal = ({ show, onClose, onSuccess }) => {
                                 className="w-full border p-2 rounded"
                                 value={status}
                                 onChange={(e) => setStatus(e.target.value)}
-                                required
+
                             >
                                 <option value="">Chọn trạng thái</option>
-                                <option value="ongoing">Đang tiến hành</option>
+                                <option value="ongoing">Bản nháp</option>
                                 <option value="completed">Hoàn thành</option>
                             </select>
                         </div>
@@ -113,7 +117,6 @@ const StoryModal = ({ show, onClose, onSuccess }) => {
                                 onChange={(e) => setKeywords(e.target.value)}
                             />
                         </div>
-
                     </div>
                     <div className="mb-4">
                         <label className="block text-sm font-medium">Mô Tả:</label>
@@ -126,25 +129,10 @@ const StoryModal = ({ show, onClose, onSuccess }) => {
                     <div className="grid grid-cols-2 gap-4 mb-4">
                         <div>
                             <label className="block text-sm font-medium">Tổng Số Chương:</label>
-                            <input
-                                type="number"
-                                className="w-full border p-2 rounded"
-                                value={totalChapters}
-                                onChange={(e) => setTotalChapters(e.target.value)}
-                            />
+                            <TagInput className="w-full border p-2 rounded" tags={tags} onTagsChanged={onTagsChanged} /> {/* Thay thế TagInput */}
                         </div>
-                        {/* <div>
-                            <label className="block text-sm font-medium">Lượt Xem:</label>
-                            <input
-                                type="number"
-                                className="w-full border p-2 rounded"
-                                value={views}
-                                onChange={(e) => setViews(e.target.value)}
-                            />
-                        </div> */}
                     </div>
                     <div className="grid grid-cols-2 gap-4 mb-4">
-
                         <div>
                             <label className="block text-sm font-medium">Slug:</label>
                             <input
@@ -152,7 +140,7 @@ const StoryModal = ({ show, onClose, onSuccess }) => {
                                 className="w-full border p-2 rounded"
                                 value={slug}
                                 onChange={(e) => setSlug(e.target.value)}
-                                required
+
                             />
                         </div>
                     </div>

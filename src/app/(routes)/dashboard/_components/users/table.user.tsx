@@ -50,59 +50,59 @@ export default function UserTable(props: Iprops) {
         <tbody>
           {props.users
             ? props.users.map((user) => (
-                <tr
-                  className="bg-white"
-                  key={user.id}
-                >
-                  <td className="py-2 px-3  text-center text-sm">{user.id}</td>
-                  <td className="py-2 px-2 flex justify-center items-center">
-                    {imageErrors[user.id] ? (
-                      <div className="rounded-full bg-black/5 w-7 h-7 flex justify-center items-center leading-7">
-                        <CiImageOff />
-                      </div>
-                    ) : (
-                      <Image
-                        src={`http://localhost/${user.avatar}`}
-                        alt="user's image"
-                        width={50}
-                        height={50}
-                        onError={() => handleImageError(user.id)} // Call the error handler
-                        style={{ borderRadius: '50%' }}
-                      />
-                    )}
-                  </td>
-                  {/* whitespace-nowrap overflow-hidden text-ellipsis max-w-xs */}
-                  <td className="py-2 px-2 text-sm text-center">
-                    {user.username}
-                  </td>
-                  <td className="py-2 px-2 text-sm text-center">
-                    {user.email}
-                  </td>
-                  <td className="py-2 px-2 text-sm text-center">
-                    {user.role_id}
-                  </td>
-                  <td className="py-2 px-2 text-sm text-center">
-                    {user.status ? 'Hoạt động' : 'Khóa'}
-                  </td>
-                  <td className="py-2 px-2 text-sm text-center">
-                    {formatDate(user.created_at)}
-                  </td>
-                  <td className="py-2 px-2 text-sm text-center flex justify-center items-center gap-2 rounded">
-                    <Button
-                      color="warning"
-                      onClick={() => props.openUModal(user)}
-                    >
-                      {LABEL.sys.edit}
-                    </Button>
-                    <Button
-                      color="failure"
-                      onClick={() => props.openDModal(user.id)}
-                    >
-                      {LABEL.sys.delete}
-                    </Button>
-                  </td>
-                </tr>
-              ))
+              <tr
+                className="bg-white"
+                key={user.id}
+              >
+                <td className="py-2 px-3  text-center text-sm">{user.id}</td>
+                <td className="py-2 px-2 flex justify-center items-center">
+                  {imageErrors[user.id] ? (
+                    <div className="rounded-full bg-black/5 w-7 h-7 flex justify-center items-center leading-7">
+                      <CiImageOff />
+                    </div>
+                  ) : (
+                    <Image
+                      src={`http://localhost/${user.avatar}`}
+                      alt="user's image"
+                      width={50}
+                      height={50}
+                      onError={() => handleImageError(user.id)} // Call the error handler
+                      style={{ borderRadius: '50%' }}
+                    />
+                  )}
+                </td>
+                {/* whitespace-nowrap overflow-hidden text-ellipsis max-w-xs */}
+                <td className="py-2 px-2 text-sm text-center">
+                  {user.username}
+                </td>
+                <td className="py-2 px-2 text-sm text-center">
+                  {user.email}
+                </td>
+                <td className="py-2 px-2 text-sm text-center">
+                  {user.role_id}
+                </td>
+                <td className="py-2 px-2 text-sm text-center">
+                  {user.status ? 'Hoạt động' : 'Khóa'}
+                </td>
+                <td className="py-2 px-2 text-sm text-center">
+                  {formatDate(user.created_at)}
+                </td>
+                <td className="py-2 px-2 text-sm text-center flex justify-center items-center gap-2 rounded">
+                  <Button
+                    color="warning"
+                    onClick={() => props.openUModal(user)}
+                  >
+                    {LABEL.sys.edit}
+                  </Button>
+                  <Button
+                    color="failure"
+                    onClick={() => props.openDModal(user.id)}
+                  >
+                    {LABEL.sys.delete}
+                  </Button>
+                </td>
+              </tr>
+            ))
             : ''}
         </tbody>
       </table>
