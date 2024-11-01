@@ -5,12 +5,13 @@ const api = axios.create({
   timeout: 10000, // Timeout (milliseconds)
 });
 
-export const getChapters = async (page, limit) => {
+export const getChapters = async (page, limit, storyId) => {
   try {
     // Tạo đối tượng params cho truy vấn
     const params = {
       page: page, // Nếu không có, mặc định là trang 1
-      limit: limit, // Nếu không có, mặc định lấy 10 chương
+      limit: limit,
+      storyId: storyId, // Nếu không có, mặc định lấy 10 chương
     };
 
     // Sử dụng axios để gọi API với params

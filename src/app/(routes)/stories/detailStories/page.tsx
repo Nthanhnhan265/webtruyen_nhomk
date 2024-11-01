@@ -23,8 +23,6 @@ const page = () => {
   const [story, setStory] = useState<Story | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [isDanhSachOpen, setDanhSachOpen] = useState(false);
-  const [isTheLoaiOpen, setTheLoaiOpen] = useState(false);
 
   const [chapters, setChapters] = useState<Chapter[]>([]); // State for chapters
   const [currentPage, setCurrentPage] = useState<number>(1); // State for current page
@@ -44,7 +42,7 @@ const page = () => {
 
     const fetchChapters = async (page: number) => {
       try {
-        const { chapters, totalPages } = await getChapters(page, 20); // Fetch chapters based on page
+        const { chapters, totalPages } = await getChapters(page, 20, 2); // Fetch chapters based on page
         setChapters(chapters);
         setTotalPages(totalPages); // Set total pages
       } catch (_error: unknown) {
