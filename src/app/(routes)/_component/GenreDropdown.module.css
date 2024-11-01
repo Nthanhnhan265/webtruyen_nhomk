@@ -1,0 +1,42 @@
+
+ 
+   .dropdownContainer {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .dropdownButton {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    cursor: pointer;
+  }
+  
+  .dropdownContent {
+    border-top: orange;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 cột */
+    background-color: white;
+    position: absolute;
+    top: 100%;
+    left: -176px;
+    /* right: 50%; */
+    z-index: 1;
+    width: 500px; /* Độ rộng tổng thể */
+    box-shadow: 0px 8px 16px rgba(0,0,0,0.1);
+    border: 1px solid #ddd;
+  }
+  
+  .genreItem {
+    padding: 10px;
+    text-align: left;
+    text-decoration: none;
+    color: black;
+    border-bottom: 1px solid #ddd;
+    transition: background-color 0.3s;
+  }
+  
+  .genreItem:hover {
+    background-color: #f1f1f1;
+  }
+  
