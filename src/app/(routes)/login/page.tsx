@@ -172,9 +172,4 @@ const Login = () => {
   );
 };
 
-<<<<<<< HEAD
 export default Login;
-=======
-export default LoginPage;
-
->>>>>>> dev-hotfix
