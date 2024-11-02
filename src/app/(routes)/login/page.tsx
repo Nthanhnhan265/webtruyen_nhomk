@@ -160,10 +160,11 @@ const Login = () => {
           {/* Hình ảnh */}
           <div>
             <Image
-              src="/anhnenlogin.png"
+              src="/images/anhnen.jpg"
               alt="Login Background"
-              width={500}
+              width={400}
               height={300}
+              className=""
             />
           </div>
         </div>

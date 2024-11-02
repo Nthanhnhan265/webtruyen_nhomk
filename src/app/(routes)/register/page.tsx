@@ -102,9 +102,13 @@ const Register = () => {
                 <TextInput
                   id="email"
                   type="email"
-                  {...register("email", { required: "Email là bắt buộc",
-                    maxLength: { value: 50, message: "Email không được quá 50 ký tự" }
-                   })}
+                  {...register("email", {
+                    required: "Email là bắt buộc",
+                    maxLength: {
+                      value: 50,
+                      message: "Email không được quá 50 ký tự",
+                    },
+                  })}
                   className="text-gray-700 w-full mt-2"
                 />
                 {errors.email && (
@@ -182,12 +186,7 @@ const Register = () => {
             </div>
           </div>
           <div>
-            <Image
-              src="/anhnenlogin.png"
-              alt="Register Background"
-              width={500}
-              height={300}
-            />
+            <Image src="/images/anhnen.jpg" alt="Register Background" width={400} height={300} />
           </div>
         </div>
       </div>
