@@ -1,4 +1,4 @@
-"use client";
+// "use client";
 import Link from "next/link";
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -24,7 +24,7 @@ const NavBar = () => {
 
   return (
     <nav className="flex justify-between items-center p-4 border-b-2 border-gray-200 bg-white px-[200px]">
-      <div className="flex items-center text-2xl font-bold">
+      <div className="flex items-center text-2xl font-bold -ml-36">
         <Link href="/" className="flex items-center">
           <span className="text-red-500">truyen</span>
           <span className="mx-1">✨</span>

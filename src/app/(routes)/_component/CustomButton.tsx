@@ -2,18 +2,15 @@
 import Link from 'next/link';
 import React from 'react';
 
-const CustomButton = ({ title, link }) => {
+const CustomButton = ({ href , title, text }) => {
   return (
-    <Link href={link}>
-      <div className="relative group">
-        <button className="bg-blue-500 text-black font-bold py-2 px-4 rounded-md transition duration-300 ease-in-out transform hover:bg-blue-600 focus:outline-none">
-          {title}
-        </button>
-        <span className="absolute left-0 -bottom-10 w-full text-center text-xs text-gray-600 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-          {title}
-        </span>
-      </div>
-    </Link>
+    <Link
+    href={href}
+    title={title}
+    className="inline-block px-2 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-700 transition-colors duration-200"
+  >
+    {text}
+  </Link>
   );
 };
 
