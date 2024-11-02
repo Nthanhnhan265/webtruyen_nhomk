@@ -4,7 +4,7 @@ import axios, { AxiosError } from "axios";
 import Image from "next/image";
 import Navbar from "../../../components/navbar";
 import Message from "../../message";
-import { FaGoogle } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
 import { useRouter } from "next/navigation";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Checkbox, Label, TextInput } from "flowbite-react";
@@ -153,7 +153,7 @@ const Login = () => {
               <a href="/register">Đăng ký tài khoản</a>
             </div>
             <button className="w-full flex items-center justify-center mt-4 p-2 border rounded text-gray-700 bg-gray-200">
-              <FaGoogle className="mr-2" />
+              <FcGoogle  className="mr-2" />
               Đăng nhập với Google
             </button>
           </div>
@@ -164,7 +164,6 @@ const Login = () => {
               alt="Login Background"
               width={400}
               height={300}
-              className=""
             />
           </div>
         </div>

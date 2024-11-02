@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { FaSearch } from "react-icons/fa";
+import { Avatar,Dropdown  } from "flowbite-react";
+import { FaListUl } from "react-icons/fa6";
+import { BsClipboard2 } from "react-icons/bs";
 
 const NavBar = () => {
   const [isListOpen, setIsListOpen] = useState(false);
@@ -21,38 +23,68 @@ const NavBar = () => {
       </div>
 
       <ul className="flex space-x-6">
-  <li className="relative group">
-    <button className="hover:text-red-500">DANH SÁCH</button>
-    <ul className="absolute mt-2 p-2 bg-white shadow-md hidden group-hover:block group-focus-within:block z-10">
-      <li className="hover:bg-gray-100">
-        <Link href="/list1" className="block px-4 py-2">
-          List 1
-        </Link>
-      </li>
-      <li className="hover:bg-gray-100">
-        <Link href="/list2" className="block px-4 py-2">
-          List 2
-        </Link>
-      </li>
-    </ul>
-  </li>
-  <li className="relative group">
-    <button className="hover:text-red-500">THỂ LOẠI</button>
-    <ul className="absolute mt-2 p-2 bg-white shadow-md hidden group-hover:block 0">
-      <li className="hover:bg-gray-100">
-        <Link href="/category1" className="block px-4 py-2">
-          Category 1
-        </Link>
-      </li>
-      <li className="hover:bg-gray-100">
-        <Link href="/category2" className="block px-4 py-2">
-          Category 2
-        </Link>
-      </li>
-    </ul>
-  </li>
-</ul>
+        {/* Danh sách */}
+        <li className="relative">
+          <button
+            onClick={toggleList}
+            className="flex items-center hover:text-red-500"
+          >
+            <FaListUl className="mr-1" />
+            DANH SÁCH
+          </button>
+          {isListOpen && (
+            <ul className="absolute mt-2 p-2 bg-white shadow-md">
+              <li>
+                <Link
+                  href="/list1"
+                  className="block px-4 py-2 hover:bg-gray-100"
+                >
+                  List 1
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/list2"
+                  className="block px-4 py-2 hover:bg-gray-100"
+                >
+                  List 2
+                </Link>
+              </li>
+            </ul>
+          )}
+        </li>
 
+        {/* Thể loại */}
+        <li className="relative">
+          <button
+            onClick={toggleCategory}
+            className="flex items-center hover:text-red-500"
+          >
+            <BsClipboard2 className="mr-1" />
+            THỂ LOẠI
+          </button>
+          {isCategoryOpen && (
+            <ul className="absolute mt-2 p-2 bg-white shadow-md">
+              <li>
+                <Link
+                  href="/category1"
+                  className="block px-4 py-2 hover:bg-gray-100"
+                >
+                  Category 1
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/category2"
+                  className="block px-4 py-2 hover:bg-gray-100 whitespace-nowrap"
+                >
+                  Category 2
+                </Link>
+              </li>
+            </ul>
+          )}
+        </li>
+      </ul>
 
       <div className="flex items-center">
         <input
@@ -60,12 +92,20 @@ const NavBar = () => {
           placeholder="Tìm kiếm truyện..."
           className="border border-gray-300 rounded-l-md px-3 py-1 focus:outline-none"
         />
-        <button className="bg-gray-300 px-3 py-1 rounded-r-md">
-          <FontAwesomeIcon icon={faSearch} className="text-gray-700" />
+        <button className="bg-gray-300 px-3 py-2 rounded-r-md border">
+          <FaSearch />
         </button>
       </div>
-
-      <div className="flex items-center space-x-4"></div>
+      <div>
+        <Avatar rounded>
+          <div className="space-y-1 font-medium dark:text-white">
+            <div>Xin chào</div>
+            <div className="text-sm text-gray-500 dark:text-gray-400">
+              username
+            </div>
+          </div>
+        </Avatar>
+      </div>
     </nav>
   );
 };
