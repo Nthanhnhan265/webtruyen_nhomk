@@ -1,4 +1,5 @@
-import { TextInput } from 'flowbite-react'
+'use client'
+import { Avatar, TextInput } from 'flowbite-react'
 import { IoSearchOutline } from 'react-icons/io5'
 import LABEL from '../label'
 interface IHeaderProp {
@@ -18,15 +19,20 @@ export default function Header(prop: IHeaderProp) {
   //==============render components===============//
   return (
     <>
-      <div className="max-w-md mb-6 mt-2">
+      <div className="w-full mb-10 mt-2 flex justify-between">
         <TextInput
           id="text"
           type="text"
+          className="basis-1/2"
           icon={IoSearchOutline}
           onChange={handleChange}
           placeholder={LABEL.sys.searchLabel}
           required
         />
+        <Avatar
+          className="shadow"
+          status="online"
+        ></Avatar>
       </div>
     </>
   )

@@ -7,7 +7,7 @@ const api = axios.create({
 })
 
 //=======Create========//
-const createUser = async (data: IDashboardUserForm) => {
+const createUser = async (data: FormData) => {
   try {
     const response = await api.post('/users', data)
     const result = response.data
@@ -83,7 +83,7 @@ const searchUsers = async (
   }
 }
 //=======Update======//
-const updateUser = async (id: number, data: IDashboardUserForm) => {
+const updateUser = async (id: number, data: FormData) => {
   try {
     const response = await api.patch(`/users/${id}`, data)
     const result = response.data

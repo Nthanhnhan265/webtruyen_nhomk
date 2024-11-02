@@ -2,19 +2,20 @@ import Link from 'next/link'
 import { HiOutlineUsers } from 'react-icons/hi'
 import { LuUserCircle2 } from 'react-icons/lu'
 import LABEL from '../label'
-
 interface Iprop {
   onClickNavbar: (navbar: string) => void
   isActiveNav: string
 }
 const Sidebar = () => {
+  //===================== DECLARE VARIABLE, HOOKS ====================//
   const CENTER = 'flex items-center gap-4 justify-start'
+
+  //===================== RENDER COMPONENTS ===========================//
   return (
     <div className="bg-white text-gray-800 min-h-screen h-full flex flex-col shadow-lg">
       <h2 className="text-xl font-bold p-4 mb-4 border-b text-blue-500 text-center">
         <Link href={'/dashboard'}>{LABEL.sys.appName}</Link>
       </h2>
-
       <ul className="flex flex-col gap-4 opacity-60 pe-4 pt-3 space-y-2 flex-grow">
         <li className={`ps-8`}>
           <Link

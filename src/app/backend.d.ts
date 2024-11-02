@@ -26,7 +26,7 @@ interface IResponse {
   links: any
 }
 interface IDashboardUserForm {
-  avatar: string
+  avatar: FileList
   username: string
   email: string
   password: string

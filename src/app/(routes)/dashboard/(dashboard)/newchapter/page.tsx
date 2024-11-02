@@ -1,7 +1,7 @@
-'use client'
-import { Button, Label, Select, Textarea, TextInput } from 'flowbite-react'
+import { Button, Label, Select, TextInput } from 'flowbite-react'
 import { HiCheck, HiX } from 'react-icons/hi'
 import { IoCaretForwardSharp } from 'react-icons/io5'
+import TextEditor from '../../../../../components/editor/editor'
 import Header from '../../_components/header'
 import LABEL from '../../label'
 
@@ -9,10 +9,11 @@ export default function CreateChapterPage() {
   const STORY_NAME =
     'Xuyên Không, Tôi Trở Thành Quản Lí Vàng Trong Làng Showbiz'
 
+  // return <Editor></Editor>
   return (
     <>
       <Header></Header>
-      <div className="mt-8">
+      <div className="mt-8 pb-4">
         {/* TITLE AND BUTTON */}
         <div className="sm:flex justify-between">
           <h1>
@@ -37,7 +38,7 @@ export default function CreateChapterPage() {
           </div>
         </div>
         {/* FORMS */}
-        <div className="lg:grid grid-cols-2 md:mt-7">
+        <div className="lg:grid grid-cols-2 md:mt-4">
           {/* FIRST COLUMNS  */}
           <div className="col-span-1 flex flex-col gap-4">
             {/* CHAPTER NAME */}
@@ -129,7 +130,7 @@ export default function CreateChapterPage() {
               <div className="mb-2 block">
                 <Label
                   htmlFor="slug"
-                  value="Slug"
+                  value="Slug:"
                 />
               </div>
               <TextInput
@@ -141,7 +142,7 @@ export default function CreateChapterPage() {
           <div className="col-span-2 mt-3">
             {/* CONTENT */}
             <div className="me-5">
-              <div className="mb-2 block">
+              {/* <div className="mb-2 block">
                 <Label
                   htmlFor="content"
                   value={LABEL.chapter.contentLabel + ':'}
@@ -151,7 +152,15 @@ export default function CreateChapterPage() {
                 id="content"
                 required
                 rows={10}
-              />
+              /> */}
+              <div className="mb-2 block">
+                <Label
+                  htmlFor="content"
+                  value={LABEL.chapter.contentLabel + ':'}
+                />
+              </div>
+
+              <TextEditor></TextEditor>
             </div>
           </div>
         </div>

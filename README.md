@@ -23,3 +23,5 @@ Cấu trúc thư mục nextjs
 - TailwindCss cung cấp class css có sẵn: (https://tailwindcss.com/docs/grid-column)
 - Toastify react thư viện thông báo lỗi: (https://github.com/fkhadra/react-toastify)
 - React icon: (https://react-icons.github.io/react-icons/icons/sl/)
+- Tip Tap: thư viện text editor siêu xịn: (https://tiptap.dev/docs)
+- Tailwind Typhography: Plugin này đặc biệt hữu ích khi bạn cần định dạng một khối văn bản lớn một cách nhất quán mà không cần phải gán lớp CSS cho từng phần tử: (https://github.com/tailwindlabs/tailwindcss-typography?tab=readme-ov-file)

@@ -44,6 +44,7 @@ const LABEL = {
     enterChapterNameLabel: 'Nhập tên chương',
   },
   sys: {
+    send: 'Gửi',
     publishedAtLabel: 'Ngày xuất bản',
     createdAtLabel: 'Ngày tạo',
     status: 'Trạng thái',
@@ -51,6 +52,7 @@ const LABEL = {
     showless: 'Ẩn bớt',
     forgotPasswordLabel: 'Quên mật khẩu?',
     loginLabel: 'Đăng nhập',
+    resetPassword: 'Khôi phục mật khẩu',
     loginToDashboardLabel: 'Đăng nhập vào trang quản lý',
     ASC: 'Tăng dần',
     DESC: 'Giảm dần',

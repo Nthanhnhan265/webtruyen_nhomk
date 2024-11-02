@@ -29,11 +29,12 @@ const UserPage = () => {
   const [sortBy, setSortBy] = useState<string>('id')
   const [orderBy, setOrderBy] = useState<string>('DESC')
   const [keyword, setKeyWord] = useState<string>('')
+  const [imageErrors, setImageErrors] = useState<{ [key: number]: boolean }>({})
   const sortableProps = [
     { label: LABEL.sys.id, value: 'id' },
     { label: LABEL.user.usernameLabel, value: 'username' },
     { label: LABEL.user.emailLabel, value: 'email' },
-    { label: LABEL.user.createdAtLabel, value: 'createdAt' },
+    { label: LABEL.sys.createdAtLabel, value: 'createdAt' },
     { label: LABEL.user.roleLabel, value: 'role_id' },
     { label: LABEL.user.statusLabel, value: 'status' },
   ]
@@ -94,7 +95,6 @@ const UserPage = () => {
 
   //handle search
   const handleSearch = async (keyword: string) => {
-    console.log('checked>>', keyword)
     setKeyWord(keyword)
   }
 
@@ -127,19 +127,37 @@ const UserPage = () => {
     setIsDModalOpen(-1)
   }
 
-  /* Submit: update a user  */
-  const handleSubmit = async (form: IDashboardUserForm, id?: number) => {
+  console.log(imageErrors)
+  //==========Handle Function============//
+  //Nơi tạo các hàm xử lý cho bảng
+  /*
+      Hàm xử lý khi ảnh không load thành công  
+  */
+  const handleImageError = (id: number) => {
+    setImageErrors((prevErrors) => ({
+      ...prevErrors,
+      [id]: true,
+    }))
+  }
+  const resetImageError = (id: number) => {
+    setImageErrors((prevErrors) => ({
+      ...prevErrors,
+      [id]: false,
+    }))
+  }
+  /* Submit: creat or update a user  */
+  const handleSubmit = async (form: FormData, id?: number) => {
     try {
       if (isEditMode && id) {
         // Xử lý cập nhật
-        const updatedUser = await updateUser(id, { ...form, status: 'us' })
-
+        const updatedUser = await updateUser(id, form)
         setUsers((prevUsers) =>
           prevUsers.map((user) =>
             user.id === id ? { ...user, ...updatedUser } : user,
           ),
         )
         toast.success(MESSAGE.user.updateSuccess)
+        resetImageError(id)
       } else {
         // Xử lý tạo mới
         const newUser = await createUser(form)
@@ -242,6 +260,9 @@ const UserPage = () => {
         openUModal={openUpdateModal}
         openDModal={openDModal}
         closeDModal={closeDModal}
+        imageErrors={imageErrors}
+        handleImageError={handleImageError}
+        handleResetImageError={resetImageError}
       ></UserTable>
       <div className="flex overflow-x-auto justify-center">
         <Pagination
