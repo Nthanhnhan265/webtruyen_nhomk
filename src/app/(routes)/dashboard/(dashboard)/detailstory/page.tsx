@@ -14,10 +14,13 @@ import { LuBadgeInfo } from 'react-icons/lu'
 import { MdOutlineStarBorder } from 'react-icons/md'
 import { TbUserPentagon } from 'react-icons/tb'
 import ChapterTable from '../../_components/chapters/table.chapter'
+import { DeleteModal } from '../../_components/users/user.modal'
 import LABEL from '../../label'
+import MESSAGE from '../../message'
 export default function DetailStory() {
   //====================== DECLARE VARIABLES, HOOKS ==========================//
   const [isExpand, setIsExpand] = useState<Boolean>(false)
+  const [isOpenDModal, setOpenDModal] = useState<number>(-1)
   //**FAKE DATA */
   const COVER = '/images/default-cover-story.webp'
   const STORY_NAME =
@@ -51,19 +54,36 @@ Tiêu Hoà ngán ngẩm, cô thầm quyết tâm sẽ đưa bọn họ từ flop
   function handleClickExpand() {
     setIsExpand(!isExpand)
   }
+
+  function handleOpenDModal(id: number) {
+    setOpenDModal(id)
+  }
+  function handleCloseDModal() {
+    setOpenDModal(-1)
+  }
+
+  function handleDelete(id: number) {
+    console.log('xoa chuong: ', id)
+  }
   return (
     <>
       <Header handleSearch={onSearch}></Header>
+      <DeleteModal
+        isOpenDModal={isOpenDModal}
+        closeDModal={handleCloseDModal}
+        labelModal={MESSAGE.chapter.confirmDelete}
+        onDelete={handleDelete}
+      ></DeleteModal>
       <div className="mt-10">
         {/* STORY'S DETAIL INFORMATION 
         (name, author, genres, status, number of views, number of reviews, number of comments) */}
-        <div className="w-full flex flex-col sm:flex-row gap-6">
+        <div className="w-full flex flex-col sm:flex-row">
           <Image
             src={COVER}
             alt="story-cover"
             width={143}
             height={186}
-            className="shadow-lg mb-2 sm:mb-0"
+            className="shadow-lg mb-2 sm:mb-0 md:w-1/4 me-6"
           ></Image>
           <ul className="flex flex-col gap-2 text-black/70">
             <li className="me-5">
@@ -172,7 +192,7 @@ Tiêu Hoà ngán ngẩm, cô thầm quyết tâm sẽ đưa bọn họ từ flop
 
         {/* TABLE OF CHAPTERS */}
         <div className="my-2">
-          <ChapterTable />
+          <ChapterTable openDModal={handleOpenDModal} />
         </div>
 
         {/* PAGINATION */}

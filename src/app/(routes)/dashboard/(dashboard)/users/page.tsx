@@ -11,7 +11,7 @@ import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import Header from '../../_components/header'
 import UserTable from '../../_components/users/table.user'
-import { UserDModal, UserModal } from '../../_components/users/user.modal'
+import { DeleteModal, UserModal } from '../../_components/users/user.modal'
 import LABEL from '../../label'
 import MESSAGE from '../../message'
 
@@ -187,7 +187,7 @@ const UserPage = () => {
 
   //================= Render component ======================//
   return (
-    <>
+    <div className="">
       {/* header */}
       <Header handleSearch={handleSearch}></Header>
 
@@ -199,20 +199,15 @@ const UserPage = () => {
         user={selectedUser}
         isEdit={isEditMode}
       />
-      <UserDModal
+      <DeleteModal
         isOpenDModal={isDModalOpen}
         closeDModal={closeDModal}
         onDelete={(id) => handleDeleteSubmit(id)}
-      ></UserDModal>
+        labelModal={MESSAGE.user.confirmDelete}
+      ></DeleteModal>
       {/* Title and Create button */}
       <div className="flex justify-between items-center mb-0">
         <h2 className="text-xl font-bold">{LABEL.user.label}</h2>
-        <Button
-          color="success"
-          onClick={() => openCreateModal()}
-        >
-          + {LABEL.sys.create}
-        </Button>
       </div>
       {/* sort */}
       <div className="mb-2 ">
@@ -222,35 +217,42 @@ const UserPage = () => {
             value={LABEL.sys.sortLabel}
           />
         </div>
-        <div className="flex gap-2">
-          <Select
-            id="sortBy"
-            name="sortBy"
-            required
-            className="max-w-40"
-            onChange={(e) => handleChangeSortBy(e)}
+        <div className="flex justify-between gap-2">
+          <div className="flex gap-2">
+            <Select
+              id="sortBy"
+              name="sortBy"
+              required
+              className="max-w-40"
+              onChange={(e) => handleChangeSortBy(e)}
+            >
+              {sortableProps.map((property) => (
+                <option
+                  key={property.value}
+                  value={property.value}
+                  selected={property.value === 'id'}
+                >
+                  {property.label}
+                </option>
+              ))}
+            </Select>
+            <Select
+              id="order"
+              name="order"
+              required
+              className="max-w-40"
+              onChange={(e) => handleChangeOrderBy(e)}
+            >
+              <option value="DESC">{LABEL.sys.DESC}</option>
+              <option value="ASC">{LABEL.sys.ASC}</option>
+            </Select>
+          </div>
+          <Button
+            color="success"
+            onClick={() => openCreateModal()}
           >
-            {sortableProps.map((property) => (
-              <option
-                key={property.value}
-                value={property.value}
-                selected={property.value === 'id'}
-              >
-                {property.label}
-              </option>
-            ))}
-          </Select>
-
-          <Select
-            id="order"
-            name="order"
-            required
-            className="max-w-40"
-            onChange={(e) => handleChangeOrderBy(e)}
-          >
-            <option value="DESC">{LABEL.sys.DESC}</option>
-            <option value="ASC">{LABEL.sys.ASC}</option>
-          </Select>
+            + {LABEL.sys.create}
+          </Button>
         </div>
       </div>
 
@@ -272,7 +274,7 @@ const UserPage = () => {
           className="mt-8"
         />
       </div>
-    </>
+    </div>
   )
 }
 

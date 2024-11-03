@@ -93,7 +93,12 @@ export default function ChapterTable(props: Iprops) {
                   </td>
                   <td className="py-2 px-2 text-sm text-center flex justify-center items-center gap-2 rounded">
                     <Button color="warning">{LABEL.sys.edit}</Button>
-                    <Button color="failure">{LABEL.sys.delete}</Button>
+                    <Button
+                      color="failure"
+                      onClick={() => props.openDModal(chapter.id)}
+                    >
+                      {LABEL.sys.delete}
+                    </Button>
                   </td>
                 </tr>
               ))

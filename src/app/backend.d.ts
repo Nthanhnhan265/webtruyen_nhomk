@@ -3,7 +3,11 @@ interface IUser {
   avatar: string
   username: string
   email: string
-  role_id: number
+  Role: {
+    id: number
+    role_name: string
+    description: string
+  }
   status: boolean
   created_at: string
 }

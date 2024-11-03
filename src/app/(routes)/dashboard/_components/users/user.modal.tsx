@@ -45,7 +45,7 @@ function UserModal(prop: IModalProps) {
       setValue('username', prop.user.username || '')
       setValue('email', prop.user.email || '')
       setValue('status', prop.user.status === true ? 'true' : 'false')
-      setValue('role_id', prop.user.role_id)
+      setValue('role_id', prop.user.Role.id)
       // setValue('avatar', prop.user.avatar)
     } else {
       reset({
@@ -289,8 +289,8 @@ function UserModal(prop: IModalProps) {
                     required: MESSAGE.user.roleNotFound,
                   })}
                 >
-                  <option value="1">{LABEL.sys.role.admin}</option>
-                  <option value="2">{LABEL.sys.role.user}</option>
+                  <option value="1">Admin</option>
+                  <option value="2">User</option>
                 </Select>
 
                 <div className="h-3">
@@ -426,8 +426,9 @@ interface IDModalProps {
   isOpenDModal: number
   closeDModal: () => void
   onDelete: (id: number) => void
+  labelModal: string
 }
-function UserDModal(prop: IDModalProps) {
+function DeleteModal(prop: IDModalProps) {
   return (
     <>
       {/* <Button onClick={prop.openDModal}>Toggle modal</Button> */}
@@ -441,7 +442,8 @@ function UserDModal(prop: IDModalProps) {
           <div className="text-center">
             <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
             <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-              {MESSAGE.user.confirmDelete}
+              {/* {MESSAGE.user.confirmDelete} */}
+              {prop.labelModal}
             </h3>
             <div className="flex justify-center gap-4">
               <Button
@@ -464,4 +466,4 @@ function UserDModal(prop: IDModalProps) {
   )
 }
 
-export { UserDModal, UserModal }
+export { DeleteModal, UserModal }

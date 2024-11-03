@@ -43,6 +43,12 @@ const LABEL = {
     enterChapterOrderLabel: 'Nhập số chương',
     enterChapterNameLabel: 'Nhập tên chương',
   },
+  genre: {
+    label: 'Thể loại',
+  },
+  review: {
+    label: 'Đánh giá',
+  },
   sys: {
     send: 'Gửi',
     publishedAtLabel: 'Ngày xuất bản',

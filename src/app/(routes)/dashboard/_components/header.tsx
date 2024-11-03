@@ -23,7 +23,7 @@ export default function Header(prop: IHeaderProp) {
         <TextInput
           id="text"
           type="text"
-          className="basis-1/2"
+          className="basis-1/3"
           icon={IoSearchOutline}
           onChange={handleChange}
           placeholder={LABEL.sys.searchLabel}

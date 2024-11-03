@@ -17,11 +17,11 @@ export default function LoginLayout({
       <body>
         <div className="layout w-full md:grid grid-cols-12 bg-[#f8f8f8]">
           {/* Render sidebar for dashboard */}
-          <div className="hidden md:block md:col-span-3 lg:col-span-2">
+          <div className=" md:block md:col-span-3 lg:col-span-2">
             <Sidebar></Sidebar>
           </div>
           {/* header and container */}
-          <div className="w-full max-w-none md:col-span-9 lg:col-span-10 container px-2 md:px-6 py-2">
+          <div className="w-full max-w-none md:col-span-9 lg:col-span-10 container px-2 md:px-6">
             <ToastContainer
               position="top-left"
               autoClose={5000}
