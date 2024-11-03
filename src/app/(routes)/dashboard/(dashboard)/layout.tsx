@@ -22,7 +22,7 @@ export default function LoginLayout({
             <Sidebar></Sidebar>
           </div>
           {/* header and container */}
-          <div className="md:col-span-9 lg:col-span-10 container px-6 py-2">
+          <div className="md:col-span-9 lg:col-span-10 container px-6  max-w-none">
             <ToastContainer
               position="top-left"
               autoClose={5000}
