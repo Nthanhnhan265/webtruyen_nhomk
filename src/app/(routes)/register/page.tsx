@@ -4,64 +4,55 @@ import axios, { AxiosError } from "axios";
 import Image from "next/image";
 import Navbar from "../../../components/navbar";
 import Message from "../../message";
-import { FcGoogle } from "react-icons/fc";
 import { useRouter } from "next/navigation";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { Checkbox, Label, TextInput } from "flowbite-react";
+import { Label, TextInput } from "flowbite-react";
 
 // Định nghĩa kiểu cho dữ liệu biểu mẫu
 interface FormData {
   username: string;
+  email: string;
   password: string;
-  rememberMe: boolean;
+  confirmPassword: string;
 }
 
-const Login = () => {
+const Register = () => {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors, isSubmitting },
     setError,
   } = useForm<FormData>(); // Sử dụng FormData làm kiểu cho useForm
   const router = useRouter();
-
+  const password = watch("password");
   // Định nghĩa hàm onSubmit với kiểu SubmitHandler của FormData
-  const onSubmit: SubmitHandler<FormData> = async ({
-    username,
-    password,
-    rememberMe,
-  }) => {
+  const onSubmit: SubmitHandler<FormData> = async (data) => {
     try {
-      const response = await axios.post("http://localhost:3000/api/login", {
-        username,
-        password,
-      });
+      const newUserResponse = await axios.post(
+        "http://localhost:3000/api/register",
+        data
+      );
 
-      if (response.status === 200) {
-        const { token } = response.data;
-        localStorage.setItem("token", token);
-
-        if (rememberMe) {
-          localStorage.setItem("username", username);
-        } else {
-          localStorage.removeItem("username");
-        }
-
+      if (newUserResponse.status === 201) {
         setTimeout(() => {
-          router.push("/dashboard");
-        }, 1000);
+          router.push("/login");
+        }, 2000);
       }
     } catch (error) {
       if (error instanceof AxiosError && error.response) {
         const errorMsg = error.response.data.message;
-
-        if (errorMsg === "Tên đăng nhập không tồn tại") {
-          setError("username", { message: Message.auth.nameError });
-        } else if (errorMsg === "Mật khẩu không chính xác") {
-          setError("password", { message: "Mật khẩu không chính xác" });
+        if (errorMsg.includes("Tên đăng nhập không được quá 50 ký tự.")) {
+          setError("username", {
+            message: "Tên đăng nhập không được quá 50 ký tự.",
+          });
+        } else if (errorMsg.includes("Tên đăng nhập đã tồn tại")) {
+          setError("username", { message: Message.auth.nameExists });
+        } else if (errorMsg.includes("Email đã tồn tại")) {
+          setError("email", { message: Message.auth.emailExists });
         } else {
           setError("username", {
-            message: "Đăng nhập thất bại, vui lòng kiểm tra lại thông tin.",
+            message: "Đăng ký thất bại, vui lòng kiểm tra lại thông tin.",
           });
         }
       }
@@ -73,10 +64,9 @@ const Login = () => {
       <Navbar />
       <div className="min-h-screen flex items-center justify-center bg-white">
         <div className="bg-white rounded-lg p-6 flex">
-          {/* Form Đăng Nhập */}
           <div className="w-96 p-6">
             <h1 className="text-gray-700 text-2xl font-bold mb-6 text-center">
-              Đăng nhập
+              Đăng ký
             </h1>
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="mb-4">
@@ -95,11 +85,35 @@ const Login = () => {
                       message: "Tên đăng nhập không được quá 50 ký tự",
                     },
                   })}
-                  className="text-gray-700 w-full"
+                  className="text-gray-700 w-full mt-2"
                 />
                 {errors.username && (
                   <p className="text-red-500 mt-1 text-sm">
                     {errors.username.message}
+                  </p>
+                )}
+              </div>
+              <div className="mb-4">
+                <Label
+                  htmlFor="email"
+                  value="Email:"
+                  className="block text-gray-700 text-base"
+                />
+                <TextInput
+                  id="email"
+                  type="email"
+                  {...register("email", {
+                    required: "Email là bắt buộc",
+                    maxLength: {
+                      value: 50,
+                      message: "Email không được quá 50 ký tự",
+                    },
+                  })}
+                  className="text-gray-700 w-full mt-2"
+                />
+                {errors.email && (
+                  <p className="text-red-500 mt-1 text-sm">
+                    {errors.email.message}
                   </p>
                 )}
               </div>
@@ -118,9 +132,13 @@ const Login = () => {
                       value: 50,
                       message: "Mật khẩu không được quá 50 ký tự",
                     },
-                    
+                    pattern: {
+                      value:
+                        /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/,
+                      message: "Mật khẩu phải có chữ hoa, số, ký tự đặc biệt",
+                    },
                   })}
-                  className="text-gray-700 w-full"
+                  className="text-gray-700 w-full mt-2"
                 />
                 {errors.password && (
                   <p className="text-red-500 mt-1 text-sm">
@@ -128,13 +146,27 @@ const Login = () => {
                   </p>
                 )}
               </div>
-              <div className="text-gray-700 flex items-center gap-2 mb-4">
-                <Checkbox
-                  id="rememberMe"
-                  {...register("rememberMe")}
-                  className="checked:bg-blue-500 focus-visible:outline-none"
+              <div className="mb-4">
+                <Label
+                  htmlFor="confirmPassword"
+                  value="Nhập lại mật khẩu:"
+                  className="block text-gray-700 text-base"
                 />
-                <Label htmlFor="rememberMe">Ghi nhớ mật khẩu</Label>
+                <TextInput
+                  id="confirmPassword"
+                  type="password"
+                  {...register("confirmPassword", {
+                    required: "Xác nhận mật khẩu là bắt buộc",
+                    validate: (value) =>
+                      value === password || "Mật khẩu xác nhận không khớp.",
+                  })}
+                  className="text-gray-700 w-full mt-2"
+                />
+                {errors.confirmPassword && (
+                  <p className="text-red-500 mt-1 text-sm">
+                    {errors.confirmPassword.message}
+                  </p>
+                )}
               </div>
               <button
                 type="submit"
@@ -145,26 +177,16 @@ const Login = () => {
                 }`}
                 disabled={isSubmitting}
               >
-                {isSubmitting ? "Đang đăng nhập..." : "Đăng nhập"}
+                {isSubmitting ? "Đang đăng ký..." : "Đăng ký"}
               </button>
             </form>
             <div className="flex justify-between mt-4 text-sm text-blue-500">
-              <a href="#">Quên mật khẩu?</a>
-              <a href="/register">Đăng ký tài khoản</a>
+              <a href="/login">Đăng nhập</a>
+              <a href="#">Quên mật khẩu</a>
             </div>
-            <button className="w-full flex items-center justify-center mt-4 p-2 border rounded text-gray-700 bg-gray-200">
-              <FcGoogle  className="mr-2" />
-              Đăng nhập với Google
-            </button>
           </div>
-          {/* Hình ảnh */}
           <div>
-            <Image
-              src="/images/anhnen.jpg"
-              alt="Login Background"
-              width={400}
-              height={300}
-            />
+            <Image src="/images/anhnen.jpg" alt="Register Background" width={400} height={300} />
           </div>
         </div>
       </div>
@@ -172,4 +194,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;
