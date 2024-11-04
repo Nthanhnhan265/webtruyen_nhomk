@@ -107,67 +107,25 @@ const AuthorPage = () => {
                         Mọi vấn đề vi phạm bản quyền vui lòng liên hệ qua email: <span className={styles.textFoot}>truyenplusonline@gmail.com</span>
                     </div>
                     <div>
-                        <div className="grid grid-cols-4 gap-4">
-                            {/* Hàng 1 */}
-                            <div><div className="flex justify-center items-center">
-                                <CustomButton
-                                    href="/some-page"
-                                    title="Go to some page"
-                                    text="Truyện Full"
-                                />
-                            </div></div>
-                            <div><div className="flex justify-center items-center">
-                                <CustomButton
-                                    href="/some-page"
-                                    title="Go to some page"
-                                    text="Truyện Hot"
-                                />
-                            </div></div>
-                            <div><div className="flex justify-center items-center">
-                                <CustomButton
-                                    href="/some-page"
-                                    title="Go to some page"
-                                    text="Ngôn Tình Hay"
-                                />
-                            </div></div>
-                            <div><div className="flex justify-center items-center">
-                                <CustomButton
-                                    href="/some-page"
-                                    title="Go to some page"
-                                    text="Ngôn Tình Hài"
-                                />
-                            </div></div>
+                    <div className="grid grid-cols-4 gap-1"> {/* Giảm khoảng cách giữa các button */}
+            {/* Hàng 1 */}
+            <CustomButton href="/some-page" title="Go to some page" text="Truyện Full" />
+            <CustomButton href="/some-page" title="Go to some page" text="Truyện Hot" />
+            <CustomButton href="/some-page" title="Go to some page" text="Ngôn Tình Hay" />
+            <CustomButton href="/some-page" title="Go to some page" text="Ngôn Tình Hài" />
 
-                            {/* Hàng 2 */}
-                            <div><div className="flex justify-center items-center">
-                                <CustomButton
-                                    href="/some-page"
-                                    title="Go to some page"
-                                    text="Ngôn Tình Hài"
-                                />
-                            </div></div>
-                            <div><div className="flex justify-center items-center">
-                                <CustomButton
-                                    href="/some-page"
-                                    title="Go to some page"
-                                    text="Ngôn Tình Hài"
-                                />
-                            </div></div>
-                            <div><div className="flex justify-center items-center">
-                                <CustomButton
-                                    href="/some-page"
-                                    title="Go to some page"
-                                    text="Ngôn Tình Hài"
-                                />
-                            </div></div>
-                            <div><div className="flex justify-center items-center">
-                                <CustomButton
-                                    href="/some-page"
-                                    title="Go to some page"
-                                    text="Ngôn Tình Hài"
-                                />
-                            </div></div>
-                        </div>
+            {/* Hàng 2 */}
+            <CustomButton href="/some-page" title="Go to some page" text="Ngôn Tình Hài" />
+            <CustomButton href="/some-page" title="Go to some page" text="Ngôn Tình Hài" />
+            <CustomButton href="/some-page" title="Go to some page" text="Ngôn Tình Hài" />
+            <CustomButton href="/some-page" title="Go to some page" text="Ngôn Tình Hài" />
+          </div>
+          <div className={styles.contact}>
+          <a href="/contact" title="Contact">Contact</a>
+          <span>-</span>
+          <a href="/tos" title="Terms of Service">ToS</a>
+          <a className="backtop" title="Trở lên đầu trang" href="#" rel="nofollow" aria-label="Trở về đầu trang">⬆</a>
+        </div>
 
                     </div>
                 </footer>
