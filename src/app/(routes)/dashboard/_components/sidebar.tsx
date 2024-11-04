@@ -1,6 +1,8 @@
 import Link from 'next/link'
 import { HiOutlineUsers } from 'react-icons/hi'
 import { LuUserCircle2 } from 'react-icons/lu'
+import { IoBookOutline } from "react-icons/io5";
+
 import LABEL from '../label'
 
 interface Iprop {
@@ -39,7 +41,7 @@ const Sidebar = () => {
             href={'/dashboard/stories'}
             className={`${CENTER}`}
           >
-            <LuUserCircle2 />
+            <IoBookOutline />
             Truyện
           </Link>
         </li>
