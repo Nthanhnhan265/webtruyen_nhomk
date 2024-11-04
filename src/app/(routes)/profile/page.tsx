@@ -60,7 +60,7 @@ const ProfilePage = () => {
             </h2>
             <div className='mt-3 mb-6 bg-white pt-5 shadow-md rounded-lg'>
                 <div className='px-10 flex pb-20'>
-                    <div className='flex flex-col gap-4 w-1/2'>
+                    <div className='flex flex-col gap-4 w-1/2 mt-4'>
                         <div className='flex items-center gap-4'>
                             <Label className='mr-5' htmlFor="current-password" value="Mật khẩu hiện tại:" />
                             <TextInput id="current-password" type="password" required style={{ width: '300px' }} /> {/* Kích thước dài hơn */}
@@ -74,7 +74,7 @@ const ProfilePage = () => {
                             <TextInput id="confirm-password" type="password" required style={{ width: '300px' }} /> {/* Kích thước dài hơn */}
                         </div>
                     </div>
-                    <div className='w-1/2 flex items-end mb-32'>
+                    <div className='w-1/2 flex justify-end mb-32'>
                         <Button className='mt-4 bg-gray-200' color="text-black" onClick={handleChangePassword}>
                             <LuPencilLine className='mt-1 mr-2' /> Thay đổi
                         </Button>
