@@ -100,7 +100,6 @@ const AuthorModal: React.FC<AuthorModalProps> = ({ show, onClose, onSuccess }) =
                             onChange={(e) => setAuthorName(e.target.value)}
                             className={`w-full p-2 border ${errors.authorName ? 'border-red-500' : 'border-gray-300'} rounded`}
                             placeholder="Nhập tên tác giả"
-
                         />
                         {errors.authorName && <p className="text-red-500">{errors.authorName}</p>}
                     </div>

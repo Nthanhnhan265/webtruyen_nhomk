@@ -31,7 +31,7 @@ export const getAuthors = async ({ author_name, description, sort, page }) => {
 }
 export const getAuthorsName = async () => {
   try {
-    const response = await api.get('/authorsName', {
+    const response = await api.get('/authors/authorsName', {
     })
     return response.data // Trả về dữ liệu
   } catch (error) {

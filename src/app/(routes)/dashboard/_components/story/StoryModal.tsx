@@ -48,7 +48,7 @@ const StoryModal = ({ show, onClose, onSuccess }) => {
         try {
             const response = await getAuthorsName();
             setAuthors(response.data.authors)
-            console.log(response.data);
+            console.log(response.data.authors);
             alert(JSON.stringify(categories))
 
         } catch (err) {
