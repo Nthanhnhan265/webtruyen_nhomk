@@ -8,7 +8,6 @@ import {
 } from '@/app/_api/user.api'
 import { Button, Label, Pagination, Select } from 'flowbite-react'
 import { useEffect, useState } from 'react'
-import Skeleton from 'react-loading-skeleton'
 import { toast } from 'react-toastify'
 import Header from '../../_components/header'
 import UserTable from '../../_components/users/table.user'
@@ -255,8 +254,6 @@ const UserPage = () => {
             + {LABEL.sys.create}
           </Button>
         </div>
-        <Skeleton />
-        here
       </div>
 
       {/* user table */}

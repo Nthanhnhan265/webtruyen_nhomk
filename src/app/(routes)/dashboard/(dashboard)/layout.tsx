@@ -15,9 +15,9 @@ export default function LoginLayout({
   return (
     <html lang="en">
       <body>
-        <div className="layout w-full md:grid grid-cols-12 bg-[#f8f8f8]">
+        <div className="layout w-full lg:grid grid-cols-12 bg-[#f8f8f8]">
           {/* Render sidebar for dashboard */}
-          <div className=" md:block md:col-span-3 lg:col-span-2">
+          <div className="  md:block md:col-span-3 lg:col-span-2">
             <Sidebar></Sidebar>
           </div>
           {/* header and container */}
