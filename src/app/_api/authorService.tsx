@@ -29,6 +29,16 @@ export const getAuthors = async ({ author_name, description, sort, page }) => {
     throw error // Ném lỗi để xử lý ở nơi khác
   }
 }
+export const getAuthorsName = async () => {
+  try {
+    const response = await api.get('/authors/authorsName', {
+    })
+    return response.data // Trả về dữ liệu
+  } catch (error) {
+    console.error('Lỗi khi lấy danh sách tác giả:', error)
+    throw error // Ném lỗi để xử lý ở nơi khác
+  }
+}
 
 export const deleteAuthor = async (id) => {
   try {

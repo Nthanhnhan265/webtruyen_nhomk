@@ -8,6 +8,7 @@ import { FaEdit, FaPlus, FaSearch, FaTrash } from 'react-icons/fa'
 import AuthorModal from '../../_components/author/AuthorModal'
 import UpdateAuthorModal from '../../_components/author/UpdateAuthorModal'
 import Header from '../../_components/header'
+import ConfirmDeleteModal from '../../_components/story/ConfirmDeleteModal';
 interface Author {
   id: number;
   author_name: string;
@@ -27,7 +28,8 @@ const AuthorPage = () => {
   const [keyword, setKeyWord] = useState<string>('')
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, settotalPages] = useState(1);
-
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [authorToDelete, setAuthorToDelete] = useState<number | null>(null);
   const limit = 4
 
   const fetchAuthors = async () => {
@@ -39,7 +41,7 @@ const AuthorPage = () => {
         sort: sortOrder,
         page: currentPage,
       })
-      setAuthors(response.authors)
+      setAuthors(response.data)
       settotalPages(response.totalPages)
       setLoading(false)
     } catch (err) {
@@ -52,18 +54,10 @@ const AuthorPage = () => {
     fetchAuthors()
   }, [sortOrder, currentPage])
 
-  const handleDelete = async (id: number) => {
-    if (window.confirm('Bạn có chắc chắn muốn xóa tác giả này không?')) {
-      try {
-        await deleteAuthor(id)
-        setAuthors((prevAuthors) =>
-          prevAuthors.filter((author) => author.id !== id),
-        )
-      } catch (err) {
-        setError('Đã xảy ra lỗi khi xóa tác giả.')
-      }
-    }
-  }
+  const handleDelete = (id: number) => {
+    setAuthorToDelete(id);
+    setShowDeleteModal(true); // Open the delete confirmation modal
+  };
   const handleSuccess = (data: Author) => {
     // Handle success, maybe update state or refetch data
   };
@@ -83,6 +77,20 @@ const AuthorPage = () => {
 
   }
   const onPageChange = (page: number) => setCurrentPage(page);
+  const confirmDelete = async () => {
+    if (authorToDelete !== null) {
+      try {
+        await deleteAuthor(authorToDelete);
+        setAuthors((prevAuthors) =>
+          prevAuthors.filter((author) => author.id !== authorToDelete),
+        );
+        setShowDeleteModal(false);
+        setAuthorToDelete(null);
+      } catch (err) {
+        setError('Đã xảy ra lỗi khi xóa tác giả.');
+      }
+    }
+  };
 
 
   if (loading) return <p>Đang tải dữ liệu...</p>
@@ -189,7 +197,12 @@ const AuthorPage = () => {
         onClose={() => setShowCreateModal(false)}
         onSuccess={handleSuccess}
       />
-    </div>
+      <ConfirmDeleteModal
+        isOpen={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        onConfirm={confirmDelete}
+      />
+    </div >
   );
 }
 
