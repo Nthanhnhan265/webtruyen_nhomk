@@ -45,33 +45,7 @@ const FavoriteStories = () => {
   return (
     <>
       <Navbar />
-      <div className="flex bg-gray-100 min-h-screen">
-        {/* Sidebar */}
-        <aside className="w-60 bg-white border-r border-gray-200 p-4">
-          <ul className="space-y-4">
-            <li>
-              <a href="#" className="text-gray-600 font-semibold">
-                Thông tin tài khoản
-              </a>
-            </li>
-            <li>
-              <a href="#" className="text-red-500 font-semibold">
-                Truyện yêu thích
-              </a>
-            </li>
-            <li>
-              <a href="#" className="text-gray-600 font-semibold">
-                Truyện gần đây
-              </a>
-            </li>
-            <li>
-              <a href="#" className="text-gray-600 font-semibold">
-                Cài đặt
-              </a>
-            </li>
-          </ul>
-        </aside>
-
+      
         {/* Main Content */}
         <main className="flex-1 p-14">
           <h1 className="text-2xl pl-6 border-l-4 border-l-red-600 font-semibold text-gray-500 mb-6">
@@ -81,7 +55,7 @@ const FavoriteStories = () => {
             {stories.map((story, index) => (
               <React.Fragment key={index}>
                 <div className="bg-white shadow-md overflow-hidden hover:scale-105 transition-transform duration-200 flex flex-col relative">
-                  <img src={story.image} className="w-full" />
+                  <img src={story.image} className="w-full"/>
                   <div className="absolute bottom-0 left-0 p-2 bg-black bg-opacity-80 w-full">
                     <p className="text-white font-bold text-sm">
                       {story.title}
@@ -101,7 +75,7 @@ const FavoriteStories = () => {
             <hr className="border-t border-gray-300 my-4 col-span-full" />
           )}
         </main>
-      </div>
+      
     </>
   );
 };
