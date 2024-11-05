@@ -8,6 +8,7 @@ import { getAllStories, deleteStory } from '@/app/_api/story.api';
 import { useEffect, useState } from 'react';
 import { FaEdit, FaPlus, FaSearch, FaTrash } from 'react-icons/fa';
 import { BsBoxArrowUpRight } from "react-icons/bs";
+import { Avatar } from "flowbite-react";
 
 interface Storie {
     id: number,
@@ -159,14 +160,11 @@ const storyPage = () => {
                         <thead>
                             <tr className="bg-white">
                                 <th className="py-3 text-sm ">ID</th>
-                                <th className="py-3 text-sm ">Tên câu chuyện</th>
-                                <th className="py-3 text-sm ">Mô tả</th>
-                                <th className="py-3 text-sm ">Tổng số chương</th>
-                                <th className="py-3 text-sm ">Lượt xem</th>
                                 <th className="py-3 text-sm ">Bìa</th>
-                                <th className="py-3 text-sm ">Từ khóa</th>
-                                <th className="py-3 text-sm ">Ngày tạo</th>
-                                <th className="py-3 text-sm ">Ngày cập nhật</th>
+                                <th className="py-3 text-sm ">Tên câu chuyện</th>
+                                <th className="py-3 text-sm ">Tác giả</th>
+                                <th className="py-3 text-sm ">Trạng thái</th>
+                                <th className="py-3 text-sm ">Tương tác</th>
                                 <th className="py-3 text-sm ">Hành động</th>
                             </tr>
                         </thead>
@@ -189,16 +187,15 @@ const storyPage = () => {
                                                 </button>
                                             </div>
                                         </td>
-                                        <td className="px-2 text-center text-sm">{story.story_name}</td>
-                                        <td className="px-2 text-center text-sm">{story.description}</td>
-                                        <td className="px-2 text-center text-sm">{story.total_chapters}</td>
-                                        <td className="px-2 text-center text-sm">{story.views}</td>
                                         <td className="px-2 text-center text-sm">
-                                            <img src={story.cover} alt="Cover" className="h-16 w-16" />
+                                            <Avatar size="lg" className='my-2' />
                                         </td>
-                                        <td className="px-2 text-center text-sm">{story.keywords}</td>
-                                        <td className="px-2 text-center text-sm">{formatDate(story.created_at)}</td>
-                                        <td className="px-2 text-center text-sm">{formatDate(story.updated_at)}</td>
+                                        <td className="px-2 text-center text-sm">{story.story_name}</td>
+                                        <td className="px-2 text-center text-sm">{story.author_id}</td>
+                                        <td className="px-2 text-center text-sm">
+                                            {story.status === 1 ? "Đã xuất bản" : "Chưa xuất bản"}
+                                        </td>
+                                        <td className="px-2 text-center text-sm">{story.views}</td>
                                         <td className="px-2 text-center text-sm">
                                             <div className="flex justify-center space-x-1">
                                                 <Button color="warning" onClick={() => handleEdit(story)}>
