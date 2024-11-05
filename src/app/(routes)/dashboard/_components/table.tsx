@@ -1,23 +1,21 @@
 'use client'
-import formatDate from '@/components/ulti/formatDate'
 import { Button } from 'flowbite-react'
-import Image from 'next/image'
-import { CiImageOff } from 'react-icons/ci'
-import LABEL from '../../label'
-import MESSAGE from '../../message'
+import LABEL from '../label'
+import MESSAGE from '../message'
+// import LABEL from '../../label'
+// import MESSAGE from '../../message'
 
 interface Iprops {
-  users: IUser[]
-  openUModal: (user: IUser) => void
-  openDModal: (id: number) => void
-  closeDModal: () => void
-  imageErrors: { [key: number]: boolean }
-  handleImageError: (id: number) => void
-  handleResetImageError: (id: number) => void
+  tbHeaderCells: Array<{
+    label: string
+    name: string
+    render?: (item: any) => JSX.Element
+  }>
+  tbCells: Array<any>
+  handleClickUpdate: (id: number) => void
+  handleClickDelete: (id: number) => void
 }
-export default function UserTable(props: Iprops) {
-  //====Declare variables, hooks==========//
-  console.log(props.users[0])
+export default function Table(props: Iprops) {
   return (
     <div className="overflow-x-auto w-full">
       <table
@@ -26,18 +24,63 @@ export default function UserTable(props: Iprops) {
       >
         <thead>
           <tr className="bg-white">
-            <th className="py-4 px-3 text-sm ">{LABEL.sys.id}</th>
-            <th className="py-4 px-2 text-sm">{LABEL.user.avatarLabel}</th>
-            <th className="py-4 px-2 text-sm">{LABEL.user.usernameLabel}</th>
-            <th className="py-4 px-2 text-sm">{LABEL.user.emailLabel}</th>
-            <th className="py-4 px-2 text-sm">{LABEL.user.roleLabel}</th>
-            <th className="py-4 px-2 text-sm">{LABEL.user.statusLabel}</th>
-            <th className="py-4 px-2 text-sm">{LABEL.sys.createdAtLabel}</th>
-            <th className="py-4 px-2 text-sm">{LABEL.sys.actionLabel}</th>
+            {props.tbHeaderCells.map((header) => (
+              <td
+                key={header.label}
+                className="py-4 px-3 text-center font-bold text-sm"
+              >
+                {header.label}
+              </td>
+            ))}
+            <td className="py-4 px-3 font-bold text-sm text-center">
+              {LABEL.sys.actionLabel}
+            </td>
           </tr>
         </thead>
         <tbody>
-          {props.users
+          {props.tbCells.map((item, rowIndex) => (
+            <tr
+              className="bg-white"
+              key={rowIndex}
+            >
+              {props.tbHeaderCells.map((header, colIndex) => (
+                <>
+                  <td
+                    key={colIndex}
+                    className=" py-2 px-3  text-center text-sm"
+                  >
+                    {header.render ? header.render(item) : item[header.name]}
+                  </td>
+                </>
+              ))}
+              <td className="py-2 px-2 text-sm text-center flex justify-center items-center gap-2 rounded">
+                <Button
+                  color="warning"
+                  onClick={() => props.handleClickUpdate(item)}
+                >
+                  {LABEL.sys.edit}
+                </Button>
+                <Button
+                  color="failure"
+                  onClick={() => props.handleClickDelete(item.id)}
+                >
+                  {LABEL.sys.delete}
+                </Button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      {!props.tbCells ? (
+        <div className="flex justify-center text-sm">
+          {MESSAGE.sys.noRecord}
+        </div>
+      ) : null}
+    </div>
+  )
+}
+/**
+ *   {props.users
             ? props.users.map((user) => (
                 <tr
                   className="bg-white"
@@ -66,7 +109,7 @@ export default function UserTable(props: Iprops) {
                       </div>
                     )}
                   </td>
-                  {/* whitespace-nowrap overflow-hidden text-ellipsis max-w-xs */}
+                 // whitespace-nowrap overflow-hidden text-ellipsis max-w-xs //
                   <td className="py-2 px-2 text-sm text-center">
                     {user.username}
                   </td>
@@ -99,13 +142,4 @@ export default function UserTable(props: Iprops) {
                 </tr>
               ))
             : ''}
-        </tbody>
-      </table>
-      {!props.users || props.users.length === 0 ? (
-        <div className="flex justify-center text-sm">
-          {MESSAGE.sys.noRecord}
-        </div>
-      ) : null}
-    </div>
-  )
-}
+ */

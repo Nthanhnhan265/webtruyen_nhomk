@@ -9,7 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@heroicons/react": "^2.1.5",
+    "@tailwindcss/typography": "^0.5.15",
+    "@tiptap/pm": "^2.9.1",
+    "@tiptap/react": "^2.9.1",
+    "@tiptap/starter-kit": "^2.9.1",
+    //"@heroicons/react": "^2.1.5",
     "axios": "^1.7.7",
     "bootstrap": "^5.3.3",
     "flowbite-react": "^0.10.2",
