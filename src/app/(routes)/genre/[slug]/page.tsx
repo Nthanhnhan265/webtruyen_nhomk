@@ -88,9 +88,9 @@ const GenrePage = () => {
                 <Image src={book.img} alt={book.title} width={300} height={150} />
               </div>
               <div className="col-span-9">
-                <Link href="" className='font-bold'>{book.title}</Link>
+                <Link href="" className={styles.hoverNameTitle}>{book.title}</Link>
                 <br />
-                <span>Tác giả:</span> <Link href={`/author/${book.slug}`}>{book.author}</Link>
+                <span>Tác giả:</span> <Link className={styles.hoverName} href={`/author/${book.slug}`}>{book.author}</Link>
                 <br />
                 <span>Thể Loại:</span> <Link href="">{book.genres}</Link>
                 <br />

@@ -58,3 +58,12 @@
   .shadow-bottom {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
+  .hoverName:hover{
+ border-bottom: 1px solid black;
+  }
+  .hoverNameTitle{
+    font-weight: bold;
+  }
+  .hoverNameTitle:hover{
+ border-bottom: 1px solid black;
+  }

@@ -2,8 +2,8 @@
 {/* <i class="fa-solid fa-angle-left"></i> */}
 {/* <i class="fa-solid fa-angle-right"></i> */}
 import Link from 'next/link';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons';
+import { GrFormPrevious } from "react-icons/gr";
+import { GrFormNext } from "react-icons/gr";
 
 const Pagination = ({ currentPage, totalPages }) => {
   const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
@@ -18,7 +18,7 @@ const Pagination = ({ currentPage, totalPages }) => {
               currentPage === 1 && 'pointer-events-none opacity-50'
             }`}
           >
-             <FontAwesomeIcon icon={faAngleLeft} /> {/* Icon Next */}
+            <GrFormPrevious />
           </Link>
         </li>
         {pageNumbers.map((page) => (
@@ -42,7 +42,7 @@ const Pagination = ({ currentPage, totalPages }) => {
               currentPage === totalPages && 'pointer-events-none opacity-50'
             }`}
           >
-             <FontAwesomeIcon icon={faAngleRight} /> {/* Icon Next */}
+          <  GrFormNext/>
           </Link>
         </li>
       </ul>

@@ -1,8 +1,7 @@
 // "use client";
 import Link from "next/link";
 import { useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { HiOutlineSearch } from "react-icons/hi";
 import styles from './GenreDropdown.module.css';
 const genres = [
     { id: 1, name: 'Tiên Hiệp', slug: 'tien-hiep' },
@@ -76,8 +75,8 @@ const NavBar = () => {
           placeholder="Tìm kiếm truyện..."
           className="border border-gray-300 rounded-l-md px-3 py-1 focus:outline-none"
         />
-        <button className="bg-gray-300 px-3 py-1 rounded-r-md">
-          <FontAwesomeIcon icon={faSearch} className="text-gray-700" />
+        <button className="bg-gray-300 px-3 py-2 rounded-r-md">
+          <HiOutlineSearch  />
         </button>
       </div>
 
