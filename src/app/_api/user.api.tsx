@@ -2,7 +2,7 @@ import axios, { AxiosError } from 'axios'
 import MESSAGE from '../(routes)/dashboard/message'
 
 const api = axios.create({
-  baseURL: 'http://localhost:3000/api',
+  baseURL: 'http://localhost:8080/api',
   timeout: 5000,
 })
 

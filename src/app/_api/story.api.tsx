@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:4000/api", // API address
+  baseURL: "http://localhost:8080/api", // API address
   timeout: 10000, // Timeout (milliseconds)
 });
 
@@ -16,11 +16,33 @@ export const getStories = async (id: number) => {
     throw error; // Rethrow error for handling elsewhere
   }
 };
+export const getAllStories = async ({
+  author_storie,
+  description,
+  sort,
+  page
+}) => {
+  try {
+    // Use backticks for template literals
+    const response = await api.get(`/story`, {
+      params: {
+        author_storie, // Tìm kiếm theo tên tác giả
+        description, // Tìm kiếm theo mô tả (nếu cần)
+        sort, // Sắp xếp
+        page, // Trang hiện tại   // Giới hạn số lượng tác giả trên mỗi trang
+      },
+    }); // Adjust endpoint to fetch stories
+    return response.data; // Return the data
+  } catch (error) {
+    console.error("Error fetching stories:", error);
+    throw error; // Rethrow error for handling elsewhere
+  }
+};
 
 // Function to delete a story by ID
 export const deleteStory = async (id: number) => {
   try {
-    const response = await api.delete(`/stories/${id}`); // Use the correct endpoint for deleting a story
+    const response = await api.delete(`/story/delete/${id}`); // Use the correct endpoint for deleting a story
     return response.data; // Return the result if needed
   } catch (error) {
     console.error("Error deleting story:", error);
@@ -33,4 +55,5 @@ export const deleteStory = async (id: number) => {
 export default {
   getStories,
   deleteStory,
+  getAllStories
 };

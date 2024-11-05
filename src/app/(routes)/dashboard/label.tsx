@@ -19,8 +19,16 @@ const LABEL = {
     user: 'Người dùng',
     admin: 'Quản trị',
   },
-  author: {
-    label: 'Tác giả',
+ author: {
+    label: 'Tác Giả',
+    createLabel: 'Thêm tác giả',
+    editLabel: 'Sửa tác giả ',
+    deleteLabel: 'Xóa tác giả',
+    usernameLabel: 'Tên tác giả',
+    describeLabel: "Mô tả",
+    act: "Hành động",
+    createdAtLabel: 'Ngày tạo',
+    url: "URL",
   },
   story: {
     author: 'Tác giả',
