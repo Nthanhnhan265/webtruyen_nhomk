@@ -23,7 +23,7 @@ const FavoriteStories = () => {
     {
       title: "Ánh Trăng Đầu Mùa Hạ",
       author: "Author Name",
-      image: "/images/story4.jpg",
+      image: "/images/anhtesst.jpg",
     },
     {
       title: "Quyền Sủng Ngộ Tác Y Fsadasdadasdasdasdasda",
@@ -54,8 +54,9 @@ const FavoriteStories = () => {
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
             {stories.map((story, index) => (
               <React.Fragment key={index}>
-                <div className="bg-white shadow-md overflow-hidden hover:scale-105 transition-transform duration-200 flex flex-col relative">
-                  <img src={story.image} className="w-full"/>
+                <div className="bg-white shadow-md overflow-hidden hover:scale-105 transition-transform duration-200 flex flex-col relative w-[160px] h-[240px]"
+                >
+                  <img src={story.image}  className="w-full h-auto object-cover"/>
                   <div className="absolute bottom-0 left-0 p-2 bg-black bg-opacity-80 w-full">
                     <p className="text-white font-bold text-sm">
                       {story.title}
@@ -75,7 +76,7 @@ const FavoriteStories = () => {
             <hr className="border-t border-gray-300 my-4 col-span-full" />
           )}
         </main>
-      
+
     </>
   );
 };
