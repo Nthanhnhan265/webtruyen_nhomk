@@ -8,22 +8,22 @@ const FavoriteStories = () => {
     {
       title: "Wind Breaker",
       author: "Mô phỏng Trường hợp tên... trời",
-      image: "/images/story1.jpg",
+      image: "/images/anhtruyen.jpg",
     },
     {
       title: "Yêu Em Nhiều Đến Thế",
       author: "Author Name",
-      image: "/images/story2.jpg",
+      image: "/images/anhtruyen.jpg",
     },
     {
       title: "Fragrant Flower",
       author: "Author Name",
-      image: "/images/story3.jpg",
+      image: "/images/anhtruyen.jpg",
     },
     {
       title: "Ánh Trăng Đầu Mùa Hạ",
       author: "Author Name",
-      image: "/images/anhtesst.jpg",
+      image: "/images/anhtruyen.jpg",
     },
     {
       title: "Quyền Sủng Ngộ Tác Y Fsadasdadasdasdasdasda",
