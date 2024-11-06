@@ -73,7 +73,7 @@ export default function HomePage() {
               >
                 <Image
                   src={
-                    story.cover
+                    story?.cover
                       ? `http://localhost:3000/${story.cover}`
                       : "/default-cover.jpg"
                   }

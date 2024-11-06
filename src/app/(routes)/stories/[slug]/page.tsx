@@ -57,7 +57,8 @@ const page = ({ params }: { params: { slug: string } }) => {
 
   const readBook = (chapterId = 1) => {
     // Navigate to the desired URL with the chapterId
-    window.location.href = `/stories/ChapterDetailPage?chapter_id=${chapterId}`;
+    // window.location.href = `/stories/ChapterDetailPage?chapter_id=${chapterId}`;
+    alert("chuyen trang chi tiet");
   };
 
   const handlePageChange = (newPage: number) => {
