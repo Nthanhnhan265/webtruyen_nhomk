@@ -1,6 +1,6 @@
 'use client' // Sử dụng cho client-side rendering
-import Navbar from '@/app/(routes)/_component/Navbar'
 import UserSideBar from '@/app/(routes)/_component/sidebar_profile'
+import Navbar from '@/components/navbar'
 import { Avatar, Button, HR, Label, TextInput } from 'flowbite-react'
 import { useRouter } from 'next/navigation' // Thêm import useRouter
 import { LuPencilLine } from 'react-icons/lu'
