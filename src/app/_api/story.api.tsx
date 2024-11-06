@@ -1,11 +1,13 @@
+
+
 import axios, { AxiosError } from 'axios'
 import MESSAGE from '../message'
 import { log } from 'console'
 
 const api = axios.create({
-  baseURL: 'http://localhost:3000/api', // API address
+  baseURL: "http://localhost:3000/api", // API address
   timeout: 10000, // Timeout (milliseconds)
-})
+});
 
 //=======Create========//
 export const createStory = async (data: FormData, selectedCategories) => {
@@ -79,13 +81,67 @@ export const updateStory = async (data: FormData, id: number) => {
 export const getStories = async (id: number) => {
   try {
     // Use backticks for template literals
-    const response = await api.get(`/story/${id}`) // Adjust endpoint to fetch stories
-    return response.data // Return the data
+    const response = await api.get(`/story/${id}`); // Adjust endpoint to fetch stories
+    return response.data; // Return the data
   } catch (error) {
-    console.error('Error fetching stories:', error)
-    throw error // Rethrow error for handling elsewhere
+    console.error("Error fetching stories:", error);
+    throw error; // Rethrow error for handling elsewhere
   }
-}
+};
+export const getStoryBySlug = async (slug) => {
+  try {
+    // Use backticks for template literals
+    const response = await api.get(`/story/getStoryBySlug/${slug}`); // Adjust endpoint to fetch stories
+    return response.data; // Return the data
+  } catch (error) {
+    console.error("Error fetching stories:", error);
+    throw error; // Rethrow error for handling elsewhere
+  }
+};
+export const getAllStorieView = async ({
+  author_storie,
+  description,
+  sort,
+  page,
+}) => {
+  try {
+    // Use backticks for template literals
+    const response = await api.get(`/story/getAllStorieView`, {
+      params: {
+        author_storie, // Tìm kiếm theo tên tác giả
+        description, // Tìm kiếm theo mô tả (nếu cần)
+        sort, // Sắp xếp
+        page, // Trang hiện tại   // Giới hạn số lượng tác giả trên mỗi trang
+      },
+    }); // Adjust endpoint to fetch stories
+    return response.data; // Return the data
+  } catch (error) {
+    console.error("Error fetching stories:", error);
+    throw error; // Rethrow error for handling elsewhere
+  }
+};
+export const getAllStorieNew = async ({
+  author_storie,
+  description,
+  sort,
+  page,
+}) => {
+  try {
+    // Use backticks for template literals
+    const response = await api.get(`/story/getAllStorieNew`, {
+      params: {
+        author_storie, // Tìm kiếm theo tên tác giả
+        description, // Tìm kiếm theo mô tả (nếu cần)
+        sort, // Sắp xếp
+        page, // Trang hiện tại   // Giới hạn số lượng tác giả trên mỗi trang
+      },
+    }); // Adjust endpoint to fetch stories
+    return response.data; // Return the data
+  } catch (error) {
+    console.error("Error fetching stories:", error);
+    throw error; // Rethrow error for handling elsewhere
+  }
+};
 export const getAllStories = async ({
   story_name,
   description,
@@ -101,24 +157,24 @@ export const getAllStories = async ({
         sort, // Sắp xếp
         page, // Trang hiện tại   // Giới hạn số lượng tác giả trên mỗi trang
       },
-    }) // Adjust endpoint to fetch stories
-    return response.data // Return the data
+    }); // Adjust endpoint to fetch stories
+    return response.data; // Return the data
   } catch (error) {
-    console.error('Error fetching stories:', error)
-    throw error // Rethrow error for handling elsewhere
+    console.error("Error fetching stories:", error);
+    throw error; // Rethrow error for handling elsewhere
   }
-}
+};
 
 // Function to delete a story by ID
 export const deleteStory = async (id: number) => {
   try {
-    const response = await api.delete(`/story/delete/${id}`) // Use the correct endpoint for deleting a story
-    return response.data // Return the result if needed
+    const response = await api.delete(`/story/delete/${id}`); // Use the correct endpoint for deleting a story
+    return response.data; // Return the result if needed
   } catch (error) {
-    console.error('Error deleting story:', error)
-    throw error // Rethrow error for handling elsewhere
+    console.error("Error deleting story:", error);
+    throw error; // Rethrow error for handling elsewhere
   }
-}
+};
 
 // You can add more API calling functions here (add, update, etc. for stories)
 
@@ -126,5 +182,10 @@ export default {
   getStories,
   deleteStory,
   getAllStories,
+  getAllStorieView,
+  getAllStorieNew,
+  getStoryBySlug,
+
   createStory
 }
+
