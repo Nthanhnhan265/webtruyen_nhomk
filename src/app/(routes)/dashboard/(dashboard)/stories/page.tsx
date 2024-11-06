@@ -5,10 +5,12 @@ import Header from '../../_components/header';
 import ConfirmDeleteModal from '../../_components/story/ConfirmDeleteModal';
 import StoryModal from '../../_components/story/StoryModal';
 import { getAllStories, deleteStory } from '@/app/_api/story.api';
+import UpdateStoryModal from '../../_components/story/updateStoryModal';
 import { useEffect, useState } from 'react';
 import { FaEdit, FaPlus, FaSearch, FaTrash } from 'react-icons/fa';
 import { BsBoxArrowUpRight } from "react-icons/bs";
 import { Avatar } from "flowbite-react";
+import Image from 'next/image';
 
 interface Storie {
     id: number,
@@ -31,23 +33,23 @@ const storyPage = () => {
     const [stories, setStories] = useState<Storie[]>([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState('')
-    const [showUpdateModal, setShowUpdateModal] = useState(false)
-    const [showCreateModal, setShowCreateModal] = useState(false) // New state for Create Modal
-    const [selectedStory, setSelectedStory] = useState(null)
+    const [modalState, setModalState] = useState<{ type: 'create' | 'update' | null; story: Storie | null }>({ type: null, story: null });
+
     const [sortOrder, setSortOrder] = useState('asc')
-    const [searchTerm, setSearchTerm] = useState('')
     const [currentPage, setCurrentPage] = useState(1)
     const [totalPages, settotalPages] = useState(1);
     const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
     const [storyIdToDelete, setStoryIdToDelete] = useState<number | null>(null);
     const [keyword, setKeyWord] = useState<string>('')
+    const [editingStory, setEditingStory] = useState(null); // State to hold the story being edited
+    const [selectedStory, setSelectedStory] = useState(null); // Add this line
 
 
     const fetchStories = async () => {
         setLoading(true)
         try {
             const response = await getAllStories({
-                author_storie: keyword,
+                story_name: keyword,
                 description: keyword,
                 sort: sortOrder,
                 page: currentPage,
@@ -55,6 +57,8 @@ const storyPage = () => {
             setStories(response.stories)
             settotalPages(response.totalPages)
             setLoading(false)
+            console.log(response.stories);
+
         } catch (err) {
             setError('Đã xảy ra lỗi khi lấy dữ liệu.')
             setLoading(false)
@@ -63,7 +67,7 @@ const storyPage = () => {
 
     useEffect(() => {
         fetchStories()
-    }, [sortOrder, currentPage])
+    }, [sortOrder, currentPage, keyword])
 
     const handleDelete = async (id: number) => {
         setStoryIdToDelete(id);
@@ -71,9 +75,14 @@ const storyPage = () => {
     }
 
     const handleEdit = (story) => {
-        // setSelectedStory(story)
-        // setShowUpdateModal(true)
+        // alert(JSON.stringify(story));
+
+        setEditingStory(story); // Set the story to be edited
+        setModalState({ type: 'update', story });
     }
+    const handleCloseModal = () => {
+        setModalState({ type: null, story: null });
+    };
     const handleConfirmDelete = async () => {
         setDeleteModalOpen(false);
         try {
@@ -88,44 +97,27 @@ const storyPage = () => {
     const handleCreateSuccess = () => {
         // fetchStories()
     }
+    const handleSuccess = () => {
+        // fetchStories()
+    }
     const onPageChange = (page: number) => setCurrentPage(page);
     const handleSearch = async (keyword: string) => {
         console.log('checked>>', keyword)
         setKeyWord(keyword)
-    }
-    const search = () => {
         fetchStories()
-        setKeyWord('')
-
     }
     const detailStory = () => {
         alert("hiển thị chi tiết")
     }
-    if (loading) return <p>Đang tải dữ liệu...</p>
-    if (error) return <p>{error}</p>
+    // if (loading) return <p>Đang tải dữ liệu...</p>
+    // if (error) return <p>{error}</p>
 
     return (
         <>
             <div className="flex  flex-col h-screen ">
                 <div className="flex justify-between ">
-                    <div className="flex items-center w-2/3">
-                        <Header handleSearch={handleSearch}></Header>
+                    <Header handleSearch={handleSearch}></Header>
 
-                        <button
-                            className="text-black p-2 rounded ml-2 mb-2"
-                            onClick={() => search()} // Gọi hàm tìm kiếm khi nhấn nút
-                        >
-                            <FaSearch className="mr-2" /> {/* Biểu tượng tìm kiếm */}
-                        </button>
-                    </div>
-                    <div className="flex items-center">
-                        <img
-                            src="https://via.placeholder.com/50"
-                            alt="Avatar"
-                            className="rounded-full border border-gray-300 h-10 w-10 mr-2"
-                        />
-                        <p className="text-sm">Nguyễn Văn A</p>
-                    </div>
                 </div>
 
                 <div className="mb-4 mt-2 flex justify-between items-center">
@@ -133,10 +125,8 @@ const storyPage = () => {
                     <div className="flex space-x-4 ">
                         <Button
                             color="success"
-                            onClick={() => {
-                                setSelectedStory(null) // Reset selected story
-                                setShowCreateModal(true) // Open Create Story Modal
-                            }}
+                            onClick={() => setModalState({ type: 'create', story: null })} // Open Create Story Modal
+
                         >
                             + Tạo mới
                         </Button>
@@ -187,8 +177,8 @@ const storyPage = () => {
                                                 </button>
                                             </div>
                                         </td>
-                                        <td className="px-2 text-center text-sm">
-                                            <Avatar size="lg" className='my-2' />
+                                        <td className="px-2 flex justify-center text-sm">
+                                            <Image alt='' src={`http://localhost:3000/${story.cover}`} width={103} height={133} className='my-2 h-full' />
                                         </td>
                                         <td className="px-2 text-center text-sm">{story.story_name}</td>
                                         <td className="px-2 text-center text-sm">{story.author_id}</td>
@@ -226,11 +216,23 @@ const storyPage = () => {
                 onSuccess={handleSuccess}
                 initialData={selectedStory}
             /> */}
-                <StoryModal
-                    show={showCreateModal}
-                    onClose={() => setShowCreateModal(false)}
-                    onSuccess={handleCreateSuccess}
-                />
+
+                {modalState.type === 'create' && (
+                    <StoryModal
+                        show={true}
+                        onClose={handleCloseModal}
+                        onSuccess={handleCreateSuccess}
+                    />
+                )}
+                {modalState.type === 'update' && modalState.story && (
+                    <UpdateStoryModal
+                        show={true}
+                        onClose={handleCloseModal}
+                        onSuccess={handleSuccess}
+                        initialData={editingStory} // Pass the editing story data here
+                    />
+                )}
+
                 <ConfirmDeleteModal
                     isOpen={isDeleteModalOpen}
                     onClose={() => setDeleteModalOpen(false)}

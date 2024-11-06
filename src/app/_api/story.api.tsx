@@ -1,10 +1,80 @@
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
+import MESSAGE from '../message'
+import { log } from 'console'
 
 const api = axios.create({
   baseURL: 'http://localhost:3000/api', // API address
   timeout: 10000, // Timeout (milliseconds)
 })
 
+//=======Create========//
+export const createStory = async (data: FormData, selectedCategories) => {
+  try {
+    // alert(JSON.stringify(selectedCategories))
+    const response = await api.post('/story/create', data)
+    console.log("check tao cau truyen, ", response);
+
+    {
+      // alert(JSON.stringify(response))
+
+      selectedCategories && selectedCategories.map(async (categorie) => {
+        const newGenreStory = { story_id: response.data.story.data.id, genre_id: categorie }
+        const GenreStory = await api.post('/story-genre', newGenreStory)
+      })
+
+    }
+    if (response.data.success == true) {
+      alert("Tạo câu truyện thành công")
+    }
+    const result = response.data
+    // alert("result" + JSON.stringify(result))
+    // if (!result.success) {
+    //   throw new Error(result.message)
+    // }
+    console.log(result)
+    return null
+  } catch (error: any) {
+    if (error instanceof AxiosError) {
+      throw new Error(error?.response?.data?.message)
+    } else {
+      console.error(error)
+      throw new Error(MESSAGE.sys.unknownError)
+    }
+  }
+}
+export const updateStory = async (data: FormData, id: number) => {
+  try {
+    // alert(JSON.stringify(id))
+    const response = await api.put(`/story/update/${id}`, data)
+    // console.log("check tao cau truyen, ", response);
+
+    {
+      // alert(JSON.stringify(response))
+      // selectedCategories && selectedCategories.map(async (categorie) => {
+      //   const newGenreStory = { story_id: response.data.story.data.id, genre_id: categorie }
+      //   const GenreStory = await api.post('/story-genre', newGenreStory)
+      // })
+
+    }
+    if (response.data.success == true) {
+      alert("cập nhật câu truyện thành công")
+    }
+    const result = response.data
+    // alert("result" + JSON.stringify(result))
+    // if (!result.success) {
+    //   throw new Error(result.message)
+    // }
+    console.log(result)
+    return null
+  } catch (error: any) {
+    if (error instanceof AxiosError) {
+      throw new Error(error?.response?.data?.message)
+    } else {
+      console.error(error)
+      throw new Error(MESSAGE.sys.unknownError)
+    }
+  }
+}
 // Function to fetch the list of stories
 export const getStories = async (id: number) => {
   try {
@@ -17,7 +87,7 @@ export const getStories = async (id: number) => {
   }
 }
 export const getAllStories = async ({
-  author_storie,
+  story_name,
   description,
   sort,
   page,
@@ -26,7 +96,7 @@ export const getAllStories = async ({
     // Use backticks for template literals
     const response = await api.get(`/story`, {
       params: {
-        author_storie, // Tìm kiếm theo tên tác giả
+        story_name, // Tìm kiếm theo tên tác giả
         description, // Tìm kiếm theo mô tả (nếu cần)
         sort, // Sắp xếp
         page, // Trang hiện tại   // Giới hạn số lượng tác giả trên mỗi trang
@@ -56,4 +126,5 @@ export default {
   getStories,
   deleteStory,
   getAllStories,
+  createStory
 }
