@@ -6,6 +6,7 @@ import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { FcGoogle } from 'react-icons/fc'
+import NavbarComponent from '../../../components/navbar'
 import Message from '../../message'
 import Footer from '../_component/footer'
 
@@ -70,6 +71,7 @@ const Login = () => {
 
   return (
     <>
+      <NavbarComponent></NavbarComponent>
       <div className="min-h-screen flex items-center justify-center bg-white">
         <div className="bg-white rounded-lg p-6 flex">
           {/* Form Đăng Nhập */}

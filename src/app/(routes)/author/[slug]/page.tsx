@@ -8,6 +8,7 @@ import { useState } from 'react'
 // import GenreDropdown from '@/app/(routes)/_component/GenreDropdown';
 import Pagination from '@/app/(routes)/_component/Pagination'
 // import styles from '@/app/(routes)/_component/GenreDropdown.module.css';
+import NavbarComponent from '../../../../components/navbar'
 import styles from '../../_component/GenreDropdown.module.css'
 import Footer from '../../_component/footer'
 
@@ -40,6 +41,7 @@ const AuthorPage = () => {
 
   return (
     <div>
+      <NavbarComponent></NavbarComponent>
       {/* Thêm thông tin khác về tác giả */}
       <div className="">
         <div className=" justify-center items-center">

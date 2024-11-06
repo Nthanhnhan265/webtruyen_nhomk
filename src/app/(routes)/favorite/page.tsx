@@ -1,5 +1,6 @@
 'use client'
 import React from 'react'
+import NavbarComponent from '../../../components/navbar'
 import Footer from '../_component/footer'
 
 const FavoriteStories = () => {
@@ -42,6 +43,7 @@ const FavoriteStories = () => {
   ]
   return (
     <>
+      <NavbarComponent></NavbarComponent>
       {/* Main Content */}
       <main className="flex-1 p-14">
         <h1 className="text-2xl pl-6 border-l-4 border-l-red-600 font-semibold text-gray-500 mb-6">

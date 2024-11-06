@@ -6,6 +6,7 @@ import Pagination from '@/app/(routes)/_component/Pagination'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
+import NavbarComponent from '../../../../components/navbar'
 import styles from '../../_component/GenreDropdown.module.css'
 import Footer from '../../_component/footer'
 
@@ -69,6 +70,7 @@ const GenrePage = () => {
 
   return (
     <div className="">
+      <NavbarComponent></NavbarComponent>
       <p className="bg-gray-100 py-2 border-t border-gray-400 border-b pl-14">
         Truyện plus / {genre.name} / Trang 1
       </p>

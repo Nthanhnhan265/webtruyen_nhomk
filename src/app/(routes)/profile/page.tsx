@@ -26,14 +26,14 @@ const ProfilePage = () => {
       </div>
 
       {/* Sidebar */}
-      <div className="fixed top-16 left-0 w-64 h-screen bg-gray-800 text-white">
+      <div className="fixed top-24 left-0 w-64 h-screen bg-gray-800 text-white">
         {' '}
         {/* Thêm top-16 để tạo khoảng cách từ Navbar */}
         <UserSideBar />
       </div>
 
       {/* Nội dung chính */}
-      <div className="flex-1 ml-64 mt px-16 py-20 bg-black/5">
+      <div className="flex-1 ml-64 mt-10 px-16 py-20 bg-black/5">
         {/* Thông tin tài khoản */}
         <h2 className="border-l-2 border-red-600 ps-5 text-black/70 text-xl">
           Thông tin tài khoản
