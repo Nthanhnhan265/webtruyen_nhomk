@@ -3,15 +3,6 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { HiOutlineSearch } from 'react-icons/hi'
 import styles from './GenreDropdown.module.css'
-const genres = [
-  { id: 1, name: 'Tiên Hiệp', slug: 'tien-hiep' },
-  { id: 2, name: 'Kiếm Hiệp', slug: 'kiem-hiep' },
-  { id: 3, name: 'Ngôn Tình', slug: 'ngon-tinh' },
-  { id: 4, name: 'Quân Sự', slug: 'quan-su' },
-  { id: 5, name: 'Lịch Sử', slug: 'lich-su' },
-  { id: 6, name: 'Trinh Thám', slug: 'trinh-tham' },
-  // Thêm các thể loại khác
-]
 
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false)
