@@ -1,4 +1,5 @@
-Cấu trúc thư mục nextjs
+Nextjs v14.2.15
+Cấu trúc thư mục nextjs ()
 
 - src
   app/
