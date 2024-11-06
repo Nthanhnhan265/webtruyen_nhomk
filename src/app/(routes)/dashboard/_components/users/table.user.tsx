@@ -66,10 +66,10 @@ export default function UserTable(props: Iprops) {
                     )}
                   </td>
                   {/* whitespace-nowrap overflow-hidden text-ellipsis max-w-xs */}
-                  <td className="py-2 px-2 text-sm text-center">
+                  <td className="py-2 px-2 text-sm text-center whitespace-nowrap overflow-hidden text-ellipsis max-w-20">
                     {user.username}
                   </td>
-                  <td className="py-2 px-2 text-sm text-center">
+                  <td className="py-2 px-2 text-sm text-center whitespace-nowrap overflow-hidden text-ellipsis max-w-xs">
                     {user.email}
                   </td>
                   <td className="py-2 px-2 text-sm text-center">
