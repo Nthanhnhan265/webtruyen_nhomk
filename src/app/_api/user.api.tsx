@@ -7,7 +7,7 @@ const api = axios.create({
 })
 
 //=======Create========//
-const createUser = async (data: IDashboardUserForm) => {
+const createUser = async (data: FormData) => {
   try {
     const response = await api.post('/users', data)
     const result = response.data
@@ -34,9 +34,17 @@ const createUser = async (data: IDashboardUserForm) => {
   }
 }
 //=======Read========//
-const getUsers = async () => {
+const getUsers = async (
+  sortBy = 'id',
+  order = 'DESC',
+  page = 1,
+  limit = 10,
+) => {
   try {
-    const response = await api.get('/users')
+    // Gửi yêu cầu API với query params page và limit
+    const response = await api.get(
+      `/users?sortBy=${sortBy}&order=${order}&page=${page}&limit=${limit}`,
+    )
     return response.data
   } catch (error) {
     console.error(MESSAGE.user.fetchUserError, error)
@@ -55,10 +63,29 @@ const getUserById = (id: number) => {
     }
   }
 }
-//=======Update======//
-const updateUser = async (id: number, data: IDashboardUserForm) => {
+
+const searchUsers = async (
+  keyword: string,
+  sortBy: string,
+  order: string,
+  page: number,
+  limit: number,
+) => {
   try {
-    const response = await api.put(`/users/${id}`, data)
+    // Gửi yêu cầu API với query params page và limit
+    const response = await api.get(
+      `/users/search?keyword=${keyword}&sortBy=${sortBy}&order=${order}&page=${page}&limit=${limit}`,
+    )
+    return response.data
+  } catch (error) {
+    console.error(MESSAGE.user.fetchUserError, error)
+    throw error
+  }
+}
+//=======Update======//
+const updateUser = async (id: number, data: FormData) => {
+  try {
+    const response = await api.patch(`/users/${id}`, data)
     const result = response.data
     if (!result.success) {
       throw new Error(result.message)
@@ -67,6 +94,8 @@ const updateUser = async (id: number, data: IDashboardUserForm) => {
   } catch (error: any) {
     if (error instanceof AxiosError) {
       throw new Error(error?.response?.data?.message)
+    } else if (error.message) {
+      throw new Error(error.message)
     } else {
       console.error(error)
       throw new Error(MESSAGE.sys.unknownError)
@@ -94,4 +123,4 @@ const deleteUser = async (id: number) => {
   }
 }
 
-export { createUser, deleteUser, getUsers, updateUser }
+export { createUser, deleteUser, getUsers, searchUsers, updateUser }

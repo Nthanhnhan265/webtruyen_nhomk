@@ -3,6 +3,11 @@ const MESSAGE = {
     fetchError: 'Đã xảy ra lỗi khi lấy dữ liệu',
     loading: 'Đang tải dữ liệu...',
     unknownError: 'Lỗi không xác định',
+    noRecord: 'Không tìm thấy dữ liệu',
+  },
+  auth: {
+    emailRequired: 'Vui lòng nhập email',
+    passwordRequired: 'Vui lòng nhập mật khẩu',
   },
   user: {
     createSuccess: 'Tạo người dùng thành công',
@@ -23,7 +28,7 @@ const MESSAGE = {
       'Mật khẩu phải bao gồm chữ thường, in hoa, số và ký tự đặc biệt (!@#$%^&*).',
     passwordsNotMatch: 'Mật khẩu không khớp.',
     passwordRepeatLength: 'Vui lòng nhập mật khẩu hợp lệ (1-255 ký tự).',
-    coverImageRequired: 'Vui lòng chọn ảnh bìa cho tài khoản.',
+    coverImageRequired: 'Vui lòng chọn ảnh bìa cho khoản.',
     coverImageFormat: 'Vui lòng chọn định dạng hợp lệ.',
     coverImageSize:
       'Ảnh tải lên có kích thước lớn hơn 5 MB, vui lòng chọn ảnh có kích thước hợp lệ.',
@@ -34,6 +39,9 @@ const MESSAGE = {
     formatError: 'Vui lòng chọn định dạng hợp lệ (JPG, PNG, WEBP).',
     sizeError: 'Vui lòng chọn ảnh có kích thước hợp lệ (tối đa 5MB).',
     uploadFail: 'Tải lên ảnh bìa thất bại, vui lòng thử lại sau.',
+  },
+  chapter: {
+    confirmDelete: 'Bạn có muốn xóa chương này không',
   },
 }
 

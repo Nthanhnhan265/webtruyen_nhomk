@@ -1,14 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['localhost'],
+    domains: ['localhost', 'truyenplus.vn'], // Thêm tên miền 'truyenplus.vn'
   },
   compiler: {
     // Enables the styled-components SWC transform
     styledComponents: true,
-  },
-  images: {
-    domains: ['truyenplus.vn'], // Thêm tên miền 'truyenplus.vn'
   },
 }
 
