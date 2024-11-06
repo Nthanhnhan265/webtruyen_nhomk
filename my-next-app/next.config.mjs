@@ -1,5 +1,5 @@
-// next.config.mjs
-export default {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   reactStrictMode: true,
   env: {
     CUSTOM_KEY: "my-value",
@@ -12,6 +12,7 @@ export default {
       },
     ],
     domains: ["http://localhost:4000", "https://upload.wikimedia.org/*"],
+    domains: ["localhost"],
   },
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
     // Thêm các tùy chỉnh webpack ở đây
@@ -27,3 +28,5 @@ export default {
     ];
   },
 };
+
+export default nextConfig;
