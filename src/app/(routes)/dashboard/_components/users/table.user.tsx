@@ -17,7 +17,6 @@ interface Iprops {
 }
 export default function UserTable(props: Iprops) {
   //====Declare variables, hooks==========//
-  console.log(props.users[0])
   return (
     <div className="overflow-x-auto w-full">
       <table

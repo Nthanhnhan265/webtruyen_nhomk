@@ -8,6 +8,7 @@ import {
 } from '@/app/_api/user.api'
 import { Button, Label, Pagination, Select } from 'flowbite-react'
 import { useEffect, useState } from 'react'
+import { GoPlus } from 'react-icons/go'
 import { toast } from 'react-toastify'
 import Header from '../../_components/header'
 import UserTable from '../../_components/users/table.user'
@@ -127,7 +128,6 @@ const UserPage = () => {
     setIsDModalOpen(-1)
   }
 
-  console.log(imageErrors)
   //==========Handle Function============//
   //Nơi tạo các hàm xử lý cho bảng
   /*
@@ -210,14 +210,14 @@ const UserPage = () => {
         <h2 className="text-xl font-bold">{LABEL.user.label}</h2>
       </div>
       {/* sort */}
-      <div className="mb-2 ">
+      <div className="mb-3">
         <div className="mb-2 block">
           <Label
             htmlFor="sortBy"
             value={LABEL.sys.sortLabel}
           />
         </div>
-        <div className="flex justify-between gap-2">
+        <div className="flex flex-row justify-between gap-2">
           <div className="flex gap-2">
             <Select
               id="sortBy"
@@ -250,8 +250,12 @@ const UserPage = () => {
           <Button
             color="success"
             onClick={() => openCreateModal()}
+            className=" whitespace-nowrap overflow-hidden text-ellipsis max-w-xs "
           >
-            + {LABEL.sys.create}
+            <div className="flex justify-center items-center gap-2">
+              <GoPlus />
+              <span className="hidden sm:inine">{LABEL.sys.create}</span>
+            </div>
           </Button>
         </div>
       </div>
