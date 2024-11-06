@@ -17,7 +17,7 @@ export default function ReviewsPage() {
       id: 1,
       username: 'toilaA',
       star: 4.5,
-      comment: 'Truyện dở vãi đái',
+      comment: 'Truyện dở',
       story: 'Ten truyen',
     },
   ]

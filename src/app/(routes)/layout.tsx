@@ -1,4 +1,3 @@
-import NavbarComponent from '@/components/navbar'
 import type { Metadata } from 'next'
 export const metadata: Metadata = {
   title: 'Web Truyen',
@@ -12,10 +11,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
-        <NavbarComponent></NavbarComponent>
-        {children}
-      </body>
+      <body>{children}</body>
     </html>
   )
 }

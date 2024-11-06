@@ -2,6 +2,7 @@
 import { chapterByStory } from '@/app/_api/chapter.api' // Import API functions
 import { getStoryBySlug } from '@/app/_api/story.api' // Import API functions
 import { useEffect, useState } from 'react'
+import NavbarComponent from '../../../../components/navbar'
 import Footer from '../../_component/footer'
 
 interface Chapter {
@@ -70,6 +71,7 @@ const page = ({ params }: { params: { slug: string } }) => {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-100">
+      <NavbarComponent></NavbarComponent>
       {/* Main Content */}
       <main className="flex flex-grow max-w-7xl mx-auto py-8 px-4 space-x-6">
         {/* Left Column - Book Details and Chapter List */}
