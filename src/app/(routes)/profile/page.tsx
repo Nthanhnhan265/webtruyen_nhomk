@@ -5,7 +5,7 @@ import { PiImagesSquare, PiMountainsFill } from "react-icons/pi";
 import { LuPencilLine } from "react-icons/lu";
 import { useRouter } from 'next/navigation'; // Thêm import useRouter
 import styles from '../../_component/GenreDropdown.module.css';
-import SideBar from '../../(routes)/dashboard/_components/sidebar';
+import SideBar from '../../(routes)/dashboard/_components/sidebar_profile';
 import Navbar from '@/app/(routes)/_component/Navbar';
 
 const ProfilePage = () => {
