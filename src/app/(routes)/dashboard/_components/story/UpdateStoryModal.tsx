@@ -1,113 +1,103 @@
+'use client'
+
 import React, { useState, useEffect } from 'react';
 import { FileInput, Label } from "flowbite-react";
 import { getAuthorsName } from '@/app/_api/authorService';
+import { getAllgenreByName } from '@/app/_api/genre.api';
 import { toast } from 'react-toastify';
-import { createStory } from '@/app/_api/story.api'
-import { getAllgenreByName } from '@/app/_api/genre.api'
+import { updateStory } from '@/app/_api/story.api';
 import Image from 'next/image';
-// In your component where you render StoryModal
-const StoryModal = ({ show, onClose, onSuccess }) => {
+
+interface StoryModalProps {
+    show: boolean;
+    onClose: () => void;
+    onSuccess: () => void;
+    initialData?: {
+        story_name: string;
+        status: string;
+        description: string;
+        author_id: string;
+        total_chapters: number;
+        views: number;
+        keywords: string;
+        slug: string;
+        cover: File | null;
+    } | null;
+}
+
+const UpdateStoryModal: React.FC<StoryModalProps> = ({ show, onClose, onSuccess, initialData }) => {
     if (!show) return null;
-    const categoriess = [
-        { id: 1, name: 'Fantasy' },
-        { id: 2, name: 'Science Fiction' },
-        { id: 3, name: 'Mystery' },
-        { id: 4, name: 'Romance' },
-        { id: 5, name: 'Horror' },
-        { id: 5, name: 'Horror' },
-        { id: 5, name: 'Horror' },
-        { id: 5, name: 'Horror' },
-        { id: 5, name: 'Horror' },
-        { id: 5, name: 'Horror' },
-        { id: 5, name: 'Horror' },
-        { id: 5, name: 'Horror' },
-        { id: 5, name: 'Horror' },
-        { id: 5, name: 'Horror' },
-        { id: 5, name: 'Horror' },
-        { id: 5, name: 'Horror' },
-        { id: 5, name: 'Horror' },
-    ];
 
-    const [authors, setAuthors] = useState([])
-    const [categories, setCategories] = useState([])
-    const [error, setError] = useState('')
+    const [authors, setAuthors] = useState([]);
+    const [categories, setCategories] = useState([]); // Assuming categories will be fetched or defined
+    const [error, setError] = useState('');
 
-    // Define state variables for each story attribute
-    const [tags, setTags] = useState([]); // State cho tags
+    const [tags, setTags] = useState([]);
     const [status, setStatus] = useState('');
     const [authorId, setAuthorId] = useState('');
     const [description, setDescription] = useState('');
     const [storyName, setStoryName] = useState('');
     const [totalChapters, setTotalChapters] = useState(0);
     const [views, setViews] = useState(0);
-    const [cover, setCover] = useState(null);
-    const [coverPreview, setCoverPreview] = useState(null);
+    const [coverFile, setCoverFile] = useState<File | null>(null);
+    const [coverPreview, setCoverPreview] = useState<string | null>(null);
     const [keywords, setKeywords] = useState('');
     const [slug, setSlug] = useState('');
     const [selectedCategories, setSelectedCategories] = useState([]);
-    const [showMore, setShowMore] = useState(false); // State for showing more categories
-    const [coverFile, setCoverFile] = useState<any>()
-    const [imageErrors, setImageErrors] = useState<Boolean>(false)
+    const [showMore, setShowMore] = useState(false);
+
     const fetchAuthors = async () => {
         try {
             const response = await getAuthorsName();
             const responseGenre = await getAllgenreByName();
             setAuthors(response.data.authors)
             setCategories(responseGenre.data)
-            // alert(JSON.stringify(responseGenre))
+            // alert(JSON.stringify(initialData))
             console.log(response.data.authors);
-
+            if (initialData) {
+                setStoryName(initialData.story_name);
+                setStatus(initialData.status);
+                setDescription(initialData.description);
+                setAuthorId(initialData.author_id);
+                setTotalChapters(initialData.total_chapters);
+                setViews(initialData.views);
+                setKeywords(initialData.keywords);
+                setSlug(initialData.slug);
+                setCoverFile(initialData.cover);
+                if (initialData.cover instanceof File) {
+                    setCoverFile(initialData.cover);
+                    setCoverPreview(URL.createObjectURL(initialData.cover)); // Use createObjectURL for File
+                } else {
+                    // Assume it's a URL string
+                    setCoverPreview(initialData.cover || null);
+                    setCoverFile(null); // Clear cover file if it's not a File
+                }
+                setSelectedCategories(initialData.categories || []); // Assuming categories are included in initialData
+            } else {
+                // Clear state if no initialData
+                setCoverFile(null);
+                setCoverPreview(null);
+            }
         } catch (err) {
             setError('Đã xảy ra lỗi khi lấy dữ liệu.')
         }
     }
-
     useEffect(() => {
-        fetchAuthors()
-    }, [])
-    // Handle file input change
-    //===================== Handle functions =======================//
-    /** VALIDATE FILE UPLOADED
-     * kiểm tra file ảnh được tải lên có hợp lệ không
-     *  @param {File} file - Đối tượng kiểu File
-     *  @returns {Boolean}
-     * */
-    const validateFile = (file: File) => {
 
-        console.log(file)
-        const maxSize = 5 * 1024 * 1024
-        const validFormats = ['image/jpeg', 'image/png', 'image/webp']
-        if (!file) {
-            toast.error("MESSAGE.user.uploadError")
-            return false
-        }
-        if (!validFormats.includes(file.type)) {
-            toast.error("MESSAGE.user.formatError")
-            return false
-        }
-        if (file.size > maxSize) {
-            toast.error("MESSAGE.user.sizeError")
-            return false
-        }
-        return true
-    }
+        fetchAuthors();
+        // alert("check initialData", initialData)
 
-    /** HANDLE UPLOAD FILE AND VALIDATION
-     * Thực thi thay đổi file và xác minh định dạng, size, kiểu file
-     * @param event
-     * @returns
-     */
+    }, [initialData]);
+
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const fileList = event.target.files
+        const fileList = event.target.files;
         if (fileList && fileList.length > 0) {
-            const file = fileList[0]
-            if (!validateFile(file)) {
-                return
-            }
-            console.log()
-            setCoverFile(file)
+            const file = fileList[0];
+            setCoverFile(file);
+            setCoverPreview(URL.createObjectURL(file)); // Set preview for the new cover
         }
-    }
+    };
+
     const handleCategoryChange = (event) => {
         const value = String(event.target.value); // Chuyển đổi giá trị thành chuỗi
         setSelectedCategories((prevSelected) => {
@@ -119,9 +109,8 @@ const StoryModal = ({ show, onClose, onSuccess }) => {
     };
 
 
-    // Handle form submission
-    const handleSubmit = async (e) => {
-        e.preventDefault()
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
         if (!storyName.trim() || !description.trim() || !slug.trim() || !authorId) {
             toast.error("Các trường tên truyện, mô tả, slug và tác giả không được để trống.");
             return;
@@ -133,48 +122,42 @@ const StoryModal = ({ show, onClose, onSuccess }) => {
             toast.error("Tên truyện, mô tả và slug không được chứa ký tự đặc biệt.");
             return;
         }
-        if (!validateFile(coverFile)) {
-            return
-        }
-        //status, author_id, description, story_name, total_chapters, views, keywords, slug 
         const formData = new FormData();
-        formData.append('story_name', storyName)
-        formData.append('status', status)
-        formData.append('description', description)
-        formData.append('author_id', authorId)
-        formData.append('total_chapters', `${totalChapters}`)
-        formData.append('keywords', keywords)
-        formData.append('slug', slug)
-        formData.append('cover', coverFile)
-        const formDataObject = Object.fromEntries(formData.entries())
-        console.log(formDataObject) // In ra toàn bộ dữ liệu dưới dạng object
-        await createStory(formData, selectedCategories)
+        formData.append('story_name', storyName);
+        formData.append('status', status);
+        formData.append('description', description);
+        formData.append('author_id', authorId);
+        formData.append('total_chapters', totalChapters.toString());
+        formData.append('views', views.toString());
+        formData.append('keywords', keywords);
+        formData.append('slug', slug);
+        if (coverFile) {
+            formData.append('cover', coverFile);
+        }
 
-        onClose();
-    };
-
-    // On tags changed
-    const onTagsChanged = (newTags) => {
-        setTags(newTags); // Cập nhật state tags
+        try {
+            await updateStory(formData, initialData.id);
+            toast.success('cập nhật thành công !');
+            onSuccess();
+            onClose();
+        } catch (err) {
+            toast.error('cập nhật thất bại');
+        }
     };
 
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
             <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-4xl">
                 <div className="flex justify-between items-center mb-6">
-                    <h2 className="text-2xl font-semibold">Thêm Truyện Mới</h2>
+                    <h2 className="text-2xl font-semibold">Cập nhật Truyện</h2>
                     <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
                         X
                     </button>
                 </div>
                 <hr className='mb-5' />
-                <form onSubmit={(e) => handleSubmit(e)}>
-                    {/* {line 1} */}
-                    {/* xs sm md lg */}
-                    <div className=" lg:flex lg:grid-cols-2 gap-5 mb-4 justify-normal">
+                <form onSubmit={handleSubmit}>
+                    <div className="lg:flex lg:grid-cols-2 gap-5 mb-4 justify-normal">
                         <div className='w-full lg:w-80 me-5'>
-
-                            {/* {tên truyện} */}
                             <div>
                                 <label className="block text-sm font-medium">Tên Truyện:</label>
                                 <input
@@ -182,11 +165,8 @@ const StoryModal = ({ show, onClose, onSuccess }) => {
                                     className="w-full border p-2 rounded"
                                     value={storyName}
                                     onChange={(e) => setStoryName(e.target.value)}
-
                                 />
                             </div>
-                            {/* {từ khóa} */}
-
                             <div>
                                 <label className="block text-sm font-medium">Từ Khóa:</label>
                                 <input
@@ -198,10 +178,7 @@ const StoryModal = ({ show, onClose, onSuccess }) => {
                             </div>
                         </div>
                         <div className='md:flex w-full'>
-                            <div className='me-10  md:basis-1/2'>
-
-                                {/* {tác giả id} */}
-
+                            <div className='me-10 md:basis-1/2'>
                                 <div>
                                     <select
                                         className="w-full border p-2 rounded"
@@ -215,17 +192,13 @@ const StoryModal = ({ show, onClose, onSuccess }) => {
                                             </option>
                                         ))}
                                     </select>
-
                                 </div>
-                                {/* {trạng thái} */}
-
                                 <div>
                                     <label className="block text-sm font-medium">Trạng Thái:</label>
                                     <select
                                         className="w-full border p-2 rounded"
                                         value={status}
                                         onChange={(e) => setStatus(e.target.value)}
-
                                     >
                                         <option value="">Chọn trạng thái</option>
                                         <option value="ongoing">Đang cập nhật</option>
@@ -234,11 +207,18 @@ const StoryModal = ({ show, onClose, onSuccess }) => {
                                 </div>
                             </div>
                             <div>
-                                {/* {ảnh bìa} */}
-                                <div>
-
-                                    <div className="flex w-full items-center justify-center relative">
-                                        {coverFile &&
+                                <div className="flex w-full items-center justify-center relative">
+                                    {initialData && typeof initialData.cover === 'string' && !coverFile ? (
+                                        <Image
+                                            src={`http://localhost:3000/${initialData.cover}`}
+                                            // Thêm dấu gạch chéo dẫn trước cho đường dẫn tương đối
+                                            alt="Existing Cover"
+                                            width={400}
+                                            height={400}
+                                            className="absolute w-full h-full rounded-lg z-[1]"
+                                        />
+                                    ) :
+                                        (coverFile &&
                                             <Image
                                                 src={URL.createObjectURL(coverFile)}
                                                 alt="avatar"
@@ -246,52 +226,46 @@ const StoryModal = ({ show, onClose, onSuccess }) => {
                                                 height={400}
                                                 className="absolute w-full h-full rounded-lg  z-[1]"
                                             />
+                                        )
 
-                                        }
-                                        <Label
-                                            htmlFor="cover"
-                                            className="flex z-10 h-40 w-40 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600  dark:hover:border-gray-500 "
-                                        >
+                                    }
 
-                                            <div className="flex flex-col items-center justify-center pb-6 pt-5">
-                                                <svg
-                                                    className="mb-4 h-8 w-8 text-gray-500 dark:text-gray-400"
-                                                    aria-hidden="true"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    fill="none"
-                                                    viewBox="0 0 20 16"
-                                                >
-                                                    <path
-                                                        stroke="currentColor"
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                        strokeWidth="2"
-                                                        d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
-                                                    />
-                                                </svg>
-                                                <p className="mb-2 text-center text-sm text-gray-500 dark:text-gray-400">
-                                                    <span className="font-semibold">Click to upload</span> or drag and drop
-                                                </p>
-                                                <p className="text-xs text-center text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
-                                            </div>
-                                            <FileInput
-                                                id="cover"
-                                                className="hidden"
-                                                accept="image/*"
-                                                onChange={handleFileChange}
-                                            />
-                                        </Label>
-                                    </div>
+                                    <Label
+                                        htmlFor="cover"
+                                        className="flex z-10 h-40 w-40 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600 dark:hover:border-gray-500"
+                                    >
+                                        <div className="flex flex-col items-center justify-center pb-6 pt-5">
+                                            <svg
+                                                className="mb-4 h-8 w-8 text-gray-500 dark:text-gray-400"
+                                                aria-hidden="true"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                fill="none"
+                                                viewBox="0 0 20 16"
+                                            >
+                                                <path
+                                                    stroke="currentColor"
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth="2"
+                                                    d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 10.5 1 5.5 5.5 0 0 0 5 6.5c0 1.114.354 2.143.944 3h-.44A3 3 0 0 0 2 13h11zm-3-1v-1h3v1m-3-4h3m-3-4h3m-3-4h3"
+                                                />
+                                            </svg>
+                                            <p className="text-xs text-gray-500 dark:text-gray-400">
+                                                Chọn hình bìa
+                                            </p>
+                                        </div>
+                                        <FileInput
+                                            id="cover"
+                                            onChange={handleFileChange}
+                                            accept="image/*"
+                                            className="absolute inset-0 cursor-pointer opacity-0"
+                                        />
+                                    </Label>
                                 </div>
                             </div>
                         </div>
-
-
-
                     </div>
-                    {/* {mô tả line 2} */}
-
-                    <div className="mb-4">
+                    <div>
                         <label className="block text-sm font-medium">Mô Tả:</label>
                         <textarea
                             className="w-full border p-2 rounded"
@@ -299,8 +273,6 @@ const StoryModal = ({ show, onClose, onSuccess }) => {
                             onChange={(e) => setDescription(e.target.value)}
                         />
                     </div>
-
-                    {/* {line 3} */}
                     <div className='flex grid-cols-2'>
                         {/* {the loai} */}
 
@@ -350,21 +322,9 @@ const StoryModal = ({ show, onClose, onSuccess }) => {
 
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4 mb-4">
-                    </div>
-                    <div className="flex justify-end mt-6">
-                        <button
-                            type="button"
-                            className="mr-2 px-4 py-2 bg-red-500 text-white rounded"
-                            onClick={onClose}
-                        >
-                            Hủy
-                        </button>
-                        <button
-                            type="submit"
-                            className="px-4 py-2 bg-blue-500 text-white rounded"
-                        >
-                            Lưu
+                    <div className="flex justify-end">
+                        <button type="submit" className="bg-blue-500 text-white rounded px-4 py-2">
+                            Cập nhật
                         </button>
                     </div>
                 </form>
@@ -373,4 +333,4 @@ const StoryModal = ({ show, onClose, onSuccess }) => {
     );
 };
 
-export default StoryModal;
+export default UpdateStoryModal;
