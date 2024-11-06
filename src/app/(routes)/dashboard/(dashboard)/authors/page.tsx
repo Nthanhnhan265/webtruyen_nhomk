@@ -52,7 +52,7 @@ const AuthorPage = () => {
 
   useEffect(() => {
     fetchAuthors()
-  }, [sortOrder, currentPage])
+  }, [sortOrder, currentPage, keyword])
 
   const handleDelete = (id: number) => {
     setAuthorToDelete(id);
@@ -70,12 +70,9 @@ const AuthorPage = () => {
   const handleSearch = async (keyword: string) => {
     console.log('checked>>', keyword)
     setKeyWord(keyword)
-  }
-  const search = () => {
     fetchAuthors()
-    setKeyWord('')
-
   }
+
   const onPageChange = (page: number) => setCurrentPage(page);
   const confirmDelete = async () => {
     if (authorToDelete !== null) {
@@ -93,29 +90,10 @@ const AuthorPage = () => {
   };
 
 
-  if (loading) return <p>Đang tải dữ liệu...</p>
-  if (error) return <p>{error}</p>
-
   return (
     <div className="flex flex-col h-screen">
       <div className="flex justify-between mb-2 p-4">
-        <div className="flex items-center">
-          <Header handleSearch={handleSearch} />
-          <button
-            className="text-black p-2 rounded ml-2 mb-2"
-            onClick={() => search()}
-          >
-            <FaSearch className="mr-2" />
-          </button>
-        </div>
-        <div className="flex items-center">
-          <img
-            src="https://via.placeholder.com/50"
-            alt="Avatar"
-            className="rounded-full border border-gray-300 h-10 w-10 mr-2"
-          />
-          <p className="text-sm">Nguyễn Văn A</p>
-        </div>
+        <Header handleSearch={handleSearch} />
       </div>
 
       <div className="flex justify-between items-center px-4">
