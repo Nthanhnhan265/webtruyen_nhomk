@@ -1,8 +1,4 @@
-
 "use client"; // Chạy trên client
-// /author/quan-hu
-// "use client";
-// image ,button,form ở flowbite,react icon 
 import { useParams } from 'next/navigation';
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
@@ -71,23 +67,26 @@ const GenrePage = () => {
   const books = booksData[genre.slug] || [];
 
   return (
-    <div className="">
+    <div className="font-sans bg-gray-100">
       <Navbar />
-      <p className="bg-gray-100 py-2 border-t border-gray-400 border-b pl-14">Truyện plus / {genre.name} / Trang 1</p>
-      <div className='ml-14 mt-8 mb-4'>
-
-        <span className='font-bold'> Truyện <span className='font-bold'>{genre.name}</span></span>
+      <p className="bg-gray-100 py-2 border-t border-gray-400 border-b pl-4 sm:pl-14 text-center sm:text-left">
+        Truyện plus / {genre.name} / Trang 1
+      </p>
+      <div className="ml-4 sm:ml-14 mt-8 mb-4">
+        <span className="font-bold">Truyện <span className="font-bold">{genre.name}</span></span>
       </div>
-      <hr className='ml-14' />
-      <p className='ml-14 my-3'>{`Truyện ${genre.name} thường kể về quá trình tu luyện và khám phá thế giới tu sĩ thần tiên đầy bí ẩn của nhân vật chính.`}</p>
-      <div className="background-body bg-gray-100 py-5 px-5 ml-14 ">
-        <div className="container">
+      <hr className="ml-4 sm:ml-14" />
+      <p className="ml-4 sm:ml-14 my-3 text-center sm:text-left">
+        {`Truyện ${genre.name} thường kể về quá trình tu luyện và khám phá thế giới tu sĩ thần tiên đầy bí ẩn của nhân vật chính.`}
+      </p>
+      <div className="background-body bg-gray-100 py-5 px-4 sm:px-5">
+        <div className="container mx-auto">
           {books.map((book, index) => (
-            <div className="grid grid-cols-12 gap-4 mb-4" key={index}>
-              <div className="col-span-3">
-                <Image src={book.img} alt={book.title} width={300} height={150} />
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-4 mb-4" key={index}>
+              <div className="col-span-1 sm:col-span-3">
+                <Image src={book.img} alt={book.title} width={300} height={150} className="w-full" />
               </div>
-              <div className="col-span-9">
+              <div className="col-span-1 sm:col-span-9">
                 <Link href="" className={styles.hoverNameTitle}>{book.title}</Link>
                 <br />
                 <span>Tác giả:</span> <Link className={styles.hoverName} href={`/author/${book.slug}`}>{book.author}</Link>
@@ -101,33 +100,35 @@ const GenrePage = () => {
           <Pagination currentPage={currentPage} totalPages={totalPages} />
         </div>
       </div>
-      <footer className="bg-gray-100 p-4 grid grid-cols-2 mt-5 pl-14">
-        <div >
+
+      {/* Footer */}
+      <footer className="bg-gray-100 p-4 grid grid-cols-1 sm:grid-cols-2 mt-5 pl-4 sm:pl-14">
+        <div className="mb-4 sm:mb-0">
           Truyện Plus – Trang đọc truyện online, thường xuyên cập nhật những bộ truyện hay nhất thuộc các thể loại đặc sắc như: truyện ngôn tình, truyện tiên hiệp, truyện kiếm hiệp, truyện đam mỹ, light novel…
           <br />
           Mọi vấn đề vi phạm bản quyền vui lòng liên hệ qua email: <span className={styles.textFoot}>truyenchomonline@gmail.com</span>
         </div>
         <div>
-          <div className="grid grid-cols-4 gap-1"> {/* Giảm khoảng cách giữa các button */}
-            {/* Hàng 1 */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2"> {/* Cải thiện khoảng cách và bố cục */}
             <CustomButton href="/some-page" title="Go to some page" text="Truyện Full" />
             <CustomButton href="/some-page" title="Go to some page" text="Truyện Hot" />
             <CustomButton href="/some-page" title="Go to some page" text="Ngôn Tình Hay" />
             <CustomButton href="/some-page" title="Go to some page" text="Ngôn Tình Hài" />
-
-            {/* Hàng 2 */}
-            <CustomButton href="/some-page" title="Go to some page" text="Ngôn Tình Hài" />
-            <CustomButton href="/some-page" title="Go to some page" text="Ngôn Tình Hài" />
-            <CustomButton href="/some-page" title="Go to some page" text="Ngôn Tình Hài" />
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-2"> {/* Cải thiện khoảng cách và bố cục */}
+            <CustomButton href="/some-page" title="Go to some page" text="Truyện Full" />
+            <CustomButton href="/some-page" title="Go to some page" text="Truyện Hot" />
+            <CustomButton href="/some-page" title="Go to some page" text="Ngôn Tình Hay" />
             <CustomButton href="/some-page" title="Go to some page" text="Ngôn Tình Hài" />
           </div>
 
-        <div className={styles.contact}>
+          <div className={styles.contact}>
           <a href="/contact" title="Contact">Contact</a>
-          <span>-</span>
-          <a href="/tos" title="Terms of Service">ToS</a>
-          <a className="backtop" title="Trở lên đầu trang" href="#" rel="nofollow" aria-label="Trở về đầu trang">⬆</a>
-        </div>
+              <span>-</span>
+              <a href="/tos" title="Terms of Service">ToS</a>
+              
+              <a className="backtop" title="Trở lên đầu trang" href="#" rel="nofollow" aria-label="Trở về đầu trang">⬆</a>
+          </div>
         </div>
       </footer>
     </div>
