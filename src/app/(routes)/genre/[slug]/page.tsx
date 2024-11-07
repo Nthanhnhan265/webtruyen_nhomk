@@ -67,7 +67,9 @@ const GenrePage = () => {
   const books = booksData[genre.slug] || [];
 
   return (
-    <div className="font-sans bg-gray-100">
+    <div>
+
+   
       <Navbar />
       <p className="bg-gray-100 py-2 border-t border-gray-400 border-b pl-4 sm:pl-14 text-center sm:text-left">
         Truyện plus / {genre.name} / Trang 1
@@ -79,8 +81,9 @@ const GenrePage = () => {
       <p className="ml-4 sm:ml-14 my-3 text-center sm:text-left">
         {`Truyện ${genre.name} thường kể về quá trình tu luyện và khám phá thế giới tu sĩ thần tiên đầy bí ẩn của nhân vật chính.`}
       </p>
-      <div className="background-body bg-gray-100 py-5 px-4 sm:px-5">
-        <div className="container mx-auto">
+      <div className="font-sans bg-gray-100 ml-14">
+      <div className="background-body bg-gray-100 py-5 px-4 sm:px-5 ml-8">
+        <div className="container mx-auto ">
           {books.map((book, index) => (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-4 mb-4" key={index}>
               <div className="col-span-1 sm:col-span-3">
@@ -102,7 +105,8 @@ const GenrePage = () => {
       </div>
 
       {/* Footer */}
-      <footer className="bg-gray-100 p-4 grid grid-cols-1 sm:grid-cols-2 mt-5 pl-4 sm:pl-14">
+    </div>
+      <footer className="bg-gray-100 p-4 grid grid-cols-1 sm:grid-cols-2 mt-5 pl-4 sm:pl-14 ml-14">
         <div className="mb-4 sm:mb-0">
           Truyện Plus – Trang đọc truyện online, thường xuyên cập nhật những bộ truyện hay nhất thuộc các thể loại đặc sắc như: truyện ngôn tình, truyện tiên hiệp, truyện kiếm hiệp, truyện đam mỹ, light novel…
           <br />

@@ -33,7 +33,9 @@ const AuthorPage = () => {
   }
 
   return (
-    <div className="font-sans bg-gray-100">
+    <div>
+
+    
       <Navbar />
       <p className="bg-gray-100 py-2 border-t border-gray-400 border-b pl-4 sm:pl-14 text-center sm:text-left">
         Truyện plus / {author.name} / Trang 1
@@ -47,8 +49,8 @@ const AuthorPage = () => {
         <p className='ml-4 sm:ml-10 my-3 text-center sm:text-left'>
           Tổng hợp truyện của tác giả {author.name} mới nhất trên Truyện Chom.
         </p>
-
-        <div className="backgroundBody bg-gray-100 py-5 px-4 sm:px-5">
+        <div className="font-sans bg-gray-100 ml-9">
+        <div className="backgroundBody bg-gray-100 py-5 px-4 sm:px-5 ">
           {/* Danh sách sách */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-4 mb-4">
             <div className="col-span-1 sm:col-span-3">
@@ -84,7 +86,7 @@ const AuthorPage = () => {
       </div>
 
       {/* Footer */}
-      <footer className="bg-gray-100 p-4 grid grid-cols-1 sm:grid-cols-2 gap-4 mt-5 pl-4 sm:pl-14">
+      <footer className="bg-gray-100 p-4 grid grid-cols-1 sm:grid-cols-2 gap-4 mt-5 pl-4 sm:pl-14 ml-9">
         <div>
           Truyện Plus – Trang đọc truyện online, thường xuyên cập nhật những bộ truyện hay nhất thuộc các thể loại đặc sắc như: truyện ngôn tình, truyện tiên hiệp, truyện kiếm hiệp, truyện đam mỹ, light novel…
           <br />
@@ -111,6 +113,7 @@ const AuthorPage = () => {
           </div>
         </div>
       </footer>
+    </div>
     </div>
   );
 };

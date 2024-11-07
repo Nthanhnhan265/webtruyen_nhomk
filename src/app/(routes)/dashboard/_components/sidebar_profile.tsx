@@ -10,7 +10,7 @@ interface Iprop {
   onClickNavbar: (navbar: string) => void
   isActiveNav: string
 }
-const Sidebar = () => {
+ const Sidebar = () => {
   const CENTER = 'flex items-center gap-4 justify-start'
   return (
     <div className="bg-white text-gray-800 min-h-screen h-full flex flex-col shadow-lg">
