@@ -11,6 +11,12 @@ interface IUser {
   status: boolean
   created_at: string
 }
+interface ILoggedinUser {
+  userId: number
+  username: string
+  email: string
+  token: string
+}
 interface IChapter {
   id: number
   order: number

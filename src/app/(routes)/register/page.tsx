@@ -183,7 +183,7 @@ const Register = () => {
             </form>
             <div className="flex justify-between mt-4 text-sm text-blue-500">
               <a href="/login">Đăng nhập</a>
-              <a href="#">Quên mật khẩu</a>
+              <a href="/reset-password">Quên mật khẩu</a>
             </div>
           </div>
           <div>
