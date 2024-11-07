@@ -21,6 +21,7 @@ Cấu trúc thư mục nextjs ()
 ## Tham khảo:
 
 - Flowbite React thư viện có sẵn components: (https://flowbite-react.com/docs/)
+- React hook form thư viện xác thực dữ liệu đầu vào cho form: (https://react-hook-form.com/docs)
 - TailwindCss cung cấp class css có sẵn: (https://tailwindcss.com/docs/grid-column)
 - Toastify react thư viện thông báo lỗi: (https://github.com/fkhadra/react-toastify)
 - React icon: (https://react-icons.github.io/react-icons/icons/sl/)
