@@ -19,16 +19,16 @@ const LABEL = {
     user: 'Người dùng',
     admin: 'Quản trị',
   },
- author: {
+  author: {
     label: 'Tác Giả',
     createLabel: 'Thêm tác giả',
     editLabel: 'Sửa tác giả ',
     deleteLabel: 'Xóa tác giả',
     usernameLabel: 'Tên tác giả',
-    describeLabel: "Mô tả",
-    act: "Hành động",
+    describeLabel: 'Mô tả',
+    act: 'Hành động',
     createdAtLabel: 'Ngày tạo',
-    url: "URL",
+    url: 'URL',
   },
   story: {
     author: 'Tác giả',
@@ -58,6 +58,7 @@ const LABEL = {
     label: 'Đánh giá',
   },
   sys: {
+    account: 'Tài khoản',
     send: 'Gửi',
     publishedAtLabel: 'Ngày xuất bản',
     createdAtLabel: 'Ngày tạo',

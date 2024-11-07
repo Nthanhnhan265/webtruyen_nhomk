@@ -8,6 +8,7 @@ import { AiOutlineComment, AiOutlineStar } from 'react-icons/ai'
 import { BiCog } from 'react-icons/bi'
 import { GoX } from 'react-icons/go'
 import { HiOutlineUsers } from 'react-icons/hi'
+import { HiSquares2X2 } from 'react-icons/hi2'
 import { LuTag, LuUserCircle2 } from 'react-icons/lu'
 import { MdBook } from 'react-icons/md'
 import LABEL from '../label'
@@ -20,6 +21,11 @@ interface INavItem {
 const Sidebar = () => {
   //===================== DECLARE VARIABLE, HOOKS ====================//
   const navItems: INavItem[] = [
+    {
+      href: '/dashboard',
+      label: LABEL.sys.account,
+      icon: HiSquares2X2,
+    },
     {
       href: '/dashboard/users',
       label: LABEL.user.label,

@@ -12,7 +12,7 @@ import StoryModal from '../../_components/story/StoryModal'
 interface Storie {
   id: number
   status: string
-  author_id: number
+  Author: { author_id: number; author_name: string }
   description: string
   story_name: string
   total_chapters: number
@@ -197,7 +197,7 @@ const storyPage = () => {
                       {story.story_name}
                     </td>
                     <td className="px-2 text-center text-sm">
-                      {story.author_id}
+                      {story.Author?.author_name}
                     </td>
                     <td className="px-2 text-center text-sm">
                       {story.status === 1 ? 'Đã xuất bản' : 'Chưa xuất bản'}
