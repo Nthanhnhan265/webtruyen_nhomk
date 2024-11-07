@@ -16,7 +16,7 @@ const Sidebar = () => {
     <div className="bg-white text-gray-800 min-h-screen h-full flex flex-col shadow-lg">
 
 
-      <ul className="flex flex-col gap-4 opacity-60 pe-4 pt-3 space-y-2 flex-grow">
+      <ul className="flex flex-col gap-4 opacity-60 pe-4 pt-7 space-y-2 flex-grow">
 
         <li className="ps-8 relative hover:border-l-4 hover:border-red-600">
           <Link
