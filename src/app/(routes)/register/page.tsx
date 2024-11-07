@@ -37,7 +37,7 @@ const Register = () => {
 
       if (newUserResponse.status === 201) {
         setTimeout(() => {
-          router.push('/')
+          router.push('/login')
         }, 2000)
       }
     } catch (error) {
