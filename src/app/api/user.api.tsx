@@ -3,13 +3,17 @@ import MESSAGE from '../(routes)/dashboard/message'
 
 const api = axios.create({
   baseURL: 'http://localhost:3000/api',
-  timeout: 5000,
+  timeout: 2000,
 })
 
 //=======Create========//
 const createUser = async (data: FormData) => {
   try {
-    const response = await api.post('/users', data)
+    const response = await api.post('/users', data, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+      },
+    })
     const result = response.data
     if (!result.success) {
       throw new Error(result.message)
@@ -41,9 +45,14 @@ const getUsers = async (
   limit = 10,
 ) => {
   try {
-    // Gửi yêu cầu API với query params page và limit
+    console.log(process.env.NODE_API_URL)
     const response = await api.get(
       `/users?sortBy=${sortBy}&order=${order}&page=${page}&limit=${limit}`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      },
     )
     return response.data
   } catch (error) {
@@ -75,6 +84,11 @@ const searchUsers = async (
     // Gửi yêu cầu API với query params page và limit
     const response = await api.get(
       `/users/search?keyword=${keyword}&sortBy=${sortBy}&order=${order}&page=${page}&limit=${limit}`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      },
     )
     return response.data
   } catch (error) {
@@ -85,7 +99,11 @@ const searchUsers = async (
 //=======Update======//
 const updateUser = async (id: number, data: FormData) => {
   try {
-    const response = await api.patch(`/users/${id}`, data)
+    const response = await api.patch(`/users/${id}`, data, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+      },
+    })
     const result = response.data
     if (!result.success) {
       throw new Error(result.message)
@@ -106,7 +124,11 @@ const updateUser = async (id: number, data: FormData) => {
 //=======Delete========//
 const deleteUser = async (id: number) => {
   try {
-    const response: IResponse = await api.delete(`/users/${id}`)
+    const response: IResponse = await api.delete(`/users/${id}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+      },
+    })
     const result = response.data
     console.log(result)
     if (!result.success) {

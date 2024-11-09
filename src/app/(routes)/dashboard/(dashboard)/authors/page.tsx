@@ -1,19 +1,17 @@
 'use client'
-import { deleteAuthor, getAuthors } from '@/app/_api/authorService'
+import { deleteAuthor, getAuthors } from '@/app/api/authorService'
+import { Button, Pagination } from 'flowbite-react'
 import { useEffect, useState } from 'react'
-import { Pagination } from "flowbite-react";
-import { Button } from 'flowbite-react'
 
-import { FaEdit, FaPlus, FaSearch, FaTrash } from 'react-icons/fa'
 import AuthorModal from '../../_components/author/AuthorModal'
 import UpdateAuthorModal from '../../_components/author/UpdateAuthorModal'
 import Header from '../../_components/header'
-import ConfirmDeleteModal from '../../_components/story/ConfirmDeleteModal';
+import ConfirmDeleteModal from '../../_components/story/ConfirmDeleteModal'
 interface Author {
-  id: number;
-  author_name: string;
-  description: string;
-  slug: string;
+  id: number
+  author_name: string
+  description: string
+  slug: string
 }
 const AuthorPage = () => {
   //============ Declare variables and hooks ================//
@@ -26,10 +24,10 @@ const AuthorPage = () => {
   const [sortOrder, setSortOrder] = useState('asc')
   const [searchTerm, setSearchTerm] = useState('')
   const [keyword, setKeyWord] = useState<string>('')
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, settotalPages] = useState(1);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [authorToDelete, setAuthorToDelete] = useState<number | null>(null);
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalPages, settotalPages] = useState(1)
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [authorToDelete, setAuthorToDelete] = useState<number | null>(null)
   const limit = 4
 
   const fetchAuthors = async () => {
@@ -55,12 +53,12 @@ const AuthorPage = () => {
   }, [sortOrder, currentPage, keyword])
 
   const handleDelete = (id: number) => {
-    setAuthorToDelete(id);
-    setShowDeleteModal(true); // Open the delete confirmation modal
-  };
+    setAuthorToDelete(id)
+    setShowDeleteModal(true) // Open the delete confirmation modal
+  }
   const handleSuccess = (data: Author) => {
     // Handle success, maybe update state or refetch data
-  };
+  }
 
   const handleEdit = (author: Author) => {
     setSelectedAuthor(author)
@@ -73,22 +71,21 @@ const AuthorPage = () => {
     fetchAuthors()
   }
 
-  const onPageChange = (page: number) => setCurrentPage(page);
+  const onPageChange = (page: number) => setCurrentPage(page)
   const confirmDelete = async () => {
     if (authorToDelete !== null) {
       try {
-        await deleteAuthor(authorToDelete);
+        await deleteAuthor(authorToDelete)
         setAuthors((prevAuthors) =>
           prevAuthors.filter((author) => author.id !== authorToDelete),
-        );
-        setShowDeleteModal(false);
-        setAuthorToDelete(null);
+        )
+        setShowDeleteModal(false)
+        setAuthorToDelete(null)
       } catch (err) {
-        setError('Đã xảy ra lỗi khi xóa tác giả.');
+        setError('Đã xảy ra lỗi khi xóa tác giả.')
       }
     }
-  };
-
+  }
 
   return (
     <div className="flex flex-col h-screen">
@@ -101,8 +98,8 @@ const AuthorPage = () => {
         <Button
           color="success"
           onClick={() => {
-            setSelectedAuthor(null);
-            setShowCreateModal(true);
+            setSelectedAuthor(null)
+            setShowCreateModal(true)
           }}
         >
           + Tạo mới
@@ -133,23 +130,39 @@ const AuthorPage = () => {
           <tbody>
             {authors.length === 0 ? (
               <tr>
-                <td colSpan={5} className="py-4 text-center">
+                <td
+                  colSpan={5}
+                  className="py-4 text-center"
+                >
                   Không tìm thấy tác giả nào.
                 </td>
               </tr>
             ) : (
               authors.map((author) => (
-                <tr className="bg-white" key={author.id}>
+                <tr
+                  className="bg-white"
+                  key={author.id}
+                >
                   <td className="py-2 px-1 text-center">{author.id}</td>
-                  <td className="py-2 px-1 text-center">{author.author_name}</td>
-                  <td className="py-2 px-1 text-center">{author.description}</td>
+                  <td className="py-2 px-1 text-center">
+                    {author.author_name}
+                  </td>
+                  <td className="py-2 px-1 text-center">
+                    {author.description}
+                  </td>
                   <td className="py-2 px-1 text-center">{author.slug}</td>
                   <td className="py-2 px-1 text-center">
                     <div className="flex justify-center space-x-1">
-                      <Button color="warning" onClick={() => handleEdit(author)}>
+                      <Button
+                        color="warning"
+                        onClick={() => handleEdit(author)}
+                      >
                         Sửa
                       </Button>
-                      <Button color="failure" onClick={() => handleDelete(author.id)}>
+                      <Button
+                        color="failure"
+                        onClick={() => handleDelete(author.id)}
+                      >
                         Xóa
                       </Button>
                     </div>
@@ -160,7 +173,11 @@ const AuthorPage = () => {
           </tbody>
         </table>
         <div className="flex justify-center mt-4">
-          <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={onPageChange} />
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={onPageChange}
+          />
         </div>
       </div>
 
@@ -180,8 +197,8 @@ const AuthorPage = () => {
         onClose={() => setShowDeleteModal(false)}
         onConfirm={confirmDelete}
       />
-    </div >
-  );
+    </div>
+  )
 }
 
-export default AuthorPage;
+export default AuthorPage

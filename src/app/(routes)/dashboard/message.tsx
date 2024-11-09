@@ -8,6 +8,7 @@ const MESSAGE = {
   auth: {
     emailRequired: 'Vui lòng nhập email',
     passwordRequired: 'Vui lòng nhập mật khẩu',
+    loginSuccess: 'Đăng nhập thành công, chào mừng trở lại!',
   },
   user: {
     createSuccess: 'Tạo người dùng thành công',

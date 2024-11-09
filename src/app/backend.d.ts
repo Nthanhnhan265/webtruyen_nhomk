@@ -12,10 +12,10 @@ interface IUser {
   created_at: string
 }
 interface ILoggedinUser {
-  userId: number
-  username: string
-  email: string
-  token: string
+  id: string | undefined
+  username: string | undefined
+  email: string | undefined
+  avatar: string | undefined
 }
 interface IChapter {
   id: number

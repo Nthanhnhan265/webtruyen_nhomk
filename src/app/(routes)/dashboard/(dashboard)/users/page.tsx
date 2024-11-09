@@ -5,7 +5,7 @@ import {
   getUsers,
   searchUsers,
   updateUser,
-} from '@/app/_api/user.api'
+} from '@/app/api/user.api'
 import { Button, Label, Pagination, Select } from 'flowbite-react'
 import { useEffect, useState } from 'react'
 import { GoPlus } from 'react-icons/go'
