@@ -8,6 +8,7 @@ import { FcGoogle } from "react-icons/fc";
 import { useRouter } from "next/navigation";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Checkbox, Label, TextInput } from "flowbite-react";
+import Cookies from "js-cookie";
 
 // Định nghĩa kiểu cho dữ liệu biểu mẫu
 interface FormData {
@@ -22,30 +23,31 @@ const Login = () => {
     handleSubmit,
     formState: { errors, isSubmitting },
     setError,
-  } = useForm<FormData>(); // Sử dụng FormData làm kiểu cho useForm
+  } = useForm<FormData>();
   const router = useRouter();
 
-  // Định nghĩa hàm onSubmit với kiểu SubmitHandler của FormData
+  // Định nghĩa hàm onSubmit
   const onSubmit: SubmitHandler<FormData> = async ({
     username,
     password,
     rememberMe,
   }) => {
     try {
-      const response = await axios.post("http://localhost:3000/api/login", {
-        username,
-        password,
-      });
-
+      const response = await axios.post(
+        "http://localhost:3000/api/login",
+        {
+          username,
+          password,
+        },
+        {
+          withCredentials: true, // Đảm bảo thêm vào đúng đối tượng config
+        }
+      );
       if (response.status === 200) {
         const { token } = response.data;
-        localStorage.setItem("token", token);
 
-        if (rememberMe) {
-          localStorage.setItem("username", username);
-        } else {
-          localStorage.removeItem("username");
-        }
+        // Lưu token vào cookie thay vì localStorage
+        Cookies.set("authToken", token, { expires: rememberMe ? 7 : 1 });
 
         setTimeout(() => {
           router.push("/");
@@ -73,7 +75,6 @@ const Login = () => {
       <Navbar />
       <div className="min-h-screen flex items-center justify-center bg-white">
         <div className="bg-white rounded-lg p-6 flex">
-          {/* Form Đăng Nhập */}
           <div className="w-96 p-6">
             <h1 className="text-gray-700 text-2xl font-bold mb-6 text-center">
               Đăng nhập
@@ -118,7 +119,6 @@ const Login = () => {
                       value: 50,
                       message: "Mật khẩu không được quá 50 ký tự",
                     },
-                    
                   })}
                   className="text-gray-700 w-full"
                 />
@@ -153,11 +153,10 @@ const Login = () => {
               <a href="/register">Đăng ký tài khoản</a>
             </div>
             <button className="w-full flex items-center justify-center mt-4 p-2 border rounded text-gray-700 bg-gray-200">
-              <FcGoogle  className="mr-2" />
+              <FcGoogle className="mr-2" />
               Đăng nhập với Google
             </button>
           </div>
-          {/* Hình ảnh */}
           <div>
             <Image
               src="/images/anhnen.jpg"
