@@ -1,32 +1,47 @@
-import styles from '@/app/(routes)/_component/GenreDropdown.module.css'
-import { Avatar } from 'flowbite-react'
-import Link from 'next/link'
-import { useState } from 'react'
-import { FaSearch } from 'react-icons/fa'
-import { RxHamburgerMenu } from 'react-icons/rx'
-const genres = [
-  { id: 1, name: 'Tiên Hiệp', slug: 'tien-hiep' },
-  { id: 2, name: 'Kiếm Hiệp', slug: 'kiem-hiep' },
-  { id: 3, name: 'Ngôn Tình', slug: 'ngon-tinh' },
-  { id: 4, name: 'Quân Sự', slug: 'quan-su' },
-  { id: 5, name: 'Lịch Sử', slug: 'lich-su' },
-  { id: 6, name: 'Trinh Thám', slug: 'trinh-tham' },
-  // Thêm các thể loại khác
-]
+import { useState, useEffect } from 'react'; 
+import styles from '@/app/(routes)/_component/GenreDropdown.module.css';
+import { Avatar } from 'flowbite-react';
+import Link from 'next/link';
+import { FaSearch } from 'react-icons/fa';
+import { RxHamburgerMenu } from 'react-icons/rx';
+
 const NavBar = () => {
-  const [isOpen, setIsOpen] = useState(false)
-  const [isListOpen, setIsListOpen] = useState(false)
-  const [isCategoryOpen, setIsCategoryOpen] = useState(false)
-  const toggleList = () => setIsListOpen(!isListOpen)
-  const toggleCategory = () => setIsCategoryOpen(!isCategoryOpen)
+  const [isOpen, setIsOpen] = useState(false);
+  const [isListOpen, setIsListOpen] = useState(false);
+  const [genres, setGenres] = useState<any[]>([]); // Khởi tạo genres là mảng trống
+  const [isCategoryOpen, setIsCategoryOpen] = useState(false);
+
+  // Toggle functions
+  const toggleList = () => setIsListOpen(!isListOpen);
+  const toggleCategory = () => setIsCategoryOpen(!isCategoryOpen);
+
+  // Fetch genres from backend
+  useEffect(() => {
+    const fetchGenres = async () => {
+      try {
+        const res = await fetch('http://localhost:5000/api/genres'); // Đường dẫn API
+        const data = await res.json();
+
+        // Kiểm tra xem dữ liệu trả về có phải là mảng không
+        if (Array.isArray(data)) {
+          setGenres(data); // Cập nhật genres nếu là mảng
+        } else {
+          console.error('Dữ liệu không phải là mảng', data);
+          setGenres([]); // Đặt genres là mảng trống nếu không phải mảng
+        }
+      } catch (err) {
+        console.error('Lỗi khi lấy dữ liệu thể loại:', err);
+        setGenres([]); // Đặt genres là mảng trống nếu có lỗi
+      }
+    };
+
+    fetchGenres(); // Gọi hàm fetchGenres khi component được render
+  }, []); // Chỉ gọi 1 lần khi component mount
 
   return (
     <nav className="flex flex-col sm:flex-row justify-between items-center p-4 border-b-2 border-gray-200 bg-white px-5 md:px-10 lg:px-20">
       <div className="flex justify-center basis-1/5 md:justify-start items-center w-full text-2xl font-bold">
-        <Link
-          href="/"
-          className="flex items-center"
-        >
+        <Link href="/" className="flex items-center">
           <span className="text-red-500">truyen</span>
           <span className="mx-1">✨</span>
           <span className="text-red-500">chom</span>
@@ -38,18 +53,12 @@ const NavBar = () => {
             <button className="hover:text-red-500">DANH SÁCH</button>
             <ul className="absolute mt-2 p-2 bg-white shadow-md hidden group-hover:block">
               <li>
-                <Link
-                  href="/list1"
-                  className="block px-4 py-2 hover:bg-gray-100"
-                >
+                <Link href="/list1" className="block px-4 py-2 hover:bg-gray-100">
                   List 1
                 </Link>
               </li>
               <li>
-                <Link
-                  href="/list2"
-                  className="block px-4 py-2 hover:bg-gray-100"
-                >
+                <Link href="/list2" className="block px-4 py-2 hover:bg-gray-100">
                   List 2
                 </Link>
               </li>
@@ -65,15 +74,19 @@ const NavBar = () => {
               <div>THỂ LOẠI</div>
               {isOpen && (
                 <div className={styles.dropdownContent}>
-                  {genres.map((genre, index) => (
-                    <Link
-                      className={styles.genreItem}
-                      key={index}
-                      href={`/genre/${genre.slug}`}
-                    >
-                      {genre.name}
-                    </Link>
-                  ))}
+                  {genres.length === 0 ? (
+                    <div>Đang tải thể loại...</div>
+                  ) : (
+                    genres.map((genre, index) => (
+                      <Link
+                        className={styles.genreItem}
+                        key={index}
+                        href={`/genre/${genre.slug}`}
+                      >
+                        {genre.genre_name} {/* Hiển thị genre_name thay vì slug */}
+                      </Link>
+                    ))
+                  )}
                 </div>
               )}
             </div>
@@ -94,9 +107,7 @@ const NavBar = () => {
           <Avatar rounded>
             <div className="space-y-1 font-medium dark:text-white hidden md:block">
               <div>Xin chào</div>
-              <div className="text-sm text-gray-500 dark:text-gray-400">
-                username
-              </div>
+              <div className="text-sm text-gray-500 dark:text-gray-400">username</div>
             </div>
           </Avatar>
           <div className="inline-block md:hidden">
@@ -105,7 +116,7 @@ const NavBar = () => {
         </div>
       </div>
     </nav>
-  )
-}
+  );
+};
 
-export default NavBar
+export default NavBar;

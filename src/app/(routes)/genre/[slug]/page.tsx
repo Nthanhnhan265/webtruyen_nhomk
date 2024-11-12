@@ -1,4 +1,4 @@
-"use client"; // Chạy trên client
+"use client"; // Đảm bảo chạy trên client
 import { useParams } from 'next/navigation';
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
@@ -8,104 +8,124 @@ import Pagination from '@/app/(routes)/_component/Pagination';
 import CustomButton from '@/app/(routes)/_component/CustomButton';
 import styles from '../../_component/GenreDropdown.module.css';
 
-const genres = [
-  { id: 1, name: 'Tiên Hiệp', slug: 'tien-hiep' },
-  { id: 2, name: 'Kiếm Hiệp', slug: 'kiem-hiep' },
-  { id: 3, name: 'Ngôn Tình', slug: 'ngon-tinh' },
-  { id: 4, name: 'Quân Sự', slug: 'quan-su' },
-  { id: 5, name: 'Lịch Sử', slug: 'lich-su' },
-  { id: 6, name: 'Trinh Thám', slug: 'trinh-tham' },
-];
-
-const booksData = {
-  'tien-hiep': [
-    {
-      slug: 'quan-hu',
-      title: 'Trận Hỏi Trường Sinh',
-      author: 'Quan Hư',
-      genres: 'Tiên Hiệp, Ngôn Tình, Huyền Huyễn, Khác',
-      chapters: 205,
-      img: 'https://truyenplus.vn/media/book/tran-hoi-truong-sinh.jpeg',
-    },
-    {
-      slug: 'hach-dong-luc-chien-liet-ham',
-      title: 'Xuất Lung Ký',
-      author: 'Hạch Động Lực Chiến Liệt Hạm',
-      genres: 'Tiên Hiệp, Võng Du, Khoa Huyễn, Dã Sử, Hệ Thống, Khác',
-      chapters: 1484,
-      img: 'https://truyenplus.vn/media/book/xuat-lung-ky.jpeg',
-    },
-  ],
-  'kiem-hiep': [
-    {
-      title: 'Lang Thiên Kiếm Thần',
-      author: 'Quan Hư',
-      genres: 'Tiên Hiệp, Ngôn Tình, Huyền Huyễn, Khác',
-      chapters: 205,
-      img: 'https://truyenplus.vn/media/book/lang-thien-kiem-than.jpg',
-    },
-    {
-      title: 'Đại Sư Huynh',
-      author: 'Hạch Động Lực Chiến Liệt Hạm',
-      genres: 'Tiên Hiệp, Võng Du, Khoa Huyễn, Dã Sử, Hệ Thống, Khác',
-      chapters: 1484,
-      img: 'https://truyenplus.vn/media/book/dai-su-huynh-khong-co-gi-la-khong-co-gi-la-dai-su-huynh.jpg',
-    },
-  ],
-};
-
 const GenrePage = () => {
-  const { slug } = useParams();
-  const genre = genres.find((g) => g.slug === slug);
+  const { slug } = useParams(); // Lấy slug thể loại từ URL
+
+  const [books, setBooks] = useState<any[]>([]); // Khởi tạo books là một mảng
+  const [loading, setLoading] = useState(true);
   const currentPage = 1;
   const totalPages = 5;
 
-  if (!genre) {
-    return <div>Thể loại không tồn tại</div>;
-  }
+  useEffect(() => {
+    const fetchBooks = async () => {
+      try {
+        // Gọi API để lấy danh sách truyện của thể loại này
+        const res = await fetch(`http://localhost:5000/api/genre/${slug}`);
+        const data = await res.json();
 
-  const books = booksData[genre.slug] || [];
+        // Kiểm tra và đảm bảo data là một mảng
+        if (Array.isArray(data)) {
+          setBooks(data); // Nếu data là mảng, đặt books = data
+        } else if (data.data && Array.isArray(data.data)) {
+          // Nếu API trả về đối tượng chứa mảng trong trường `data`
+          setBooks(data.data);
+        } else {
+          setBooks([]); // Nếu không có mảng dữ liệu, đặt books là mảng rỗng
+        }
+      } catch (err) {
+        console.error("Lỗi khi tải dữ liệu:", err);
+        setBooks([]); // Đặt books là mảng rỗng trong trường hợp lỗi
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (slug) {
+      fetchBooks();
+    }
+  }, [slug]);
+
+  if (loading) {
+    return <div>Đang tải dữ liệu...</div>;
+  }
 
   return (
     <div>
-
-   
       <Navbar />
+      {books.length === 0 ? (
+        <p>Không có truyện nào trong thể loại này.</p>
+      ) : (
+        books.map((book, index) => (
+                
       <p className="bg-gray-100 py-2 border-t border-gray-400 border-b pl-4 sm:pl-14 text-center sm:text-left">
-        Truyện plus / {genre.name} / Trang 1
+        Truyện plus / {book.genre_name} / Trang 1
       </p>
+        ))
+      )}
+       {books.length === 0 ? (
+        <p>Không có truyện nào trong thể loại này.</p>
+      ) : (
+        books.map((book, index) => (
+                
+   
       <div className="ml-4 sm:ml-14 mt-8 mb-4">
-        <span className="font-bold">Truyện <span className="font-bold">{genre.name}</span></span>
+        <span className="font-bold">Truyện thể loại <span className="font-bold">{book.genre_name}</span></span>
       </div>
-      <hr className="ml-4 sm:ml-14" />
+        ))
+      )}
+            <hr className="ml-4 sm:ml-14" />
+        {books.length === 0 ? (
+        <p>Không có truyện nào trong thể loại này.</p>
+      ) : (
+        books.map((book, index) => (
+                
+   
+      
       <p className="ml-4 sm:ml-14 my-3 text-center sm:text-left">
-        {`Truyện ${genre.name} thường kể về quá trình tu luyện và khám phá thế giới tu sĩ thần tiên đầy bí ẩn của nhân vật chính.`}
+
+        {book.description}
       </p>
+        ))
+      )}
+
       <div className="font-sans bg-gray-100 ml-14">
-      <div className="background-body bg-gray-100 py-5 px-4 sm:px-5 ml-8">
-        <div className="container mx-auto ">
-          {books.map((book, index) => (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-4 mb-4" key={index}>
-              <div className="col-span-1 sm:col-span-3">
-                <Image src={book.img} alt={book.title} width={300} height={150} className="w-full" />
-              </div>
-              <div className="col-span-1 sm:col-span-9">
-                <Link href="" className={styles.hoverNameTitle}>{book.title}</Link>
-                <br />
-                <span>Tác giả:</span> <Link className={styles.hoverName} href={`/author/${book.slug}`}>{book.author}</Link>
-                <br />
-                <span>Thể Loại:</span> <Link href="">{book.genres}</Link>
-                <br />
-                <span>Số chương:</span> <Link href="">{book.chapters}</Link>
-              </div>
-            </div>
-          ))}
+        <div className="background-body bg-gray-100 py-5 px-4 sm:px-5 ml-8">
+          <div className="container mx-auto">
+            {books.length === 0 ? (
+              <p>Không có truyện nào trong thể loại này.</p>
+            ) : (
+              books.map((book, index) => (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-4 mb-4" key={index}>
+                  <div className="col-span-1 sm:col-span-3">
+                    <Image
+                      src="https://truyenplus.vn/media/book/tran-hoi-truong-sinh.jpeg"
+                      alt={book.story_name}
+                      width={300}
+                      height={150}
+                      className="w-full"
+                    />
+                  </div>
+                  <div className="col-span-1 sm:col-span-9">
+                    <Link href={`/story/${book.story_slug}`} className={styles.hoverNameTitle}>
+                      {book.story_name}
+                    </Link>
+                    <br />
+                    <span>Tác giả:</span>
+                    <Link className={styles.hoverName} href={`/author/${book.author_slug}`}>
+                      {book.author_name}
+                    </Link>
+                    <br />
+                    <span>Thể loại:</span> <Link href={`/genre/${slug}`}>{book.genre_name}</Link>
+                    <br />
+                    <span>Số chương:</span><Link href={`/story/${book.story_slug}`}>{book.total_chapters}</Link>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
           <Pagination currentPage={currentPage} totalPages={totalPages} />
         </div>
       </div>
-
-      {/* Footer */}
-    </div>
       <footer className="bg-gray-100 p-4 grid grid-cols-1 sm:grid-cols-2 mt-5 pl-4 sm:pl-14 ml-14">
         <div className="mb-4 sm:mb-0">
           Truyện Plus – Trang đọc truyện online, thường xuyên cập nhật những bộ truyện hay nhất thuộc các thể loại đặc sắc như: truyện ngôn tình, truyện tiên hiệp, truyện kiếm hiệp, truyện đam mỹ, light novel…
@@ -114,16 +134,16 @@ const GenrePage = () => {
         </div>
         <div>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2"> {/* Cải thiện khoảng cách và bố cục */}
-            <CustomButton href="/some-page" title="Go to some page" text="Truyện Full" />
-            <CustomButton href="/some-page" title="Go to some page" text="Truyện Hot" />
-            <CustomButton href="/some-page" title="Go to some page" text="Ngôn Tình Hay" />
-            <CustomButton href="/some-page" title="Go to some page" text="Ngôn Tình Hài" />
+            <CustomButton href="/some-page" title="Go to some page" text="Action" />
+            <CustomButton href="/some-page" title="Go to some page" text="Adventure" />
+            <CustomButton href="/some-page" title="Go to some page" text="Romance" />
+            <CustomButton href="/some-page" title="Go to some page" text="Fantansy" />
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-2"> {/* Cải thiện khoảng cách và bố cục */}
-            <CustomButton href="/some-page" title="Go to some page" text="Truyện Full" />
-            <CustomButton href="/some-page" title="Go to some page" text="Truyện Hot" />
+            <CustomButton href="/some-page" title="Go to some page" text="Horror" />
+            {/* <CustomButton href="/some-page" title="Go to some page" text="Truyện Hot" />
             <CustomButton href="/some-page" title="Go to some page" text="Ngôn Tình Hay" />
-            <CustomButton href="/some-page" title="Go to some page" text="Ngôn Tình Hài" />
+            <CustomButton href="/some-page" title="Go to some page" text="Ngôn Tình Hài" /> */}
           </div>
 
           <div className={styles.contact}>
@@ -136,6 +156,7 @@ const GenrePage = () => {
         </div>
       </footer>
     </div>
+    
   );
 };
 
