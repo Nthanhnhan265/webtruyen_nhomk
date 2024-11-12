@@ -6,12 +6,18 @@ import { useEffect, useState } from 'react'
 import { getAllStorieNew, getAllStorieView } from '@/app/api/story.api'
 import NavBar from '../components/navbar'
 import Footer from './(routes)/_component/footer'
-
+interface Story {
+  story_name: string
+  total_chapters: number
+  keywords: string
+  slug: string
+  cover: string
+}
 export default function HomePage() {
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
-  const [hotStories, setHotStories] = useState([])
-  const [newStories, setNewStories] = useState([])
+  const [hotStories, setHotStories] = useState<Story[]>([])
+  const [newStories, setNewStories] = useState<Story[]>([])
 
   const fetchStories = async () => {
     const params = {
@@ -31,10 +37,10 @@ export default function HomePage() {
       console.error('Error fetching stories:', error)
     }
   }
-  const handleClick = (slug) => {
+  const handleClick = (slug: string) => {
     window.location.href = `/stories/${slug}`
   }
-  const onPageChange = (page) => {
+  const onPageChange = (page: number) => {
     setCurrentPage(page)
   }
 

@@ -8,31 +8,25 @@ const api = axios.create({
   baseURL: "http://localhost:3000/api", // API address
   timeout: 10000, // Timeout (milliseconds)
 });
+interface Genre {
 
+}
 //=======Create========//
-export const createStory = async (data: FormData, selectedCategories) => {
+export const createStory = async (data: FormData, selectedGenre: any) => {
   try {
-    // alert(JSON.stringify(selectedCategories))
     const response = await api.post('/story/create', data)
     console.log("check tao cau truyen, ", response);
-
     {
-      // alert(JSON.stringify(response))
-
-      selectedCategories && selectedCategories.map(async (categorie) => {
-        const newGenreStory = { story_id: response.data.story.data.id, genre_id: categorie }
+      selectedGenre && selectedGenre.map(async (genre: number) => {
+        const newGenreStory = { story_id: response.data.story.data.id, genre_id: genre }
         const GenreStory = await api.post('/story-genre', newGenreStory)
       })
-
     }
     if (response.data.success == true) {
-      alert("Tạo câu truyện thành công")
+      console.log();
+      ("Tạo câu truyện thành công")
     }
     const result = response.data
-    // alert("result" + JSON.stringify(result))
-    // if (!result.success) {
-    //   throw new Error(result.message)
-    // }
     console.log(result)
     return null
   } catch (error: any) {
@@ -46,26 +40,13 @@ export const createStory = async (data: FormData, selectedCategories) => {
 }
 export const updateStory = async (data: FormData, id: number) => {
   try {
-    // alert(JSON.stringify(id))
     const response = await api.put(`/story/update/${id}`, data)
-    // console.log("check tao cau truyen, ", response);
 
-    {
-      // alert(JSON.stringify(response))
-      // selectedCategories && selectedCategories.map(async (categorie) => {
-      //   const newGenreStory = { story_id: response.data.story.data.id, genre_id: categorie }
-      //   const GenreStory = await api.post('/story-genre', newGenreStory)
-      // })
-
-    }
     if (response.data.success == true) {
-      alert("cập nhật câu truyện thành công")
+      console.log();
+      ("cập nhật câu truyện thành công")
     }
     const result = response.data
-    // alert("result" + JSON.stringify(result))
-    // if (!result.success) {
-    //   throw new Error(result.message)
-    // }
     console.log(result)
     return null
   } catch (error: any) {
@@ -77,25 +58,31 @@ export const updateStory = async (data: FormData, id: number) => {
     }
   }
 }
-// Function to fetch the list of stories
 export const getStories = async (id: number) => {
   try {
-    // Use backticks for template literals
-    const response = await api.get(`/story/${id}`); // Adjust endpoint to fetch stories
-    return response.data; // Return the data
+    const response = await api.get(`/story/${id}`);
+    return response.data;
   } catch (error) {
     console.error("Error fetching stories:", error);
-    throw error; // Rethrow error for handling elsewhere
+    throw error;
   }
 };
-export const getStoryBySlug = async (slug) => {
+export const getStoryBySlug = async (slug: string) => {
   try {
-    // Use backticks for template literals
-    const response = await api.get(`/story/getStoryBySlug/${slug}`); // Adjust endpoint to fetch stories
-    return response.data; // Return the data
+    const response = await api.get(`/story/getStoryBySlug/${slug}`);
+    return response.data;
   } catch (error) {
     console.error("Error fetching stories:", error);
-    throw error; // Rethrow error for handling elsewhere
+    throw error;
+  }
+};
+export const getStoryById = async (id: number) => {
+  try {
+    const response = await api.get(`/story/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching stories:", error);
+    throw error;
   }
 };
 export const getAllStorieView = async ({
@@ -105,19 +92,18 @@ export const getAllStorieView = async ({
   page,
 }) => {
   try {
-    // Use backticks for template literals
     const response = await api.get(`/story/getAllStorieView`, {
       params: {
-        author_storie, // Tìm kiếm theo tên tác giả
-        description, // Tìm kiếm theo mô tả (nếu cần)
-        sort, // Sắp xếp
-        page, // Trang hiện tại   // Giới hạn số lượng tác giả trên mỗi trang
+        author_storie,
+        description,
+        sort,
+        page
       },
-    }); // Adjust endpoint to fetch stories
-    return response.data; // Return the data
+    });
+    return response.data;
   } catch (error) {
     console.error("Error fetching stories:", error);
-    throw error; // Rethrow error for handling elsewhere
+    throw error;
   }
 };
 export const getAllStorieNew = async ({
@@ -145,39 +131,36 @@ export const getAllStorieNew = async ({
 export const getAllStories = async ({
   story_name,
   description,
+  sortBy,
   sort,
   page,
 }) => {
   try {
-    // Use backticks for template literals
     const response = await api.get(`/story`, {
       params: {
-        story_name, // Tìm kiếm theo tên tác giả
-        description, // Tìm kiếm theo mô tả (nếu cần)
-        sort, // Sắp xếp
-        page, // Trang hiện tại   // Giới hạn số lượng tác giả trên mỗi trang
+        story_name,
+        description,
+        sortBy,
+        sort,
+        page,
       },
-    }); // Adjust endpoint to fetch stories
-    return response.data; // Return the data
+    });
+    return response.data;
   } catch (error) {
     console.error("Error fetching stories:", error);
-    throw error; // Rethrow error for handling elsewhere
+    throw error;
   }
 };
 
-// Function to delete a story by ID
 export const deleteStory = async (id: number) => {
   try {
-    const response = await api.delete(`/story/delete/${id}`); // Use the correct endpoint for deleting a story
-    return response.data; // Return the result if needed
+    const response = await api.delete(`/story/delete/${id}`);
+    return response.data;
   } catch (error) {
     console.error("Error deleting story:", error);
-    throw error; // Rethrow error for handling elsewhere
+    throw error;
   }
 };
-
-// You can add more API calling functions here (add, update, etc. for stories)
-
 export default {
   getStories,
   deleteStory,
@@ -185,7 +168,7 @@ export default {
   getAllStorieView,
   getAllStorieNew,
   getStoryBySlug,
-
-  createStory
+  createStory,
+  getStoryById
 }
 

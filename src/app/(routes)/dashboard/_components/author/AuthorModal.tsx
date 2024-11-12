@@ -1,63 +1,63 @@
-import { createAuthor } from '@/app/api/authorService'
 import React, { useEffect, useState } from 'react'
+
 interface FormErrors {
-  authorName?: string
+  author_name?: string
   description?: string
   slug?: string
 }
-interface Erorr {
-  authorName?: string
-  description?: string
-  slug?: string
-}
+
 interface AuthorModalProps {
   show: boolean // Indicates whether the modal is visible
   onClose: () => void // Function to call when closing the modal
   onSuccess: (data: {
-    authorName: string
+    author_name: string
     description: string
     slug: string
   }) => void // Function to call on successful author creation
 }
+
 const AuthorModal: React.FC<AuthorModalProps> = ({
   show,
   onClose,
   onSuccess,
 }) => {
-  const [authorName, setAuthorName] = useState('')
+  const [author_name, setAuthorName] = useState('')
   const [description, setDescription] = useState('')
   const [slug, setSlug] = useState('')
-  const [errors, setErrors] = useState<Erorr>({}) // Lưu trữ lỗi cho từng trường
-  let formErrors: FormErrors = {}
+  const [errors, setErrors] = useState<FormErrors>({}) // Store errors for each field
+
+  // Reset form fields and errors when modal is opened
   useEffect(() => {
     if (show) {
-      // Reset form fields and errors when the modal is opened
       setAuthorName('')
       setDescription('')
       setSlug('')
       setErrors({})
     }
   }, [show])
-  // Kiểm tra dữ liệu nhập
+
+  // Validate form data
   const validateForm = () => {
     let isValid = true
-    // Kiểm tra tên tác giả (1 - 255 ký tự và không chứa ký tự đặc biệt)
-    if (!authorName) {
-      formErrors.authorName = 'Bạn không được để trống tên tác giả.'
+    let formErrors: FormErrors = {}
+
+    // Validate author name
+    if (!author_name) {
+      formErrors.author_name = 'Bạn không được để trống tên tác giả.'
       isValid = false
     } else if (
-      authorName.length < 1 ||
-      authorName.length > 255 ||
+      author_name.length < 1 ||
+      author_name.length > 255 ||
       /[^a-zA-Z0-9\sàáạảãâầấậẩẫèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữđ]/.test(
-        authorName,
+        author_name,
       )
     ) {
-      formErrors.authorName =
+      formErrors.author_name =
         'Vui lòng nhập tên tác giả hợp lệ (1 - 255 ký tự và không chứa ký tự đặc biệt).'
       isValid = false
     }
 
-    // Kiểm tra URL (1 - 255 ký tự)
+    // Validate URL (slug)
     if (!slug) {
       formErrors.slug = 'Bạn không được để trống URL.'
       isValid = false
@@ -66,46 +66,38 @@ const AuthorModal: React.FC<AuthorModalProps> = ({
       isValid = false
     }
 
-    // Kiểm tra mô tả (tùy chọn, nhưng nếu có phải dưới 500 ký tự)
+    // Validate description (optional, but must be less than 500 characters)
     if (
-      description.length < 1 ||
       description.length > 500 ||
       /[^a-zA-Z0-9\sàáạảãâầấậẩẫèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữđ]/.test(
         description,
       )
     ) {
-      formErrors.description = 'Vui lòng nhập mô tả hợp lệ (1 - 255 ký tự).'
+      formErrors.description = 'Vui lòng nhập mô tả hợp lệ (1 - 500 ký tự).'
       isValid = false
     }
 
-    setErrors(formErrors) // Lưu lỗi vào state
+    setErrors(formErrors)
     return isValid
   }
 
+  // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // alert(formErrors)
-    // Nếu validate thất bại thì không cho phép lưu
+
+    // If validation fails, do not proceed
     if (!validateForm()) return
 
-    try {
-      const newAuthor = { author_name: authorName, description, slug }
-      await createAuthor(newAuthor)
-      alert('Tác giả đã được thêm thành công!')
-      onSuccess({ authorName, description, slug }) // Làm mới danh sách tác giả
-      onClose() // Đóng modal
-    } catch (error) {
-      alert('Đã xảy ra lỗi khi thêm tác giả.')
-    }
+    // Call the onSuccess prop with form data if validation passes
+    onSuccess({ author_name, description, slug })
   }
 
+  // Handle cancel action
   const handleCancel = () => {
-    // Hiển thị thông báo xác nhận khi người dùng nhấn "Hủy"
-    if (window.confirm('Bạn có chắc muốn hủy không?')) {
-      onClose()
-    }
+    onClose()
   }
 
+  // Return null if modal is not visible
   if (!show) return null
 
   return (
@@ -116,15 +108,15 @@ const AuthorModal: React.FC<AuthorModalProps> = ({
           <div className="mb-4">
             <label className="block mb-2">Tên tác giả</label>
             <input
-              value={authorName}
+              value={author_name}
               onChange={(e) => setAuthorName(e.target.value)}
               className={`w-full p-2 border ${
-                errors.authorName ? 'border-red-500' : 'border-gray-300'
+                errors.author_name ? 'border-red-500' : 'border-gray-300'
               } rounded`}
               placeholder="Nhập tên tác giả"
             />
-            {errors.authorName && (
-              <p className="text-red-500">{errors.authorName}</p>
+            {errors.author_name && (
+              <p className="text-red-500">{errors.author_name}</p>
             )}
           </div>
           <div className="mb-4">
