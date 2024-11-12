@@ -39,9 +39,9 @@ interface IAuthor {
 interface IResponse {
   status: number
   success: boolean
-  data: any
+  data: object
   message: string
-  links: any
+  links: object
 }
 interface IDashboardUserForm {
   avatar: FileList

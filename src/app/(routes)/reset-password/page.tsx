@@ -1,6 +1,7 @@
 // src/app/login/page.tsx
 
 import { Button, Label, TextInput } from 'flowbite-react'
+import { useForm } from 'react-hook-form'
 import { HiMail } from 'react-icons/hi'
 import { RiMailSendLine, RiShieldUserFill } from 'react-icons/ri'
 import LABEL from '../dashboard/label'
@@ -9,14 +10,14 @@ interface IForgotForm {
 }
 const ForgotPassword = () => {
   //================= Declares vars, hooks ==============//
-  // const {
-  //   getValues,
-  //   setValue,
-  //   register,
-  //   formState: { errors },
-  //   reset,
-  //   handleSubmit,
-  // } = useForm<IForgotForm>()
+  const {
+    // getValues,
+    // setValue,
+    // register,
+    formState: { errors },
+    // reset,
+    handleSubmit,
+  } = useForm<IForgotForm>()
   //=================Handle function ====================//
   /**
    *
@@ -24,14 +25,13 @@ const ForgotPassword = () => {
    */
   const onSubmit = (data: IForgotForm) => {
     console.log(data)
-    prop.onSubmit(data) // Gọi hàm handleSubmit được truyền từ props với dữ liệu form
   }
   //=================Render page=========================//
   return (
     <div className="flex justify-center">
       <form
         method="post"
-        // onSubmit={handleSubmit(onSubmit)}
+        onSubmit={handleSubmit(onSubmit)}
         className="flex min-w-96 px-10 py-8 mt-20 rounded-md border-t border-l border-r border-b-4 border-[#007AFF]/60 shadow-xl bg-white flex-col gap-4"
       >
         <h1 className="flex font-semibold justify-center text-lg items-center gap-2 uppercase">

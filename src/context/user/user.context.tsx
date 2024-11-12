@@ -4,7 +4,6 @@ import {
   Dispatch,
   ReactNode,
   SetStateAction,
-  useContext,
   useState,
 } from 'react'
 
@@ -15,7 +14,7 @@ interface IpropLoggedInUer {
 /** CREATE CONTEXT FOR LOGGED IN USER
  * Tại và khai báo trạng thái mặt định cho Context
  */
-const userContext = createContext<IpropLoggedInUer>({
+export const userContext = createContext<IpropLoggedInUer>({
   loggedInUser: {
     username: undefined,
     email: undefined,
@@ -43,11 +42,4 @@ export function UserProvider({ children }: { children: ReactNode }) {
     setIsLoggedInUser: setIsLoggedInUser,
   }
   return <userContext.Provider value={value}>{children}</userContext.Provider>
-}
-/** SIDE BAR CONTEXT
- * @returns {IpropLoggedInUer} - Trả về đối tượng IpropLoggedInUser
- */
-export function getUserContext() {
-  const user = useContext(userContext)
-  return user
 }

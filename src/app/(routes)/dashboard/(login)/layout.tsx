@@ -19,7 +19,7 @@ export default function RootLayout({
       <Image
         src={'/images/bg-lib.webp'}
         alt="background image"
-        className="fixed top-0 -z-10 blur-sm w-full left-0"
+        className="fixed top-0 -z-10 blur-sm w-full left-0 h-full"
         width={1440}
         height={1024}
       ></Image>

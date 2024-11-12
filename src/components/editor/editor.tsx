@@ -8,6 +8,7 @@ interface ITextEditorProps {
 }
 
 const TextEditor = (prop: ITextEditorProps) => {
+  console.log(prop)
   const editor = useEditor({
     extensions: [StarterKit],
     content: '<p>Hello World! 🌎️</p>',

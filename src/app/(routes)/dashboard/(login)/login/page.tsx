@@ -1,10 +1,10 @@
 'use client'
-import { getUserContext } from '@/context/user/user.context'
-import useLogin from '@/hooks/useLogin'
+import useLogin from '@/hooks/users/useLogin'
+import { useUserContext } from '@/hooks/users/userUserContext'
 import { Button, Checkbox, Label, TextInput } from 'flowbite-react'
 import Link from 'next/link'
 
-import { redirect, useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { HiMail } from 'react-icons/hi'
 import { MdOutlineLockPerson } from 'react-icons/md'
@@ -25,10 +25,9 @@ export default function LoginAdminPage() {
     formState: { errors },
     handleSubmit,
   } = useForm<ILoginForm>()
-  const { loggedInUser } = getUserContext()
+  const { loggedInUser } = useUserContext()
   const { login, loading } = useLogin()
   const router = useRouter()
-  localStorage.getItem('accessToken')
 
   //================= Handle function ====================//
   /** SUBMIT EMAIL AND PASSWORD
@@ -39,15 +38,12 @@ export default function LoginAdminPage() {
     try {
       await login(data.email, data.password)
       toast.success(MESSAGE.auth.loginSuccess)
-      router.push('/dashboard')
+      return router.push('/dashboard')
     } catch (error) {
       if (error instanceof Error) {
         toast.error(error.message)
       }
     }
-  }
-  if (loggedInUser && localStorage.getItem('accessToken')) {
-    return redirect('/dashboard')
   }
 
   //================= Render page =========================//

@@ -67,9 +67,9 @@ export async function POST(request: NextRequest) {
     )
   }
 }
-export async function GET(request: NextRequest) {
-  console.log('nextjs server got a request')
-  return NextResponse.json({
-    hello: 'world',
-  })
-}
+// export async function GET(request: NextRequest) {
+//   console.log('nextjs server got a request')
+//   return NextResponse.json({
+//     hello: 'world',
+//   })
+// }
