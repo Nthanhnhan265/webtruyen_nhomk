@@ -1,6 +1,6 @@
 'use client'
 import UpdateStoryModal from '@/app/(routes)/dashboard/_components/story/UpdateStoryModal'
-import { deleteStory, getAllStories } from '@/app/_api/story.api'
+import { deleteStory, getAllStories } from '@/app/api/story.api'
 import { Button, Pagination } from 'flowbite-react'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'

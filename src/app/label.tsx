@@ -1,7 +1,5 @@
 const LABEL = {
-  auth: {
-    
-  },
+  auth: {},
   sys: {
     appName: 'Web Truyện',
     edit: 'Sửa',

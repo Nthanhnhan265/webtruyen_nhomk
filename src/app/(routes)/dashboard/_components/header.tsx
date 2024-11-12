@@ -1,5 +1,5 @@
 'use client'
-import { getSidebarContext } from '@/context/navigation/sidebar.context'
+import { useSidebarContext } from '@/context/navigation/sidebar.context'
 import { Avatar, TextInput } from 'flowbite-react'
 import { IoSearchOutline } from 'react-icons/io5'
 import { RxHamburgerMenu } from 'react-icons/rx'
@@ -9,7 +9,7 @@ interface IHeaderProp {
 }
 export default function Header(prop: IHeaderProp) {
   //==============declare vars, hooks=============//
-  const { isOpenProp, setIsOpenProp } = getSidebarContext()
+  const { isOpenProp, setIsOpenProp } = useSidebarContext()
   //==============handle function=================//
   /*
     HandleChange: search record when typing 

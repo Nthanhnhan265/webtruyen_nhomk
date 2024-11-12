@@ -3,7 +3,7 @@ import { Pagination } from 'flowbite-react'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
 
-import { getAllStorieNew, getAllStorieView } from '@/app/_api/story.api'
+import { getAllStorieNew, getAllStorieView } from '@/app/api/story.api'
 import NavBar from '../components/navbar'
 import Footer from './(routes)/_component/footer'
 

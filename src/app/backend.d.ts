@@ -11,6 +11,12 @@ interface IUser {
   status: boolean
   created_at: string
 }
+interface ILoggedinUser {
+  id: string | undefined
+  username: string | undefined
+  email: string | undefined
+  avatar: string | undefined
+}
 interface IChapter {
   id: number
   order: number
@@ -33,9 +39,9 @@ interface IAuthor {
 interface IResponse {
   status: number
   success: boolean
-  data: any
+  data: object
   message: string
-  links: any
+  links: object
 }
 interface IDashboardUserForm {
   avatar: FileList

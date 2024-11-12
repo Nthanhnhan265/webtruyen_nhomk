@@ -1,5 +1,5 @@
 const formatDate = (dateString: string) => {
-  const options: Object = {
+  const options: object = {
     day: '2-digit',
     month: '2-digit',
     year: 'numeric',

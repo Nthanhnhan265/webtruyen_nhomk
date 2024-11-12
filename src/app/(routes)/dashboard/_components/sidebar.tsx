@@ -1,5 +1,5 @@
 'use client'
-import { getSidebarContext } from '@/context/navigation/sidebar.context'
+import { useSidebarContext } from '@/context/navigation/sidebar.context'
 import { Drawer, Sidebar as SidebarFlowBite } from 'flowbite-react'
 import Link from 'next/link'
 
@@ -58,7 +58,7 @@ const Sidebar = () => {
   ]
   const path = usePathname()
   const CENTER = 'flex items-center gap-2 justify-start ps-8 py-2'
-  const { isOpenProp, setIsOpenProp } = getSidebarContext()
+  const { isOpenProp, setIsOpenProp } = useSidebarContext()
   //===================== HANDLE FUNCTIONS ============================//
 
   //===================== RENDER COMPONENTS ===========================//
@@ -124,6 +124,7 @@ const Sidebar = () => {
                       {navItems.map((item, index) => (
                         <Link
                           href={item.href}
+                          key={index}
                           className={
                             path === item.href
                               ? `${CENTER} text-[#013CC6] relative bg-gray-100 rounded-md`
