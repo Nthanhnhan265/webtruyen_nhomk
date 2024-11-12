@@ -1,3 +1,5 @@
-export default function () {
-  return <>this is homepage of dashboard</>
+export default function DashboardHome() {
+  // const { loggedInUser, setIsLoggedInUser } = useUserContext()
+  // console.log(loggedInUser)
+  return <div>this is homepage of dashboard</div>
 }

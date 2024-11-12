@@ -7,9 +7,12 @@ import {
   Select,
   TextInput,
 } from 'flowbite-react'
+import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { HiOutlineExclamationCircle } from 'react-icons/hi'
+import { IoIosImages } from 'react-icons/io'
+import { toast } from 'react-toastify'
 import LABEL from '../../label'
 import MESSAGE from '../../message'
 
@@ -17,16 +20,16 @@ import MESSAGE from '../../message'
 //============CREAT, UPDATE===========//
 interface IModalProps {
   isOpenModal: boolean
-  handleSubmit: (form: IDashboardUserForm, id?: number) => void
+  handleSubmit: (form: FormData, id?: number) => void
   closeModal: () => void
   user?: IUser | null
   isEdit?: boolean
 }
 
 function UserModal(prop: IModalProps) {
-  // ============Declare hooks, variables =====================//
-  const [avatarFile, setAvatarFile] = useState<File>()
-
+  // ===================== Declare hooks, variables ==================//
+  const [avatarFile, setAvatarFile] = useState()
+  const [imageErrors, setImageErrors] = useState<boolean>(false)
   const {
     register,
     handleSubmit,
@@ -36,56 +39,150 @@ function UserModal(prop: IModalProps) {
     reset,
   } = useForm<IDashboardUserForm>()
 
+  // Đặt dữ liệu cho form trong trường hợp thêm mới và chỉnh sửa
   useEffect(() => {
     if (prop.isEdit && prop.user) {
-      // Nếu đang ở chế độ chỉnh sửa và có thông tin người dùng, điền thông tin vào form
       setValue('username', prop.user.username || '')
       setValue('email', prop.user.email || '')
       setValue('status', prop.user.status === true ? 'true' : 'false')
-      setValue('role_id', prop.user.role_id)
+      setValue('role_id', prop.user.Role.id)
+      // setValue('avatar', prop.user.avatar)
     } else {
-      // Nếu ở chế độ tạo mới, reset form về trạng thái ban đầu
       reset({
-        username: '', // Giá trị mặc định là rỗng
+        username: '',
         email: '',
-        status: 'true', // Mặc định là 'active'
-        role_id: 1, // Mặc định là rỗng
+        status: 'true',
+        role_id: 1,
       })
     }
   }, [prop.isEdit, prop.user, reset, setValue])
+  console.log(imageErrors)
+  // Hiện password và confirm password nếu là thêm mới và ẩn nếu chỉnh sửa
+  const passwordRegister = !prop.isEdit
+    ? register('password', {
+        minLength: {
+          value: 6,
+          message: MESSAGE.user.passwordStrength,
+        },
+        validate: (value) => {
+          if (
+            prop.isEdit &&
+            !/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])/.test(value)
+          ) {
+            return MESSAGE.user.passwordStrength
+          }
+          return true
+        },
+      })
+    : {}
+  const confirmPasswordRegister = !prop.isEdit
+    ? register('confirmPassword', {
+        validate: (value) => {
+          if (value !== getValues('password')) {
+            return MESSAGE.user.passwordsNotMatch
+          }
+          return true
+        },
+      })
+    : {}
 
-  // Validate file upload
+  //===================== Handle functions =======================//
+  /** VALIDATE FILE UPLOADED
+   * kiểm tra file ảnh được tải lên có hợp lệ không
+   *  @param {File} file - Đối tượng kiểu File
+   *  @returns {Boolean}
+   * */
   const validateFile = (file: File) => {
-    const maxSize = 5 * 1024 * 1024 // 5MB
+    console.log(file)
+    const maxSize = 5 * 1024 * 1024
     const validFormats = ['image/jpeg', 'image/png', 'image/webp']
-
     if (!file) {
-      return MESSAGE.user.uploadError // No file selected
+      toast.error(MESSAGE.user.uploadError)
+      return false
     }
-
     if (!validFormats.includes(file.type)) {
-      return MESSAGE.user.formatError // Invalid format
+      toast.error(MESSAGE.user.formatError)
+      return false
     }
-
     if (file.size > maxSize) {
-      return MESSAGE.user.sizeError // File too large
+      toast.error(MESSAGE.user.sizeError)
+      return false
     }
-
-    return true // File valid
+    return true
   }
 
+  /** HANDLE UPLOAD FILE AND VALIDATION
+   * Thực thi thay đổi file và xác minh định dạng, size, kiểu file
+   * @param event
+   * @returns
+   */
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const fileList = event.target.files
     if (fileList && fileList.length > 0) {
       const file = fileList[0]
+      if (!validateFile(file)) {
+        return
+      }
+      setImageErrors(false)
       setAvatarFile(file)
     }
   }
+  /** HANDLE CLEAR DATA ON MODAL
+   * Đóng modal và xóa dữ liệu
+   */
   const clearModal = () => {
     prop.closeModal()
+    setAvatarFile('')
+    setImageErrors(false)
     reset()
   }
 
+  /** HANLDE SUBMIT FORM
+   *
+   * @param data
+   * @returns
+   */
+  const onSubmit = (data: IDashboardUserForm) => {
+    console.log('submit clicked', data)
+    /*
+      Trường hợp không có avatar và không chọn file thì chặn lại
+    */
+    if (!prop.user?.avatar && !validateFile(avatarFile)) {
+      return
+    }
+    const formData = new FormData()
+    Object.entries(data).forEach(([key, value]) => {
+      formData.append(key, value)
+    })
+    //Tạo người dùng:
+    /*
+      admin điền các thông tin và chọn hình ảnh, sau đó ấn submit, 
+      lấy thông tin user và hình ảnh avatar cho vào đối tượng formData và gửi lên server
+    */
+    if (!prop.isEdit) {
+      formData.append('avatar', avatarFile)
+    }
+    // Chỉnh sửa người dùng
+    /*
+      admin sửa những thông tin cần sửa như bình thường 
+      - trường hợp đổi ảnh avatar thì làm như việc tạo người dùng mới - cho file vào đối tượng formData 
+      - trường hợp không đổi ảnh avatar thì giữ nguyên đường dẫn cũ
+      */
+    else {
+      if (avatarFile) {
+        formData.append('avatar', avatarFile)
+      } else if (prop.user?.avatar) {
+        formData.append('avatar', prop.user?.avatar)
+      }
+    }
+    prop.handleSubmit(formData, prop.user?.id)
+    // console.log(formData.get('avatar'))
+    // console.log(formData.getAll)
+    // const formDataObject = Object.fromEntries(formData.entries())
+    // console.log(formDataObject) // In ra toàn bộ dữ liệu dưới dạng object
+    // console.log(formData.entries())
+  }
+  //=================== Render component =====================//
   return (
     <Modal
       show={prop.isOpenModal}
@@ -97,600 +194,246 @@ function UserModal(prop: IModalProps) {
         {prop.isEdit ? LABEL.user.editLabel : LABEL.user.createLabel}
       </Modal.Header>
 
-      <form
-        className="gap-4"
-        onSubmit={handleSubmit((data) => {
-          console.log('submit clicked')
-          prop.handleSubmit(data, prop.user?.id)
-        })}
-      >
-        <Modal.Body className="grid grid-cols-2 gap-4">
-          <div className="col-span-1 space-y-4">
-            {/* Username Field */}
-            <div>
-              <Label
-                htmlFor="username"
-                value={LABEL.user.usernameLabel}
-              />
-              <TextInput
-                id="username"
-                type="text"
-                {...register('username', {
-                  required: MESSAGE.user.usernameRequired,
-                  validate: (value) => {
-                    if (!/^[^\W_]+$/.test(value)) {
-                      return MESSAGE.user.usernameSpecialChars
-                    }
-                    return true
-                  },
-                })}
-              />
-              <div className="h-3">
-                {errors.username && (
-                  <p className="text-red-500 text-xs">
-                    {errors.username.message}
-                  </p>
-                )}
-              </div>
-            </div>
-
-            {/* Email Field */}
-            <div>
-              <Label
-                htmlFor="email"
-                value={LABEL.user.emailLabel}
-              />
-              <TextInput
-                id="email"
-                type="email"
-                {...register('email', {
-                  required: MESSAGE.user.emailRequired,
-                  pattern: {
-                    value: /^\S+@\S+$/i,
-                    message: MESSAGE.user.emailRequired,
-                  },
-                })}
-              />
-              <div className="h-3">
-                {errors.email && (
-                  <p className="text-red-500 text-xs">{errors.email.message}</p>
-                )}
-              </div>
-            </div>
-
-            {/* Password Field */}
-            {!prop.isEdit && (
+      <Modal.Body className="flex flex-col">
+        <form
+          className="gap-4"
+          onSubmit={handleSubmit(onSubmit)}
+        >
+          {/* row 1: username, email, role, status, avatar */}
+          <div className="w-full md:grid gap-4 grid-cols-2">
+            <div className="col-span-1 space-y-4">
+              {/* Username Field */}
               <div>
                 <Label
-                  htmlFor="password"
-                  value={LABEL.user.passwordLabel}
+                  htmlFor="username"
+                  value={LABEL.user.usernameLabel}
                 />
                 <TextInput
-                  id="password"
-                  type="password"
-                  {...register('password', {
-                    required: MESSAGE.user.passwordRequired,
-                    minLength: {
-                      value: 6,
-                      message: MESSAGE.user.passwordStrength,
-                    },
+                  id="username"
+                  type="text"
+                  {...register('username', {
+                    required: MESSAGE.user.usernameRequired,
                     validate: (value) => {
-                      if (
-                        !/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])/.test(
-                          value,
-                        )
-                      ) {
-                        return MESSAGE.user.passwordStrength
+                      if (!/^[^\W_]+$/.test(value)) {
+                        return MESSAGE.user.usernameSpecialChars
                       }
                       return true
                     },
                   })}
                 />
-                <div className="h-3">
-                  {errors.password && (
+                <div className="h-3 !mt-0">
+                  {errors.username && (
                     <p className="text-red-500 text-xs">
-                      {errors.password.message}
+                      {errors.username.message}
                     </p>
                   )}
                 </div>
               </div>
-            )}
-          </div>
-
-          {/* Second Column */}
-          <div className="grid grid-cols-3 gap-x-1 col-span-1 space-y-4">
-            <div className="col-span-2 space-y-4">
-              {/* Role Selection */}
-              <div className="max-w-md">
+              {/* Email Field */}
+              <div className="!mt-0">
                 <Label
-                  htmlFor="role_id"
-                  value={LABEL.user.roleLabel}
+                  htmlFor="email"
+                  value={LABEL.user.emailLabel}
                 />
-                <Select
-                  id="role_id"
-                  {...register('role_id', {
-                    required: MESSAGE.user.roleNotFound,
+                <TextInput
+                  id="email"
+                  type="email"
+                  {...register('email', {
+                    required: MESSAGE.user.emailRequired,
+                    pattern: {
+                      value: /^\S+@\S+$/i,
+                      message: MESSAGE.user.emailRequired,
+                    },
                   })}
-                >
-                  <option value="1">{LABEL.sys.role.admin}</option>
-                  <option value="2">{LABEL.sys.role.user}</option>
-                </Select>
-
-                <div className="h-3">
+                />
+                <div className="h-3 !mt-0">
+                  {errors.email && (
+                    <p className="text-red-500 text-xs">
+                      {errors.email.message}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+            <div className="col-span-1 md:grid grid-cols-3 gap-2 space-y-4">
+              <div className="col-span-2 space-y-4">
+                {/* Role Selection */}
+                <div className="max-w-md !mt-0">
+                  <Label
+                    htmlFor="role_id"
+                    value={LABEL.user.roleLabel}
+                  />
+                  <Select
+                    id="role_id"
+                    {...register('role_id', {
+                      required: MESSAGE.user.roleNotFound,
+                    })}
+                  >
+                    <option value="1">Admin</option>
+                    <option value="2">User</option>
+                  </Select>
+                </div>
+                <div className="h-3 !mt-0">
                   {errors.role_id && (
                     <p className="text-red-500 text-xs">
                       {errors.role_id.message}
                     </p>
                   )}
                 </div>
-              </div>
-
-              {/* Status Selection */}
-              <div className="max-w-md">
-                <Label
-                  htmlFor="status"
-                  value={LABEL.user.statusLabel}
-                />
-                <Select
-                  id="status"
-                  {...register('status', {
-                    required: MESSAGE.user.statusNotFound,
-                  })}
-                >
-                  <option value="true">{LABEL.sys.statusAccount.active}</option>
-                  <option value="false">
-                    {LABEL.sys.statusAccount.banned}
-                  </option>
-                </Select>
-                <div className="h-3">
-                  {errors.status && (
-                    <p className="text-red-500 text-xs">
-                      {errors.status.message}
-                    </p>
-                  )}
-                </div>
-              </div>
-            </div>
-            {/* Avatar Upload */}
-            <div className="col-span-1 flex items-center">
-              <Label
-                htmlFor="dropzone-file"
-                className="flex w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100"
-              >
-                <div className="flex flex-col items-center justify-center pb-5 pt-5">
-                  <svg
-                    className="mb-4 h-8 w-8 text-gray-500"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 20 16"
+                {/* Status Selection */}
+                <div className="max-w-md !mt-0">
+                  <Label
+                    htmlFor="status"
+                    value={LABEL.user.statusLabel}
+                  />
+                  <Select
+                    id="status"
+                    {...register('status', {
+                      required: MESSAGE.user.statusNotFound,
+                    })}
                   >
-                    <path
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5A5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
-                    />
-                  </svg>
-                  <p className="mb-2 text-sm text-gray-500">
-                    {LABEL.user.avatarLabel}
-                  </p>
-                  <div className="h-3">
-                    {!avatarFile ||
-                      (validateFile(avatarFile) !== true && (
-                        <p className="text-red-500 text-xs">
-                          {validateFile(avatarFile)}
-                        </p>
-                      ))}
+                    <option value="true">
+                      {LABEL.sys.statusAccount.active}
+                    </option>
+                    <option value="false">
+                      {LABEL.sys.statusAccount.banned}
+                    </option>
+                  </Select>
+                  <div className="h-3 !mt-0">
+                    {errors.status && (
+                      <p className="text-red-500 text-xs">
+                        {errors.status.message}
+                      </p>
+                    )}
                   </div>
                 </div>
-                <FileInput
-                  id="dropzone-file"
-                  className="hidden"
-                />
-              </Label>
+              </div>
+              {/* Avatar Upload */}
+              <div className="col-span-1 flex items-center relative overflow-hidden">
+                {!imageErrors &&
+                  (prop.user?.avatar && !avatarFile ? (
+                    <Image
+                      src={'http://localhost:3000/' + prop.user.avatar}
+                      alt="avatar"
+                      width={400}
+                      height={400}
+                      className="absolute w-full h-auto z-[1]"
+                      onError={() => {
+                        setImageErrors(true)
+                      }}
+                    />
+                  ) : (
+                    avatarFile && (
+                      <Image
+                        src={URL.createObjectURL(avatarFile)}
+                        alt="avatar"
+                        width={400}
+                        height={400}
+                        className="absolute w-full h-auto z-[1]"
+                      />
+                    )
+                  ))}
+                <Label
+                  htmlFor="avatar"
+                  className="flex group aspect-square w-full md:h-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed  gap-1 z-10 bg-gray-500/20 hover:backdrop-brightness-50 transition-all duration-200"
+                >
+                  {/* border-gray-300 bg-gray-50 hover:bg-gray-100 */}
+                  <IoIosImages className="text-lg group-hover:text-white duration-300" />
+                  <p className="mb-2 text-sm group-hover:text-white duration-300">
+                    {LABEL.user.avatarLabel}
+                  </p>
+                  <FileInput
+                    id="avatar"
+                    className="hidden"
+                    name="avatar"
+                    accept="image/png, image/webp, image/jpg"
+                    onChange={handleFileChange}
+                  />
+                  {errors.avatar && (
+                    <p style={{ color: 'red' }}>{errors.avatar.message}</p>
+                  )}
+                </Label>
+              </div>
             </div>
-
+          </div>
+          {/* row 2: password, confirm password  */}
+          <div className="w-full md:grid gap-4 grid-cols-2">
+            {/* Password Field */}
+            {!prop.isEdit && (
+              <>
+                <div>
+                  <Label
+                    htmlFor="password"
+                    value={LABEL.user.passwordLabel}
+                  />
+                  <TextInput
+                    id="password"
+                    type="password"
+                    {...passwordRegister}
+                  />
+                  <div className="h-3 !mt-0">
+                    {errors.password && (
+                      <p className="text-red-500 text-xs">
+                        {errors.password.message}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </>
+            )}
             {/* Confirm Password Field */}
             {!prop.isEdit && (
-              <div className="col-span-3">
-                <Label
-                  htmlFor="confirmPassword"
-                  value={LABEL.user.confirmPassLabel}
-                />
-                <TextInput
-                  id="confirmPassword"
-                  type="password"
-                  {...register('confirmPassword', {
-                    required: MESSAGE.user.passwordRequired,
-                    validate: (value) => {
-                      if (value !== getValues('password')) {
-                        return MESSAGE.user.passwordsNotMatch
-                      }
-                      return true
-                    },
-                  })}
-                />
-                <div className="h-3">
-                  {errors.confirmPassword && (
-                    <p className="text-red-500 text-xs">
-                      {errors.confirmPassword.message}
-                    </p>
-                  )}
+              <>
+                <div className="col-span-1">
+                  <Label
+                    htmlFor="confirmPassword"
+                    value={LABEL.user.confirmPassLabel}
+                  />
+                  <TextInput
+                    id="confirmPassword"
+                    type="password"
+                    {...confirmPasswordRegister}
+                  />
+                  <div className="h-3 !mt-0">
+                    {errors.confirmPassword && (
+                      <p className="text-red-500 text-xs">
+                        {errors.confirmPassword.message}
+                      </p>
+                    )}
+                  </div>
                 </div>
-              </div>
+              </>
             )}
           </div>
-        </Modal.Body>
-
-        {/* Modal Footer */}
-        <Modal.Footer className="justify-end">
-          <Button
-            type="submit"
-            color="blue"
-          >
-            {LABEL.sys.save}
-          </Button>
-          <Button
-            color="gray"
-            onClick={clearModal}
-          >
-            {LABEL.sys.cancel}
-          </Button>
-        </Modal.Footer>
-      </form>
+          {/* Modal Footer */}
+          <Modal.Footer className="justify-end px-0">
+            <Button
+              type="submit"
+              color="blue"
+            >
+              {LABEL.sys.save}
+            </Button>
+            <Button
+              color="gray"
+              onClick={clearModal}
+            >
+              {LABEL.sys.cancel}
+            </Button>
+          </Modal.Footer>
+        </form>
+      </Modal.Body>
     </Modal>
   )
 }
-
-// interface IModalProps {
-//   isOpenCModal: boolean
-//   handleSumit: (from: IDashboardUserForm, id?: number) => void
-//   closeCModal: () => void
-//   handleCreateSubmit: (form: IDashboardUserForm) => void
-//   user?: IUser
-//   isEdit?: boolean
-// }
-
-// function UserModal(prop: IModalProps) {
-//   // ============Declare hooks, variables =====================//
-//   const [avatarFile, setAvatarFile] = useState<File>()
-
-//   const {
-//     register,
-//     handleSubmit,
-//     formState: { errors },
-//     setValue,
-//     getValues,
-//     reset,
-//   } = useForm<IDashboardUserForm>()
-//   //fill out the form with the value
-//   useEffect(() => {
-//     if (prop.user) {
-//       setValue('username', prop.user.username)
-//       setValue('email', prop.user.email)
-//       setValue('status', prop.user.status)
-//       setValue('role_id', prop.user.role_id)
-//     } else {
-//       reset() // Reset lại form khi tạo mới
-//     }
-//   }, [prop.user, prop.isEdit])
-
-//   //==============Handle others function=======================//
-//   const validateFile = (file: File) => {
-//     const maxSize = 5 * 1024 * 1024 // 5MB
-//     const validFormats = ['image/jpeg', 'image/png', 'image/webp']
-
-//     if (!file) {
-//       return MESSAGE.user.uploadError // Không chọn file
-//     }
-
-//     if (!validFormats.includes(file.type)) {
-//       return MESSAGE.user.formatError // Định dạng không hợp lệ
-//     }
-
-//     if (file.size > maxSize) {
-//       return MESSAGE.user.sizeError // Kích thước quá lớn
-//     }
-
-//     return true // Hợp lệ
-//   }
-//   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-//     const fileList = event.target.files
-//     // console.log(fileList[0].name)
-//     console.log('called')
-//     if (fileList && fileList.length > 0) {
-//       const file = fileList[0]
-//       setAvatarFile(file)
-//     }
-//   }
-
-//   const clearModal = () => {
-//     console.log('called when user closed modal, cleared data')
-//     prop.closeCModal()
-//     reset()
-//   }
-
-//   return (
-//     <>
-//       <Modal
-//         show={prop.isOpenCModal}
-//         onClose={prop.closeCModal}
-//         size="5xl"
-//         position="top-center"
-//       >
-//         <Modal.Header>
-//           {prop.user ? LABEL.user.editLabel : LABEL.user.createLabel}
-//         </Modal.Header>
-//         <form
-//           className="gap-4"
-//           onSubmit={handleSubmit(prop.handleCreateSubmit)}
-//         >
-//           <Modal.Body className="grid grid-cols-2 gap-4">
-//             <div className="col-span-1 space-y-4">
-//               {/* Username Field */}
-//               <div>
-//                 <Label
-//                   htmlFor="username"
-//                   value={LABEL.user.usernameLabel}
-//                 />
-//                 <TextInput
-//                   id="username"
-//                   type="text"
-//                   placeholder=""
-//                   {...register('username', {
-//                     required: MESSAGE.user.usernameRequired,
-//                     validate: (value) => {
-//                       if (!/^[^\W_]+$/.test(value)) {
-//                         return MESSAGE.user.usernameSpecialChars
-//                       }
-//                       return true
-//                     },
-//                   })}
-//                 />
-//                 <div>
-//                   {errors.username && (
-//                     <p className="text-red-500 text-xs">
-//                       {errors.username.message}
-//                     </p>
-//                   )}
-//                 </div>
-//               </div>
-
-//               {/* Email Field */}
-//               <div>
-//                 <Label
-//                   htmlFor="email"
-//                   value={LABEL.user.emailLabel}
-//                 />
-//                 <TextInput
-//                   id="email"
-//                   type="email"
-//                   placeholder=""
-//                   {...register('email', {
-//                     required: MESSAGE.user.emailRequired,
-//                     pattern: {
-//                       value: /^\S+@\S+$/i,
-//                       message: MESSAGE.user.emailRequired,
-//                     },
-//                   })}
-//                 />
-//                 <div>
-//                   {errors.email && (
-//                     <p className="text-red-500 text-xs">
-//                       {errors.email.message}
-//                     </p>
-//                   )}
-//                 </div>
-//               </div>
-
-//               {/* Password Field */}
-//               <div>
-//                 <Label
-//                   htmlFor="password"
-//                   value={LABEL.user.passwordLabel}
-//                 />
-//                 <TextInput
-//                   id="password"
-//                   type="password"
-//                   {...register('password', {
-//                     required: MESSAGE.user.passwordRequired,
-//                     minLength: {
-//                       value: 6,
-//                       message: MESSAGE.user.passwordStrength,
-//                     },
-//                     validate: (value) => {
-//                       if (
-//                         !/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])/.test(
-//                           value,
-//                         )
-//                       ) {
-//                         return MESSAGE.user.passwordStrength
-//                       }
-//                       return true
-//                     },
-//                   })}
-//                 />
-//                 {errors.password && (
-//                   <p className="text-red-500 text-xs">
-//                     {errors.password.message}
-//                   </p>
-//                 )}
-//               </div>
-//             </div>
-
-//             {/* Second Column */}
-//             <div className="space-y-2 grid grid-cols-3 gap-2 me-1">
-//               <div className="col-span-2 space-y-4">
-//                 {/* Role Selection */}
-//                 <div className="max-w-md">
-//                   <Label
-//                     htmlFor="role_id"
-//                     value={LABEL.user.roleLabel}
-//                   />
-//                   <Select
-//                     id="role_id"
-//                     {...register('role_id', {
-//                       required: MESSAGE.user.roleNotFound,
-//                     })}
-//                   >
-//                     <option value="1">{LABEL.sys.role.admin}</option>
-//                     <option value="2">{LABEL.sys.role.user}</option>
-//                   </Select>
-//                   <div>
-//                     {errors.role_id && (
-//                       <p className="text-red-500 text-xs">
-//                         {errors.role_id.message}
-//                       </p>
-//                     )}
-//                   </div>
-//                 </div>
-
-//                 {/* Status Selection */}
-//                 <div className="max-w-md">
-//                   <Label
-//                     htmlFor="status"
-//                     value={LABEL.user.statusLabel}
-//                   />
-//                   <Select
-//                     id="status"
-//                     {...register('status', {
-//                       required: MESSAGE.user.statusNotFound,
-//                     })}
-//                   >
-//                     <option value="1">{LABEL.sys.statusAccount.active}</option>
-//                     <option value="0">{LABEL.sys.statusAccount.banned}</option>
-//                   </Select>
-//                   <div>
-//                     {errors.status && (
-//                       <p className="text-red-500 text-xs">
-//                         {errors.status.message}
-//                       </p>
-//                     )}
-//                   </div>
-//                 </div>
-//               </div>
-
-//               {/* Avatar Upload */}
-
-//               <div className="col-span-1 flex items-end ">
-//                 <Label
-//                   htmlFor="dropzone-file"
-//                   className="flex w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100"
-//                 >
-//                   <div className="flex flex-col items-center justify-center pb-5 pt-5">
-//                     <svg
-//                       className="mb-4 h-8 w-8 text-gray-500"
-//                       aria-hidden="true"
-//                       xmlns="http://www.w3.org/2000/svg"
-//                       fill="none"
-//                       viewBox="0 0 20 16"
-//                     >
-//                       <path
-//                         stroke="currentColor"
-//                         strokeLinecap="round"
-//                         strokeLinejoin="round"
-//                         strokeWidth="2"
-//                         d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
-//                       />
-//                     </svg>
-//                     <p className="mb-2 text-sm text-center text-gray-500">
-//                       <span className="font-semibold">
-//                         {LABEL.user.avatarLabel}
-//                       </span>
-//                     </p>
-//                     <div>
-//                       {!avatarFile ||
-//                         (validateFile(avatarFile) !== true && (
-//                           <p className="text-red-500 text-xs">
-//                             {validateFile(avatarFile)}
-//                           </p>
-//                         ))}
-//                     </div>
-//                   </div>
-//                   <FileInput
-//                     id="dropzone-file"
-//                     className="hidden"
-//                     // onChange={handleFileChange}
-
-//                     // {...register('avatar', {
-//                     //   validate: {
-//                     //     lessThan10MB: (files) =>
-//                     //       files[0]?.size < 10000000 || 'Max 10MB',
-//                     //     acceptedFormats: (files) =>
-//                     //       ['image/jpeg', 'image/png', 'image/gif'].includes(
-//                     //         files[0]?.type,
-//                     //       ) || 'Only PNG, JPEG e GIF',
-//                     //   },
-//                     // })}
-
-//                     // required
-//                   />
-//                 </Label>
-//               </div>
-
-//               {/* Confirm Password Field */}
-//               <div className="col-span-3">
-//                 <Label
-//                   htmlFor="confirmPassword"
-//                   value={LABEL.user.confirmPassLabel}
-//                 />
-//                 <TextInput
-//                   id="confirmPassword"
-//                   type="password"
-//                   {...register('confirmPassword', {
-//                     required: MESSAGE.user.passwordRequired,
-//                     validate: (value) => {
-//                       if (value !== getValues('password')) {
-//                         return MESSAGE.user.passwordsNotMatch
-//                       }
-//                       return true
-//                     },
-//                   })}
-//                 />
-//                 <div>
-//                   {errors.confirmPassword && (
-//                     <p className="text-red-500 text-xs">
-//                       {errors.confirmPassword.message}
-//                     </p>
-//                   )}
-//                 </div>
-//               </div>
-//             </div>
-//           </Modal.Body>
-
-//           {/* Footer of the Modal */}
-//           <Modal.Footer className="justify-end">
-//             <Button
-//               type="submit"
-//               className="font-bold"
-//             >
-//               {LABEL.sys.save}
-//             </Button>
-//             <Button
-//               color="gray"
-//               onClick={() => {
-//                 prop.closeCModal()
-//                 clearModal()
-//               }}
-//             >
-//               {LABEL.sys.cancel}
-//             </Button>
-//           </Modal.Footer>
-//         </form>
-//       </Modal>
-//     </>
-//   )
-// }
 
 //============DELETE=================//
 interface IDModalProps {
   isOpenDModal: number
   closeDModal: () => void
   onDelete: (id: number) => void
+  labelModal: string
 }
-function UserDModal(prop: IDModalProps) {
+function DeleteModal(prop: IDModalProps) {
   return (
     <>
       {/* <Button onClick={prop.openDModal}>Toggle modal</Button> */}
@@ -704,13 +447,19 @@ function UserDModal(prop: IDModalProps) {
           <div className="text-center">
             <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
             <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-              {MESSAGE.user.confirmDelete}
+              {/* {MESSAGE.user.confirmDelete} */}
+              {prop.labelModal}
             </h3>
             <div className="flex justify-center gap-4">
-              <Button color="failure">{LABEL.sys.confirm}</Button>
+              <Button
+                color="failure"
+                onClick={() => prop.onDelete(prop.isOpenDModal)}
+              >
+                {LABEL.sys.confirm}
+              </Button>
               <Button
                 color="gray"
-                onClick={() => prop.closeDModal()}
+                onClick={prop.closeDModal}
               >
                 {LABEL.sys.cancel}
               </Button>
@@ -722,4 +471,4 @@ function UserDModal(prop: IDModalProps) {
   )
 }
 
-export { UserDModal, UserModal }
+export { DeleteModal, UserModal }

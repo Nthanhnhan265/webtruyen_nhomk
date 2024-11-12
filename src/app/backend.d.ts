@@ -3,9 +3,30 @@ interface IUser {
   avatar: string
   username: string
   email: string
-  role_id: number
+  Role: {
+    id: number
+    role_name: string
+    description: string
+  }
   status: boolean
   created_at: string
+}
+interface ILoggedinUser {
+  id: string | undefined
+  username: string | undefined
+  email: string | undefined
+  avatar: string | undefined
+}
+interface IChapter {
+  id: number
+  order: number
+  name: string
+  status: string
+  views: number
+  reviews: number
+  comments: number
+  create_at: string
+  published_at: string
 }
 interface IAuthor {
   id: number
@@ -18,12 +39,12 @@ interface IAuthor {
 interface IResponse {
   status: number
   success: boolean
-  data: any
+  data: object
   message: string
-  links: any
+  links: object
 }
 interface IDashboardUserForm {
-  avatar: string
+  avatar: FileList
   username: string
   email: string
   password: string

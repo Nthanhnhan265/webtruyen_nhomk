@@ -1,17 +1,9 @@
-import Link from "next/link";
-import { useState } from "react";
-import { FaSearch } from "react-icons/fa";
-import { FaListUl } from "react-icons/fa6";
-import { BsClipboard2 } from "react-icons/bs";
+'use client'
+import NavBar from './navbar-auth'
 
-const NavBar = () => {
-  const [isListOpen, setIsListOpen] = useState(false);
-  const [isCategoryOpen, setIsCategoryOpen] = useState(false);
-
-  const toggleList = () => setIsListOpen(!isListOpen);
-  const toggleCategory = () => setIsCategoryOpen(!isCategoryOpen);
-
+export default function NavbarComponent() {
   return (
+<<<<<<< HEAD
     <nav className="flex justify-between items-center p-4 border-b-2 border-gray-200 bg-white px-[200px]">
       <div className="flex items-center text-2xl font-bold">
         <Link href="/" className="flex items-center">
@@ -109,3 +101,10 @@ const NavBar = () => {
 };
 
 export default NavBar;
+=======
+    <>
+      <NavBar></NavBar>
+    </>
+  )
+}
+>>>>>>> dev

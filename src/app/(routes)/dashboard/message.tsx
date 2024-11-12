@@ -8,6 +8,8 @@ const MESSAGE = {
   auth: {
     emailRequired: 'Vui lòng nhập email',
     passwordRequired: 'Vui lòng nhập mật khẩu',
+    loginSuccess: 'Đăng nhập thành công, chào mừng trở lại!',
+    unauthorized: 'Vui lòng đăng nhập lại',
   },
   user: {
     createSuccess: 'Tạo người dùng thành công',
@@ -39,6 +41,9 @@ const MESSAGE = {
     formatError: 'Vui lòng chọn định dạng hợp lệ (JPG, PNG, WEBP).',
     sizeError: 'Vui lòng chọn ảnh có kích thước hợp lệ (tối đa 5MB).',
     uploadFail: 'Tải lên ảnh bìa thất bại, vui lòng thử lại sau.',
+  },
+  chapter: {
+    confirmDelete: 'Bạn có muốn xóa chương này không',
   },
 }
 
