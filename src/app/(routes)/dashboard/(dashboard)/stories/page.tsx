@@ -1,18 +1,14 @@
 'use client'
 import UpdateStoryModal from '@/app/(routes)/dashboard/_components/story/UpdateStoryModal'
-<<<<<<< HEAD
-import { deleteStory, getAllStories } from '@/app/api/story.api'
-=======
 import { deleteStory, getAllStories, getStoryById } from '@/app/_api/story.api'
->>>>>>> 680f4720180b9326c3e490ec7373a18c5b9c3724
 import { Button, Pagination } from 'flowbite-react'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import { BsBoxArrowUpRight } from 'react-icons/bs'
+import { toast } from 'react-toastify'
 import Header from '../../_components/header'
 import ConfirmDeleteModal from '../../_components/story/ConfirmDeleteModal'
 import StoryModal from '../../_components/story/StoryModal'
-import { toast } from 'react-toastify'
 
 interface Storie {
   id: number
@@ -61,8 +57,7 @@ const storyPage = () => {
       console.log(response.stories)
     } catch (err) {
       toast.error('Đã xảy ra lỗi khi lấy dữ liệu.')
-      console.log(err);
-
+      console.log(err)
     }
   }
 
@@ -78,18 +73,18 @@ const storyPage = () => {
   const handleEdit = async (id: number) => {
     try {
       // Indicate that the story is being loaded
-      const response = await getStoryById(id);
+      const response = await getStoryById(id)
 
       if (response?.data) {
-        setEditingStory(response.data); // Set the story to be edited
-        setShowModalEdit(true);
+        setEditingStory(response.data) // Set the story to be edited
+        setShowModalEdit(true)
       } else {
-        toast.error("không tìm thấy id");
+        toast.error('không tìm thấy id')
       }
     } catch (err) {
-      toast.error("khong tìm thấy tryện");
+      toast.error('khong tìm thấy tryện')
     }
-  };
+  }
 
   const handleCloseModal = () => {
     setModalState({ type: null, story: null })
@@ -104,7 +99,7 @@ const storyPage = () => {
       )
       // Update the stories state after successful deletion if needed
     } catch (err) {
-      toast.error("xóa thất bại")
+      toast.error('xóa thất bại')
     }
   }
   const handleCreateSuccess = () => {
@@ -147,8 +142,7 @@ const storyPage = () => {
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
           >
-            description: string
-            story_name: string
+            description: string story_name: string
             {/* <option value="id">Id</option> */}
             <option value="story_name">Tên truyện</option>
             <option value="description">Mô tả</option>
