@@ -4,10 +4,13 @@ import { getStoryBySlug } from '@/app/api/story.api' // Import API functions
 import { useEffect, useState } from 'react'
 import NavbarComponent from '../../../../components/navbar'
 import Footer from '../../_component/footer'
+import { toast } from 'react-toastify'
 
 interface Chapter {
   chapter_title: string
   chapter_id: number
+  slug: string
+  chapter_name: string
 }
 
 interface Story {
@@ -17,6 +20,7 @@ interface Story {
   total_chapters: number
   source?: string
   cover: string
+  slug: string
 }
 
 const page = ({ params }: { params: { slug: string } }) => {
@@ -26,7 +30,7 @@ const page = ({ params }: { params: { slug: string } }) => {
   const [currentPage, setCurrentPage] = useState<number>(1) // State for current page
   const [totalPages, setTotalPages] = useState<number>(1) // State for total pages
   const { slug } = params // Lấy slug từ params của route
-
+  // const URL = `${}`;
   useEffect(() => {
     // Log thông tin slug khi thay đổi
     console.log('check useparam', slug)
@@ -35,34 +39,32 @@ const page = ({ params }: { params: { slug: string } }) => {
       try {
         const data = await getStoryBySlug(slug) // Lấy thông tin story từ API
         console.log('check dât', data)
-        setStory(data) // Lưu dữ liệu story vào state
+        setStory(data.data) // Lưu dữ liệu story vào state
         const { chapters, totalPages } = await chapterByStory(
-          data.id, // Truyền id của story vào hàm getChapters
+          data.data.id, // Truyền id của story vào hàm getChapters
           currentPage,
         )
+        console.log(chapters);
+
         setChapters(chapters) // Lưu danh sách chương vào state
         setTotalPages(totalPages) // Lưu tổng số trang vào state
       } catch (_error: unknown) {
-        setError('Error fetching story') // Xử lý lỗi nếu không lấy được dữ liệu
+        toast.error('lay du lieu that bai') // Xử lý lỗi nếu không lấy được dữ liệu
       }
     }
     fetchStory()
   }, [currentPage]) // Thêm slug và story vào dependency array để theo dõi sự thay đổi
-
-  // if (loading) {
-  //   return <div>Loading...</div>;
-  // }
-
-  // if (error) {
-  //   return <div>{error}</div>;
-  // }
-
-  const readBook = (chapterId = 1) => {
-    // Navigate to the desired URL with the chapterId
-    // window.location.href = `/stories/ChapterDetailPage?chapter_id=${chapterId}`;
-    alert('chuyen trang chi tiet')
+  const readBook = (slug: any) => {
+    if (!slug) {
+      if (chapters && chapters.length > 0) {
+        window.location.href = `/stories/${story?.slug}/${chapters[0]?.slug}`;
+      } else {
+        console.error("No chapters found for this story.");
+      }
+    } else {
+      window.location.href = `/stories/${story?.slug}/${slug}`;
+    }
   }
-
   const handlePageChange = (newPage: number) => {
     if (newPage >= 1 && newPage <= totalPages) {
       setCurrentPage(newPage) // Update the current page when pagination buttons are clicked
@@ -99,7 +101,7 @@ const page = ({ params }: { params: { slug: string } }) => {
                 Nguồn: {story?.source || 'Sưu tầm'}
               </p>
               <button
-                onClick={() => readBook()}
+                onClick={() => readBook(story?.slug)}
                 className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
               >
                 Đọc truyện
@@ -111,10 +113,11 @@ const page = ({ params }: { params: { slug: string } }) => {
           <div className="mt-6">
             <h2 className="text-2xl font-semibold">Danh sách chương</h2>
             <ul className="grid grid-cols-2 gap-4 mt-4">
-              {chapters.map((chapter) => (
-                <li key={chapter.id}>
+              {chapters.map((chapter, index) => (
+                <li key={index}>
                   <a
-                    href={`/stories/ChapterDetailPage?chapter_id=${chapter.id}`} // Truyền chapter_id qua query string
+                    // href={`/stories/${story?.slug}/${chapter.slug}`} // Truyền chapter_id qua query string
+                    onClick={() => readBook(chapter.slug)}
                     className="text-blue-500 hover:underline"
                   >
                     {chapter.chapter_name}
@@ -135,9 +138,8 @@ const page = ({ params }: { params: { slug: string } }) => {
               {Array.from({ length: totalPages }, (_, i) => (
                 <button
                   key={i}
-                  className={`px-3 py-1 border rounded ${
-                    i + 1 === currentPage ? 'bg-gray-300' : ''
-                  }`}
+                  className={`px-3 py-1 border rounded ${i + 1 === currentPage ? 'bg-gray-300' : ''
+                    }`}
                   onClick={() => handlePageChange(i + 1)}
                 >
                   {i + 1}
@@ -164,10 +166,10 @@ const page = ({ params }: { params: { slug: string } }) => {
           </h2>
           {/* Other elements */}
         </div>
-      </main>
+      </main >
 
       <Footer></Footer>
-    </div>
+    </div >
   )
 }
 

@@ -1,28 +1,38 @@
-import { updateAuthor } from '@/app/api/authorService'
 import React, { useEffect, useState } from 'react'
+// import { updateAuthor } from '@/app/_api/authorService';
+
 interface FormErrors {
   authorName?: string
   description?: string
   slug?: string
 }
+
 interface Author {
   id: number
   author_name: string
   description: string
   slug: string
 }
+interface Authorone {
+  id: number
+  author_name: string
+  description: string
+  slug: string
+}
+
 interface Erorr {
-  id?: number
   authorName?: string
   description?: string
   slug?: string
 }
+
 interface AuthorModalProps {
   show: boolean // Indicates whether the modal is visible
   onClose: () => void // Function to call when closing the modal
   onSuccess: (data: Author) => void // Function to call on successful author creation
   initialData?: Author | null // Optional initial data for editing
 }
+
 const UpdateAuthorModal: React.FC<AuthorModalProps> = ({
   show,
   onClose,
@@ -52,7 +62,7 @@ const UpdateAuthorModal: React.FC<AuthorModalProps> = ({
     let isValid = true
     let formErrors: FormErrors = {}
 
-    // Allow Vietnamese characters in authorName
+    // Validate author name
     if (!authorName) {
       formErrors.authorName = 'Bạn không được để trống tên tác giả.'
       isValid = false
@@ -68,6 +78,7 @@ const UpdateAuthorModal: React.FC<AuthorModalProps> = ({
       isValid = false
     }
 
+    // Validate URL (slug)
     if (!slug) {
       formErrors.slug = 'Bạn không được để trống URL.'
       isValid = false
@@ -81,13 +92,16 @@ const UpdateAuthorModal: React.FC<AuthorModalProps> = ({
       isValid = false
     }
 
+    // Validate description (optional, but must be less than 500 characters and not empty)
     if (
+      description.length < 1 ||
       description.length > 500 ||
       /[^a-zA-Z0-9\sàáạảãâầấậẩẫèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữđ]/.test(
         description,
       )
     ) {
-      formErrors.description = 'Mô tả không được vượt quá 500 ký tự.'
+      formErrors.description =
+        'Mô tả không được vượt quá 500 ký tự và không chứa ký tự đặc biệt.'
       isValid = false
     }
 
@@ -102,30 +116,19 @@ const UpdateAuthorModal: React.FC<AuthorModalProps> = ({
     // Validate the form
     if (!validateForm()) return
 
-    try {
-      const updatedAuthor = {
-        id: initialData?.id || 0, // Include the ID for updating
-        author_name: authorName,
-        description,
-        slug,
-      }
-
-      // Call the updateAuthor API and pass the author ID and updated data
-      await updateAuthor(initialData?.id, updatedAuthor)
-
-      // Success handling
-      alert('Tác giả đã được cập nhật thành công!')
-      onSuccess(updatedAuthor)
-      onClose()
-    } catch (error) {
-      alert('Đã xảy ra lỗi khi cập nhật tác giả.')
+    // Prepare updated author object
+    const updatedAuthor = {
+      author_name: authorName,
+      description,
+      slug,
     }
+
+    // Call onSuccess with the updated author data
+    onSuccess(initialData?.id, updatedAuthor)
   }
 
   const handleCancel = () => {
-    if (window.confirm('Bạn có chắc muốn hủy không?')) {
-      onClose()
-    }
+    onClose()
   }
 
   // Return null if modal is not supposed to be shown
