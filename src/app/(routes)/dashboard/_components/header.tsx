@@ -1,11 +1,15 @@
-import { TextInput } from 'flowbite-react'
+'use client'
+import { getSidebarContext } from '@/context/navigation/sidebar.context'
+import { Avatar, TextInput } from 'flowbite-react'
 import { IoSearchOutline } from 'react-icons/io5'
+import { RxHamburgerMenu } from 'react-icons/rx'
 import LABEL from '../label'
 interface IHeaderProp {
   handleSearch: (keyword: string) => void
 }
 export default function Header(prop: IHeaderProp) {
   //==============declare vars, hooks=============//
+  const { isOpenProp, setIsOpenProp } = getSidebarContext()
   //==============handle function=================//
   /*
     HandleChange: search record when typing 
@@ -18,15 +22,33 @@ export default function Header(prop: IHeaderProp) {
   //==============render components===============//
   return (
     <>
-      <div className="max-w-md mb-6 mt-2">
+      <div className="w-full mb-10 mt-2 flex justify-between items-center">
         <TextInput
           id="text"
           type="text"
+          className="basis-1/2"
           icon={IoSearchOutline}
           onChange={handleChange}
           placeholder={LABEL.sys.searchLabel}
           required
         />
+
+        <div className="flex basis-1/2 justify-end w-full">
+          <Avatar
+            className="shadow"
+            status="online"
+            className="items-center"
+          ></Avatar>
+          <button
+            onClick={() => {
+              setIsOpenProp(!isOpenProp)
+              console.log(isOpenProp)
+            }}
+            className={`p-3 block lg:hidden hover:border-black/20 hover:shadow transition-all duration-200 border-2 ms-2 rounded-md`}
+          >
+            <RxHamburgerMenu />
+          </button>
+        </div>
       </div>
     </>
   )

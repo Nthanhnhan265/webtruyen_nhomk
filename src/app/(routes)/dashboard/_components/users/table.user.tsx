@@ -2,7 +2,6 @@
 import formatDate from '@/components/ulti/formatDate'
 import { Button } from 'flowbite-react'
 import Image from 'next/image'
-import { useState } from 'react'
 import { CiImageOff } from 'react-icons/ci'
 import LABEL from '../../label'
 import MESSAGE from '../../message'
@@ -12,28 +11,17 @@ interface Iprops {
   openUModal: (user: IUser) => void
   openDModal: (id: number) => void
   closeDModal: () => void
+  imageErrors: { [key: number]: boolean }
+  handleImageError: (id: number) => void
+  handleResetImageError: (id: number) => void
 }
 export default function UserTable(props: Iprops) {
   //====Declare variables, hooks==========//
-  const [imageErrors, setImageErrors] = useState<{ [key: number]: boolean }>({})
-
-  //==========Handle Function============//
-  //Nơi tạo các hàm xử lý cho bảng
-  /*
-      Hàm xử lý khi ảnh không load thành công  
-  */
-  const handleImageError = (id: number) => {
-    setImageErrors((prevErrors) => ({
-      ...prevErrors,
-      [id]: true,
-    }))
-  }
-
   return (
-    <>
+    <div className="overflow-x-auto w-full">
       <table
         style={{ borderCollapse: 'separate', borderSpacing: '0 3px' }}
-        className="border-separate min-w-full "
+        className=" border-separate min-w-full "
       >
         <thead>
           <tr className="bg-white">
@@ -43,7 +31,7 @@ export default function UserTable(props: Iprops) {
             <th className="py-4 px-2 text-sm">{LABEL.user.emailLabel}</th>
             <th className="py-4 px-2 text-sm">{LABEL.user.roleLabel}</th>
             <th className="py-4 px-2 text-sm">{LABEL.user.statusLabel}</th>
-            <th className="py-4 px-2 text-sm">{LABEL.user.createdAtLabel}</th>
+            <th className="py-4 px-2 text-sm">{LABEL.sys.createdAtLabel}</th>
             <th className="py-4 px-2 text-sm">{LABEL.sys.actionLabel}</th>
           </tr>
         </thead>
@@ -55,31 +43,37 @@ export default function UserTable(props: Iprops) {
                   key={user.id}
                 >
                   <td className="py-2 px-3  text-center text-sm">{user.id}</td>
-                  <td className="py-2 px-2 flex justify-center items-center">
-                    {imageErrors[user.id] ? (
-                      <div className="rounded-full bg-black/5 w-7 h-7 flex justify-center items-center leading-7">
-                        <CiImageOff />
+                  <td className="py-2 px-2 mx-auto">
+                    {props.imageErrors[user.id] ? (
+                      <div className="rounded-full bg-black/5 w-7 h-7 mx-auto leading-7">
+                        <div className="h-full flex justify-center items-center">
+                          <CiImageOff />
+                        </div>
                       </div>
                     ) : (
-                      <Image
-                        src={`http://localhost/${user.avatar}`}
-                        alt="user's image"
-                        width={50}
-                        height={50}
-                        onError={() => handleImageError(user.id)} // Call the error handler
-                        style={{ borderRadius: '50%' }}
-                      />
+                      <div className="w-7 h-7 overflow-hidden rounded-full mx-auto">
+                        <Image
+                          src={`http://localhost:3000/${user.avatar}`}
+                          alt="user's image"
+                          width={50}
+                          height={50}
+                          className="h-full w-full"
+                          onError={() => props.handleImageError(user.id)}
+                          onLoad={() => props.handleResetImageError(user.id)}
+                          style={{ borderRadius: '50%' }}
+                        />
+                      </div>
                     )}
                   </td>
                   {/* whitespace-nowrap overflow-hidden text-ellipsis max-w-xs */}
-                  <td className="py-2 px-2 text-sm text-center">
+                  <td className="py-2 px-2 text-sm text-center whitespace-nowrap overflow-hidden text-ellipsis max-w-20">
                     {user.username}
                   </td>
-                  <td className="py-2 px-2 text-sm text-center">
+                  <td className="py-2 px-2 text-sm text-center whitespace-nowrap overflow-hidden text-ellipsis max-w-xs">
                     {user.email}
                   </td>
                   <td className="py-2 px-2 text-sm text-center">
-                    {user.role_id}
+                    {user.Role.role_name}
                   </td>
                   <td className="py-2 px-2 text-sm text-center">
                     {user.status ? 'Hoạt động' : 'Khóa'}
@@ -111,6 +105,6 @@ export default function UserTable(props: Iprops) {
           {MESSAGE.sys.noRecord}
         </div>
       ) : null}
-    </>
+    </div>
   )
 }

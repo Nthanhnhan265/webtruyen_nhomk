@@ -1,5 +1,6 @@
-"use client";
+'use client'
 
+<<<<<<< HEAD
 import axios, { AxiosError } from "axios";
 import Image from "next/image";
 import Navbar from "../../../components/navbar";
@@ -9,12 +10,23 @@ import { useRouter } from "next/navigation";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Checkbox, Label, TextInput } from "flowbite-react";
 import Cookies from "js-cookie";
+=======
+import axios, { AxiosError } from 'axios'
+import { Checkbox, Label, TextInput } from 'flowbite-react'
+import Image from 'next/image'
+import { useRouter } from 'next/navigation'
+import { SubmitHandler, useForm } from 'react-hook-form'
+import { FcGoogle } from 'react-icons/fc'
+import NavbarComponent from '../../../components/navbar'
+import Message from '../../message'
+import Footer from '../_component/footer'
+>>>>>>> dev
 
 // Định nghĩa kiểu cho dữ liệu biểu mẫu
 interface FormData {
-  username: string;
-  password: string;
-  rememberMe: boolean;
+  username: string
+  password: string
+  rememberMe: boolean
 }
 
 const Login = () => {
@@ -23,8 +35,13 @@ const Login = () => {
     handleSubmit,
     formState: { errors, isSubmitting },
     setError,
+<<<<<<< HEAD
   } = useForm<FormData>();
   const router = useRouter();
+=======
+  } = useForm<FormData>() // Sử dụng FormData làm kiểu cho useForm
+  const router = useRouter()
+>>>>>>> dev
 
   // Định nghĩa hàm onSubmit
   const onSubmit: SubmitHandler<FormData> = async ({
@@ -33,6 +50,7 @@ const Login = () => {
     rememberMe,
   }) => {
     try {
+<<<<<<< HEAD
       const response = await axios.post(
         "http://localhost:3000/api/login",
         {
@@ -52,27 +70,47 @@ const Login = () => {
         setTimeout(() => {
           router.push("/");
         }, 1000);
+=======
+      const response = await axios.post('http://localhost:3000/api/login', {
+        username,
+        password,
+      })
+
+      if (response.status === 200) {
+        const { token } = response.data
+        localStorage.setItem('token', token)
+
+        if (rememberMe) {
+          localStorage.setItem('username', username)
+        } else {
+          localStorage.removeItem('username')
+        }
+
+        setTimeout(() => {
+          router.push('/')
+        }, 1000)
+>>>>>>> dev
       }
     } catch (error) {
       if (error instanceof AxiosError && error.response) {
-        const errorMsg = error.response.data.message;
+        const errorMsg = error.response.data.message
 
-        if (errorMsg === "Tên đăng nhập không tồn tại") {
-          setError("username", { message: Message.auth.nameError });
-        } else if (errorMsg === "Mật khẩu không chính xác") {
-          setError("password", { message: "Mật khẩu không chính xác" });
+        if (errorMsg === 'Tên đăng nhập không tồn tại') {
+          setError('username', { message: Message.auth.nameError })
+        } else if (errorMsg === 'Mật khẩu không chính xác') {
+          setError('password', { message: 'Mật khẩu không chính xác' })
         } else {
-          setError("username", {
-            message: "Đăng nhập thất bại, vui lòng kiểm tra lại thông tin.",
-          });
+          setError('username', {
+            message: 'Đăng nhập thất bại, vui lòng kiểm tra lại thông tin.',
+          })
         }
       }
     }
-  };
+  }
 
   return (
     <>
-      <Navbar />
+      <NavbarComponent></NavbarComponent>
       <div className="min-h-screen flex items-center justify-center bg-white">
         <div className="bg-white rounded-lg p-6 flex">
           <div className="w-96 p-6">
@@ -89,11 +127,11 @@ const Login = () => {
                 <TextInput
                   id="username"
                   type="text"
-                  {...register("username", {
-                    required: "Tên đăng nhập là bắt buộc",
+                  {...register('username', {
+                    required: 'Tên đăng nhập là bắt buộc',
                     maxLength: {
                       value: 50,
-                      message: "Tên đăng nhập không được quá 50 ký tự",
+                      message: 'Tên đăng nhập không được quá 50 ký tự',
                     },
                   })}
                   className="text-gray-700 w-full"
@@ -113,11 +151,11 @@ const Login = () => {
                 <TextInput
                   id="password"
                   type="password"
-                  {...register("password", {
-                    required: "Mật khẩu là bắt buộc",
+                  {...register('password', {
+                    required: 'Mật khẩu là bắt buộc',
                     maxLength: {
                       value: 50,
-                      message: "Mật khẩu không được quá 50 ký tự",
+                      message: 'Mật khẩu không được quá 50 ký tự',
                     },
                   })}
                   className="text-gray-700 w-full"
@@ -131,7 +169,7 @@ const Login = () => {
               <div className="text-gray-700 flex items-center gap-2 mb-4">
                 <Checkbox
                   id="rememberMe"
-                  {...register("rememberMe")}
+                  {...register('rememberMe')}
                   className="checked:bg-blue-500 focus-visible:outline-none"
                 />
                 <Label htmlFor="rememberMe">Ghi nhớ mật khẩu</Label>
@@ -140,12 +178,12 @@ const Login = () => {
                 type="submit"
                 className={`w-full p-2 rounded ${
                   isSubmitting
-                    ? "bg-gray-400"
-                    : "bg-blue-500 text-white hover:bg-blue-600"
+                    ? 'bg-gray-400'
+                    : 'bg-blue-500 text-white hover:bg-blue-600'
                 }`}
                 disabled={isSubmitting}
               >
-                {isSubmitting ? "Đang đăng nhập..." : "Đăng nhập"}
+                {isSubmitting ? 'Đang đăng nhập...' : 'Đăng nhập'}
               </button>
             </form>
             <div className="flex justify-between mt-4 text-sm text-blue-500">
@@ -167,8 +205,13 @@ const Login = () => {
           </div>
         </div>
       </div>
+      <Footer></Footer>
     </>
-  );
-};
+  )
+}
 
+<<<<<<< HEAD
 export default Login;
+=======
+export default Login
+>>>>>>> dev

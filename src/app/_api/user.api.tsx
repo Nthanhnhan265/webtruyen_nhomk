@@ -2,12 +2,12 @@ import axios, { AxiosError } from 'axios'
 import MESSAGE from '../(routes)/dashboard/message'
 
 const api = axios.create({
-  baseURL: 'http://localhost:8080/api',
+  baseURL: 'http://localhost:3000/api',
   timeout: 5000,
 })
 
 //=======Create========//
-const createUser = async (data: IDashboardUserForm) => {
+const createUser = async (data: FormData) => {
   try {
     const response = await api.post('/users', data)
     const result = response.data
@@ -83,7 +83,7 @@ const searchUsers = async (
   }
 }
 //=======Update======//
-const updateUser = async (id: number, data: IDashboardUserForm) => {
+const updateUser = async (id: number, data: FormData) => {
   try {
     const response = await api.patch(`/users/${id}`, data)
     const result = response.data

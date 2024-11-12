@@ -2,7 +2,7 @@
 import axios from 'axios'
 
 const api = axios.create({
-  baseURL: 'http://localhost:8080/api', // Địa chỉ API
+  baseURL: 'http://localhost:3000/api', // Địa chỉ API
   timeout: 10000, // Thời gian chờ (mili giây)
 })
 
@@ -22,6 +22,16 @@ export const getAuthors = async ({ author_name, description, sort, page }) => {
         sort, // Sắp xếp
         page, // Trang hiện tại   // Giới hạn số lượng tác giả trên mỗi trang
       },
+    })
+    return response.data // Trả về dữ liệu
+  } catch (error) {
+    console.error('Lỗi khi lấy danh sách tác giả:', error)
+    throw error // Ném lỗi để xử lý ở nơi khác
+  }
+}
+export const getAuthorsName = async () => {
+  try {
+    const response = await api.get('/authors/authorsName', {
     })
     return response.data // Trả về dữ liệu
   } catch (error) {

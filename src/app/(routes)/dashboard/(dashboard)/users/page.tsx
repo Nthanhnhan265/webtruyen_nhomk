@@ -8,10 +8,11 @@ import {
 } from '@/app/_api/user.api'
 import { Button, Label, Pagination, Select } from 'flowbite-react'
 import { useEffect, useState } from 'react'
+import { GoPlus } from 'react-icons/go'
 import { toast } from 'react-toastify'
 import Header from '../../_components/header'
 import UserTable from '../../_components/users/table.user'
-import { UserDModal, UserModal } from '../../_components/users/user.modal'
+import { DeleteModal, UserModal } from '../../_components/users/user.modal'
 import LABEL from '../../label'
 import MESSAGE from '../../message'
 
@@ -29,11 +30,12 @@ const UserPage = () => {
   const [sortBy, setSortBy] = useState<string>('id')
   const [orderBy, setOrderBy] = useState<string>('DESC')
   const [keyword, setKeyWord] = useState<string>('')
+  const [imageErrors, setImageErrors] = useState<{ [key: number]: boolean }>({})
   const sortableProps = [
     { label: LABEL.sys.id, value: 'id' },
     { label: LABEL.user.usernameLabel, value: 'username' },
     { label: LABEL.user.emailLabel, value: 'email' },
-    { label: LABEL.user.createdAtLabel, value: 'createdAt' },
+    { label: LABEL.sys.createdAtLabel, value: 'createdAt' },
     { label: LABEL.user.roleLabel, value: 'role_id' },
     { label: LABEL.user.statusLabel, value: 'status' },
   ]
@@ -64,7 +66,7 @@ const UserPage = () => {
         }
       } catch (err) {
         console.log(err)
-        // toast.error(MESSAGE.sys.fetchError)
+        toast.error(MESSAGE.sys.fetchError)
       }
       //  finally {
       //   setLoading(false)
@@ -94,7 +96,6 @@ const UserPage = () => {
 
   //handle search
   const handleSearch = async (keyword: string) => {
-    console.log('checked>>', keyword)
     setKeyWord(keyword)
   }
 
@@ -127,19 +128,36 @@ const UserPage = () => {
     setIsDModalOpen(-1)
   }
 
-  /* Submit: update a user  */
-  const handleSubmit = async (form: IDashboardUserForm, id?: number) => {
+  //==========Handle Function============//
+  //Nơi tạo các hàm xử lý cho bảng
+  /*
+      Hàm xử lý khi ảnh không load thành công  
+  */
+  const handleImageError = (id: number) => {
+    setImageErrors((prevErrors) => ({
+      ...prevErrors,
+      [id]: true,
+    }))
+  }
+  const resetImageError = (id: number) => {
+    setImageErrors((prevErrors) => ({
+      ...prevErrors,
+      [id]: false,
+    }))
+  }
+  /* Submit: creat or update a user  */
+  const handleSubmit = async (form: FormData, id?: number) => {
     try {
       if (isEditMode && id) {
         // Xử lý cập nhật
-        const updatedUser = await updateUser(id, { ...form, status: 'us' })
-
+        const updatedUser = await updateUser(id, form)
         setUsers((prevUsers) =>
           prevUsers.map((user) =>
             user.id === id ? { ...user, ...updatedUser } : user,
           ),
         )
         toast.success(MESSAGE.user.updateSuccess)
+        resetImageError(id)
       } else {
         // Xử lý tạo mới
         const newUser = await createUser(form)
@@ -181,58 +199,64 @@ const UserPage = () => {
         user={selectedUser}
         isEdit={isEditMode}
       />
-      <UserDModal
+      <DeleteModal
         isOpenDModal={isDModalOpen}
         closeDModal={closeDModal}
         onDelete={(id) => handleDeleteSubmit(id)}
-      ></UserDModal>
+        labelModal={MESSAGE.user.confirmDelete}
+      ></DeleteModal>
       {/* Title and Create button */}
       <div className="flex justify-between items-center mb-0">
         <h2 className="text-xl font-bold">{LABEL.user.label}</h2>
-        <Button
-          color="success"
-          onClick={() => openCreateModal()}
-        >
-          + {LABEL.sys.create}
-        </Button>
       </div>
       {/* sort */}
-      <div className="mb-2 ">
+      <div className="mb-3">
         <div className="mb-2 block">
           <Label
             htmlFor="sortBy"
             value={LABEL.sys.sortLabel}
           />
         </div>
-        <div className="flex gap-2">
-          <Select
-            id="sortBy"
-            name="sortBy"
-            required
-            className="max-w-40"
-            onChange={(e) => handleChangeSortBy(e)}
+        <div className="flex flex-row justify-between gap-2">
+          <div className="flex gap-2">
+            <Select
+              id="sortBy"
+              name="sortBy"
+              required
+              className="max-w-40"
+              onChange={(e) => handleChangeSortBy(e)}
+            >
+              {sortableProps.map((property) => (
+                <option
+                  key={property.value}
+                  value={property.value}
+                  selected={property.value === 'id'}
+                >
+                  {property.label}
+                </option>
+              ))}
+            </Select>
+            <Select
+              id="order"
+              name="order"
+              required
+              className="max-w-40"
+              onChange={(e) => handleChangeOrderBy(e)}
+            >
+              <option value="DESC">{LABEL.sys.DESC}</option>
+              <option value="ASC">{LABEL.sys.ASC}</option>
+            </Select>
+          </div>
+          <Button
+            color="success"
+            onClick={() => openCreateModal()}
+            className=" whitespace-nowrap overflow-hidden text-ellipsis max-w-xs "
           >
-            {sortableProps.map((property) => (
-              <option
-                key={property.value}
-                value={property.value}
-                selected={property.value === 'id'}
-              >
-                {property.label}
-              </option>
-            ))}
-          </Select>
-
-          <Select
-            id="order"
-            name="order"
-            required
-            className="max-w-40"
-            onChange={(e) => handleChangeOrderBy(e)}
-          >
-            <option value="DESC">{LABEL.sys.DESC}</option>
-            <option value="ASC">{LABEL.sys.ASC}</option>
-          </Select>
+            <div className="flex justify-center items-center gap-2">
+              <GoPlus />
+              <span className="hidden sm:inine">{LABEL.sys.create}</span>
+            </div>
+          </Button>
         </div>
       </div>
 
@@ -242,8 +266,11 @@ const UserPage = () => {
         openUModal={openUpdateModal}
         openDModal={openDModal}
         closeDModal={closeDModal}
+        imageErrors={imageErrors}
+        handleImageError={handleImageError}
+        handleResetImageError={resetImageError}
       ></UserTable>
-      <div className="flex overflow-x-auto sm:justify-center">
+      <div className="flex overflow-x-auto justify-center">
         <Pagination
           currentPage={currentPage}
           totalPages={totalPages}
