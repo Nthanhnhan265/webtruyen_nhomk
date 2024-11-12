@@ -35,9 +35,8 @@ export default function Header(prop: IHeaderProp) {
 
         <div className="flex basis-1/2 justify-end w-full">
           <Avatar
-            className="shadow"
+            className="shadow items-center"
             status="online"
-            className="items-center"
           ></Avatar>
           <button
             onClick={() => {

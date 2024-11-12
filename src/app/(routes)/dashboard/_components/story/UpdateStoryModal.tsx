@@ -7,12 +7,12 @@ import { getAllgenreByName } from '@/app/_api/genre.api';
 import { toast } from 'react-toastify';
 import { updateStory } from '@/app/_api/story.api';
 import Image from 'next/image';
-
 interface StoryModalProps {
     show: boolean;
     onClose: () => void;
-    onSuccess: () => void;
+    onSuccess: (data: any) => void;
     initialData?: {
+        id: number,
         story_name: string;
         status: string;
         description: string;
@@ -24,15 +24,20 @@ interface StoryModalProps {
         cover: File | null;
     } | null;
 }
-
+interface Genre {
+    genre_name: string;
+    id: number;
+}
+interface Author {
+    author_name: string;
+    id: number;
+}
 const UpdateStoryModal: React.FC<StoryModalProps> = ({ show, onClose, onSuccess, initialData }) => {
     if (!show) return null;
 
     const [authors, setAuthors] = useState([]);
     const [categories, setCategories] = useState([]); // Assuming categories will be fetched or defined
-    const [error, setError] = useState('');
 
-    const [tags, setTags] = useState([]);
     const [status, setStatus] = useState('');
     const [authorId, setAuthorId] = useState('');
     const [description, setDescription] = useState('');
@@ -43,7 +48,9 @@ const UpdateStoryModal: React.FC<StoryModalProps> = ({ show, onClose, onSuccess,
     const [coverPreview, setCoverPreview] = useState<string | null>(null);
     const [keywords, setKeywords] = useState('');
     const [slug, setSlug] = useState('');
-    const [selectedCategories, setSelectedCategories] = useState([]);
+    const [genres, setGenres] = useState<Genre[]>([]);
+    const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+
     const [showMore, setShowMore] = useState(false);
 
     const fetchAuthors = async () => {
@@ -52,6 +59,7 @@ const UpdateStoryModal: React.FC<StoryModalProps> = ({ show, onClose, onSuccess,
             const responseGenre = await getAllgenreByName();
             setAuthors(response.data.authors)
             setCategories(responseGenre.data)
+            setGenres(responseGenre.data); // Assuming categories are included in initialData
             // alert(JSON.stringify(initialData))
             console.log(response.data.authors);
             if (initialData) {
@@ -72,20 +80,18 @@ const UpdateStoryModal: React.FC<StoryModalProps> = ({ show, onClose, onSuccess,
                     setCoverPreview(initialData.cover || null);
                     setCoverFile(null); // Clear cover file if it's not a File
                 }
-                setSelectedCategories(initialData.categories || []); // Assuming categories are included in initialData
             } else {
                 // Clear state if no initialData
                 setCoverFile(null);
                 setCoverPreview(null);
             }
         } catch (err) {
-            setError('Đã xảy ra lỗi khi lấy dữ liệu.')
+            toast.error('Đã xảy ra lỗi khi lấy dữ liệu.')
         }
     }
     useEffect(() => {
 
         fetchAuthors();
-        // alert("check initialData", initialData)
 
     }, [initialData]);
 
@@ -98,7 +104,7 @@ const UpdateStoryModal: React.FC<StoryModalProps> = ({ show, onClose, onSuccess,
         }
     };
 
-    const handleCategoryChange = (event) => {
+    const handleCategoryChange = (event: any) => {
         const value = String(event.target.value); // Chuyển đổi giá trị thành chuỗi
         setSelectedCategories((prevSelected) => {
             if (prevSelected.includes(value)) {
@@ -116,12 +122,25 @@ const UpdateStoryModal: React.FC<StoryModalProps> = ({ show, onClose, onSuccess,
             return;
         }
 
-        // 2. Kiểm tra ký tự đặc biệt
-        const specialCharRegex = /[!@#$%^&*(),.?":{}|<>]/; // Thay đổi biểu thức chính quy nếu cần
-        if (specialCharRegex.test(storyName) || specialCharRegex.test(description) || specialCharRegex.test(slug)) {
-            toast.error("Tên truyện, mô tả và slug không được chứa ký tự đặc biệt.");
+        // 2. Slug Validation: Only allow letters, numbers, and hyphen (-)
+        const slugRegex = /^[a-zA-Z0-9-]+$/;
+        if (!slugRegex.test(slug)) {
+            toast.error("Slug chỉ được chứa chữ cái, số và dấu gạch ngang (-).");
             return;
         }
+
+        // 3. Validate storyName and description: Allow Vietnamese characters, letters, numbers, and spaces, but no special characters
+        const specialCharRegex = /[!@#$%^&*(),.?":{}|<>]/; // Special characters to disallow
+        if (specialCharRegex.test(storyName)) {
+            toast.error("Tên truyện không được chứa ký tự đặc biệt.");
+            return;
+        }
+        const allowedSpecialCharRegex = /^[a-zA-Z0-9À-ỹà-ỹ\s.,!?()'"_-]+$/; // Vietnamese characters + spaces + some punctuation
+        if (!allowedSpecialCharRegex.test(description)) {
+            toast.error("Mô tả không được chứa ký tự đặc biệt ngoài các dấu chấm, phẩy, chấm hỏi, dấu chấm than, dấu ngoặc và dấu gạch ngang.");
+            return;
+        }
+
         const formData = new FormData();
         formData.append('story_name', storyName);
         formData.append('status', status);
@@ -136,9 +155,12 @@ const UpdateStoryModal: React.FC<StoryModalProps> = ({ show, onClose, onSuccess,
         }
 
         try {
+            if (!initialData) {
+                throw new Error
+            }
             await updateStory(formData, initialData.id);
             toast.success('cập nhật thành công !');
-            onSuccess();
+            onSuccess(formData);
             onClose();
         } catch (err) {
             toast.error('cập nhật thất bại');
@@ -186,7 +208,7 @@ const UpdateStoryModal: React.FC<StoryModalProps> = ({ show, onClose, onSuccess,
                                         onChange={(e) => setAuthorId(e.target.value)}
                                     >
                                         <option value="">Chọn tác giả</option>
-                                        {(Array.isArray(authors) ? authors : []).map((author) => (
+                                        {(Array.isArray(authors) ? authors : []).map((author: Author) => (
                                             <option key={author.id} value={author.id}>
                                                 {author.author_name}
                                             </option>
@@ -280,17 +302,17 @@ const UpdateStoryModal: React.FC<StoryModalProps> = ({ show, onClose, onSuccess,
                             <label className="block text-sm font-medium">Thể loại</label>
                             <div className="max-h-32 overflow-y-auto border border-gray-300 rounded p-2">
                                 <div className="flex flex-col">
-                                    {categories.slice(0, showMore ? categories.length : 1).map((category) => (
-                                        <div key={category.id} className="flex items-center">
+                                    {genres.slice(0, showMore ? genres.length : 1).map((genre: Genre) => (
+                                        <div key={genre.id} className="flex items-center">
                                             <input
                                                 type="checkbox"
-                                                id={category.id}
-                                                value={category.id}
-                                                checked={selectedCategories.includes(String(category.id))} // Chuyển đổi thành chuỗi để so sánh
+                                                id={`${genre.id}`}
+                                                value={genre.id}
+                                                checked={selectedCategories.includes(String(genre.id))} // Chuyển đổi thành chuỗi để so sánh
                                                 onChange={handleCategoryChange}
                                                 className="mr-2"
                                             />
-                                            <label htmlFor={category.id} className="text-sm">{category.genre_name}</label>
+                                            <label htmlFor={`${genre.id}`} className="text-sm">{genre.genre_name}</label>
                                         </div>
                                     ))}
 

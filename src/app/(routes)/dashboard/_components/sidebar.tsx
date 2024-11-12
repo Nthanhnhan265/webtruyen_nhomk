@@ -123,6 +123,7 @@ const Sidebar = () => {
                     <SidebarFlowBite.ItemGroup>
                       {navItems.map((item, index) => (
                         <Link
+                          key={index}
                           href={item.href}
                           className={
                             path === item.href

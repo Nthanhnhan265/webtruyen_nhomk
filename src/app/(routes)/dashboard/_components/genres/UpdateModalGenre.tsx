@@ -1,40 +1,34 @@
 import React, { useState, useEffect } from 'react';
-// import { updateAuthor } from '@/app/_api/authorService';
+// import { updateGenre } from '@/app/_api/authorService';
 
 interface FormErrors {
-    authorName?: string;
+    genre_name?: string;
     description?: string;
     slug?: string;
 }
 
-interface Author {
+interface Genre {
     id: number;
-    author_name: string;
-    description: string;
-    slug: string;
-}
-interface Authorone {
-    id: number;
-    author_name: string;
+    genre_name: string;
     description: string;
     slug: string;
 }
 
 interface Erorr {
-    authorName?: string;
+    genre_name?: string;
     description?: string;
     slug?: string;
 }
 
-interface AuthorModalProps {
+interface GenreModalProps {
     show: boolean;         // Indicates whether the modal is visible
     onClose: () => void;   // Function to call when closing the modal
-    onSuccess: (data: Author) => void; // Function to call on successful author creation
-    initialData?: Author | null; // Optional initial data for editing
+    onSuccess: (data: Genre) => void; // Function to call on successful author creation
+    initialData?: Genre | null; // Optional initial data for editing
 }
 
-const UpdateAuthorModal: React.FC<AuthorModalProps> = ({ show, onClose, onSuccess, initialData = null }) => {
-    const [authorName, setAuthorName] = useState('');
+const UpdateGenreModal: React.FC<GenreModalProps> = ({ show, onClose, onSuccess, initialData = null }) => {
+    const [genre_name, setGenreName] = useState('');
     const [description, setDescription] = useState('');
     const [slug, setSlug] = useState('');
     const [errors, setErrors] = useState<Erorr>({});
@@ -42,11 +36,11 @@ const UpdateAuthorModal: React.FC<AuthorModalProps> = ({ show, onClose, onSucces
     // When initialData changes, set form values
     useEffect(() => {
         if (initialData) {
-            setAuthorName(initialData.author_name || '');
+            setGenreName(initialData.genre_name || '');
             setDescription(initialData.description || '');
             setSlug(initialData.slug || '');
         } else {
-            setAuthorName('');
+            setGenreName('');
             setDescription('');
             setSlug('');
         }
@@ -58,14 +52,14 @@ const UpdateAuthorModal: React.FC<AuthorModalProps> = ({ show, onClose, onSucces
         let formErrors: FormErrors = {};
 
         // Validate author name
-        if (!authorName) {
-            formErrors.authorName = 'Bạn không được để trống tên tác giả.';
+        if (!genre_name) {
+            formErrors.genre_name = 'Bạn không được để trống tên tác giả.';
             isValid = false;
         } else if (
-            authorName.length < 1 || authorName.length > 255 ||
-            /[^a-zA-Z0-9\sàáạảãâầấậẩẫèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữđ]/.test(authorName)
+            genre_name.length < 1 || genre_name.length > 255 ||
+            /[^a-zA-Z0-9\sàáạảãâầấậẩẫèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữđ]/.test(genre_name)
         ) {
-            formErrors.authorName = 'Vui lòng nhập tên tác giả hợp lệ (1 - 255 ký tự và không chứa ký tự đặc biệt).';
+            formErrors.genre_name = 'Vui lòng nhập tên tác giả hợp lệ (1 - 255 ký tự và không chứa ký tự đặc biệt).';
             isValid = false;
         }
 
@@ -91,19 +85,18 @@ const UpdateAuthorModal: React.FC<AuthorModalProps> = ({ show, onClose, onSucces
     // Handle the form submission
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-
         // Validate the form
         if (!validateForm()) return;
 
         // Prepare updated author object
-        const updatedAuthor = {
-            author_name: authorName,
+        const updatedGenre = {
+            genre_name,
             description,
             slug,
         };
 
         // Call onSuccess with the updated author data
-        onSuccess(initialData?.id, updatedAuthor);
+        onSuccess(initialData?.id, updatedGenre);
     };
 
     const handleCancel = () => {
@@ -117,18 +110,18 @@ const UpdateAuthorModal: React.FC<AuthorModalProps> = ({ show, onClose, onSucces
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
             <div className="bg-white p-6 rounded shadow-lg w-1/2">
-                <h2 className="text-xl font-bold mb-4">Chỉnh sửa Tác Giả</h2>
+                <h2 className="text-xl font-bold mb-4">Chỉnh sửa Thể loại</h2>
                 <form onSubmit={handleSubmit}>
                     <div className="mb-4">
-                        <label className="block mb-2">Tên tác giả</label>
+                        <label className="block mb-2">Tên thể loại</label>
                         <input
-                            value={authorName}
-                            onChange={(e) => setAuthorName(e.target.value)}
-                            className={`w-full p-2 border ${errors.authorName ? 'border-red-500' : 'border-gray-300'} rounded`}
+                            value={genre_name}
+                            onChange={(e) => setGenreName(e.target.value)}
+                            className={`w-full p-2 border ${errors.genre_name ? 'border-red-500' : 'border-gray-300'} rounded`}
                             placeholder="Nhập tên tác giả"
-                            required
+
                         />
-                        {errors.authorName && <p className="text-red-500">{errors.authorName}</p>}
+                        {errors.genre_name && <p className="text-red-500">{errors.genre_name}</p>}
                     </div>
                     <div className="mb-4">
                         <label className="block mb-2">URL</label>
@@ -137,7 +130,7 @@ const UpdateAuthorModal: React.FC<AuthorModalProps> = ({ show, onClose, onSucces
                             onChange={(e) => setSlug(e.target.value)}
                             className={`w-full p-2 border ${errors.slug ? 'border-red-500' : 'border-gray-300'} rounded`}
                             placeholder="tac-gia/..."
-                            required
+
                         />
                         {errors.slug && <p className="text-red-500">{errors.slug}</p>}
                     </div>
@@ -162,4 +155,4 @@ const UpdateAuthorModal: React.FC<AuthorModalProps> = ({ show, onClose, onSucces
     );
 };
 
-export default UpdateAuthorModal;
+export default UpdateGenreModal;

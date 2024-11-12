@@ -5,7 +5,7 @@ const api = axios.create({
   timeout: 10000, // Timeout (milliseconds)
 });
 
-export const getChapters = async (page, limit) => {
+export const getChapters = async (page: number, limit: number) => {
   try {
     // Tạo đối tượng params cho truy vấn
     const params = {
@@ -23,7 +23,7 @@ export const getChapters = async (page, limit) => {
     throw error; // Quăng lỗi để xử lý ở chỗ khác
   }
 };
-export const chapterByStory = async (story_id, page) => {
+export const chapterByStory = async (story_id: number, page: number) => {
   try {
     // Tạo đối tượng params cho truy vấn
     const params = {
@@ -41,12 +41,28 @@ export const chapterByStory = async (story_id, page) => {
     throw error; // Quăng lỗi để xử lý ở chỗ khác
   }
 };
-export const getChapterById = async (chapterId: number) => {
+export const getChapterBySlug = async (slug: string) => {
   try {
-    const response = await api.get(`/chapters/${chapterId}`); // Fetch chapter by ID
+    // Tạo đối tượng params cho truy vấn
+    const params = {
+      slug: slug
+    };
+
+    // Sử dụng axios để gọi API với params
+    const response = await api.get(`/chapters/${slug}`);
+    // Trả về dữ liệu từ phản hồi
     return response.data;
   } catch (error) {
-    console.error(`Error fetching chapter with id ${chapterId}:`, error);
+    console.error("Error fetching chapters:", error);
+    throw error; // Quăng lỗi để xử lý ở chỗ khác
+  }
+};
+export const getChapterByStoryidAll = async (id: number) => {
+  try {
+    const response = await api.get(`/chapters/getstory/${id}`); // Fetch chapter by ID
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching chapter with id ${id}:`, error);
     throw error;
   }
 };
@@ -56,6 +72,7 @@ export const getChapterById = async (chapterId: number) => {
 
 export default {
   getChapters,
-  getChapterById,
+  getChapterByStoryidAll,
   chapterByStory,
+  getChapterBySlug
 };

@@ -5,60 +5,45 @@ import { toast } from 'react-toastify';
 import { createStory } from '@/app/_api/story.api'
 import { getAllgenreByName } from '@/app/_api/genre.api'
 import Image from 'next/image';
-// In your component where you render StoryModal
-const StoryModal = ({ show, onClose, onSuccess }) => {
+interface StoryModalProps {
+    show: boolean;
+    onClose: () => void;
+    onSuccess: (data: any) => void;
+}
+interface Author {
+    author_name: string;
+    id: number;
+}
+interface Genre {
+    genre_name: string;
+    id: number;
+}
+const StoryModal: React.FC<StoryModalProps> = ({ show, onClose, onSuccess }) => {
     if (!show) return null;
-    const categoriess = [
-        { id: 1, name: 'Fantasy' },
-        { id: 2, name: 'Science Fiction' },
-        { id: 3, name: 'Mystery' },
-        { id: 4, name: 'Romance' },
-        { id: 5, name: 'Horror' },
-        { id: 5, name: 'Horror' },
-        { id: 5, name: 'Horror' },
-        { id: 5, name: 'Horror' },
-        { id: 5, name: 'Horror' },
-        { id: 5, name: 'Horror' },
-        { id: 5, name: 'Horror' },
-        { id: 5, name: 'Horror' },
-        { id: 5, name: 'Horror' },
-        { id: 5, name: 'Horror' },
-        { id: 5, name: 'Horror' },
-        { id: 5, name: 'Horror' },
-        { id: 5, name: 'Horror' },
-    ];
-
-    const [authors, setAuthors] = useState([])
-    const [categories, setCategories] = useState([])
-    const [error, setError] = useState('')
+    const [authors, setAuthors] = useState<Author[]>([])
+    const [genres, setGenres] = useState<Genre[]>([])
 
     // Define state variables for each story attribute
-    const [tags, setTags] = useState([]); // State cho tags
     const [status, setStatus] = useState('');
     const [authorId, setAuthorId] = useState('');
     const [description, setDescription] = useState('');
     const [storyName, setStoryName] = useState('');
     const [totalChapters, setTotalChapters] = useState(0);
-    const [views, setViews] = useState(0);
-    const [cover, setCover] = useState(null);
-    const [coverPreview, setCoverPreview] = useState(null);
     const [keywords, setKeywords] = useState('');
     const [slug, setSlug] = useState('');
-    const [selectedCategories, setSelectedCategories] = useState([]);
-    const [showMore, setShowMore] = useState(false); // State for showing more categories
+    const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+    const [showMore, setShowMore] = useState(false); // State for showing more genres
     const [coverFile, setCoverFile] = useState<any>()
-    const [imageErrors, setImageErrors] = useState<Boolean>(false)
     const fetchAuthors = async () => {
         try {
             const response = await getAuthorsName();
             const responseGenre = await getAllgenreByName();
             setAuthors(response.data.authors)
-            setCategories(responseGenre.data)
-            // alert(JSON.stringify(responseGenre))
+            setGenres(responseGenre.data)
             console.log(response.data.authors);
 
         } catch (err) {
-            setError('Đã xảy ra lỗi khi lấy dữ liệu.')
+            toast.error('Đã xảy ra lỗi khi lấy dữ liệu.')
         }
     }
 
@@ -108,7 +93,7 @@ const StoryModal = ({ show, onClose, onSuccess }) => {
             setCoverFile(file)
         }
     }
-    const handleCategoryChange = (event) => {
+    const handleCategoryChange = (event: any) => {
         const value = String(event.target.value); // Chuyển đổi giá trị thành chuỗi
         setSelectedCategories((prevSelected) => {
             if (prevSelected.includes(value)) {
@@ -120,7 +105,7 @@ const StoryModal = ({ show, onClose, onSuccess }) => {
 
 
     // Handle form submission
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: any) => {
         e.preventDefault()
         if (!storyName.trim() || !description.trim() || !slug.trim() || !authorId) {
             toast.error("Các trường tên truyện, mô tả, slug và tác giả không được để trống.");
@@ -149,14 +134,15 @@ const StoryModal = ({ show, onClose, onSuccess }) => {
         const formDataObject = Object.fromEntries(formData.entries())
         console.log(formDataObject) // In ra toàn bộ dữ liệu dưới dạng object
         await createStory(formData, selectedCategories)
-
+        onSuccess(formData)
+        toast.success("thêm truyện thành công")
         onClose();
+        if (!formData) {
+            toast.success("thêm truyện thất bại")
+
+        }
     };
 
-    // On tags changed
-    const onTagsChanged = (newTags) => {
-        setTags(newTags); // Cập nhật state tags
-    };
 
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
@@ -308,24 +294,24 @@ const StoryModal = ({ show, onClose, onSuccess }) => {
                             <label className="block text-sm font-medium">Thể loại</label>
                             <div className="max-h-32 overflow-y-auto border border-gray-300 rounded p-2">
                                 <div className="flex flex-col">
-                                    {categories.slice(0, showMore ? categories.length : 1).map((category) => (
-                                        <div key={category.id} className="flex items-center">
+                                    {genres.slice(0, showMore ? genres.length : 1).map((genre: Genre) => (
+                                        <div key={genre.id} className="flex items-center">
                                             <input
                                                 type="checkbox"
-                                                id={category.id}
-                                                value={category.id}
-                                                checked={selectedCategories.includes(String(category.id))} // Chuyển đổi thành chuỗi để so sánh
-                                                onChange={handleCategoryChange}
+                                                id={`${genre.id}`}
+                                                value={genre.id}
+                                                checked={selectedCategories.includes(String(genre.id))} // Chuyển đổi thành chuỗi để so sánh
+                                                onChange={(e) => handleCategoryChange(e)}
                                                 className="mr-2"
                                             />
-                                            <label htmlFor={category.id} className="text-sm">{category.genre_name}</label>
+                                            <label htmlFor={`${genre.id}`} className="text-sm">{genre.genre_name}</label>
                                         </div>
                                     ))}
 
                                 </div>
                             </div>
-                            {/* Toggle button for more categories */}
-                            {categories.length > 2 && (
+                            {/* Toggle button for more genres */}
+                            {genres.length > 2 && (
                                 <button
                                     type="button"
                                     onClick={() => setShowMore(!showMore)}
