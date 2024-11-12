@@ -47,7 +47,7 @@ export default function Table(props: Iprops) {
               {props.tbHeaderCells?.map((header, colIndex) => (
                 <td
                   key={colIndex}
-                  className="py-2 px-3 text-center text-sm"
+                  className="py-2 px-3 text-center text-sm w-auto"
                 >
                   {header.render ? header.render(item) : item[header.name]}
                 </td>

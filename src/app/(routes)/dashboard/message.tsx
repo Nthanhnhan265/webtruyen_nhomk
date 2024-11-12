@@ -11,6 +11,9 @@ const MESSAGE = {
     loginSuccess: 'Đăng nhập thành công, chào mừng trở lại!',
     unauthorized: 'Vui lòng đăng nhập lại',
   },
+  review: {
+    confirmDelete: 'Bạn có muốn xóa đánh giá này không?',
+  },
   user: {
     createSuccess: 'Tạo người dùng thành công',
     deleteSuccess: 'Xóa người dùng thành công',

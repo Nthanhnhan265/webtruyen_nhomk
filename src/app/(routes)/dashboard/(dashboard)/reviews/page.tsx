@@ -4,6 +4,7 @@ import { useDeleteModal } from '@/hooks/modals/useDeleteModal'
 import { AxiosError } from 'axios'
 import { Label, Pagination, Select } from 'flowbite-react'
 import { useEffect, useState } from 'react'
+import { IoIosStar } from 'react-icons/io'
 import { redirect } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import formatDate from '../../../../../components/ulti/formatDate'
@@ -36,7 +37,11 @@ export default function ReviewsPage() {
             return {
               id: rv.id,
               username: rv.User?.username,
-              star: rv.star,
+              star: (
+                <div className="flex justify-center items-center gap-0.5">
+                  {rv.star} <IoIosStar className="text-yellow-200" />
+                </div>
+              ),
               comment: rv.comment,
               story_id: rv.Story?.story_name,
               created_at: formatDate(rv.created_at),
@@ -57,7 +62,11 @@ export default function ReviewsPage() {
             return {
               id: rv.id,
               username: rv.User?.username,
-              star: rv.star,
+              star: (
+                <div className="flex justify-center items-center gap-0.5">
+                  {rv.star} <IoIosStar className="text-yellow-200" />
+                </div>
+              ),
               comment: rv.comment,
               story_id: rv.Story?.story_name,
               created_at: formatDate(rv.created_at),
@@ -83,10 +92,15 @@ export default function ReviewsPage() {
     }
     fetchUsers()
   }, [currentPage, sortBy, orderBy, keyword])
+
   const headerCells = [
     { label: 'Tên độc giả', name: 'username' },
-    { label: 'Điểm', name: 'star' },
-    { label: 'Cảm nghĩ', name: 'comment' },
+    { label: 'Đánh giá', name: 'star' },
+    {
+      label: 'Cảm nghĩ',
+      name: 'comment',
+      render: (item) => <div className="">{item.comment}</div>,
+    },
     { label: 'Truyện', name: 'story_id' },
     { label: 'Ngày tạo', name: 'created_at' },
   ]
@@ -125,10 +139,10 @@ export default function ReviewsPage() {
     console.log(id)
   }
   const handleDelete = (id: number) => {
-    console.log('d function called')
+    console.log('d function called', id)
   }
   useEffect(() => {
-    setMessage('xoa rv')
+    setMessage(MESSAGE.review.confirmDelete)
     setHandleDelete(() => handleDelete)
     console.log(reviews)
   }, [])
