@@ -1,6 +1,6 @@
 'use client'
-import { chapterByStory } from '@/app/_api/chapter.api' // Import API functions
-import { getStoryBySlug } from '@/app/_api/story.api' // Import API functions
+import { chapterByStory } from '@/app/api/chapter.api' // Import API functions
+import { getStoryBySlug } from '@/app/api/story.api' // Import API functions
 import { useEffect, useState } from 'react'
 import NavbarComponent from '../../../../components/navbar'
 import Footer from '../../_component/footer'

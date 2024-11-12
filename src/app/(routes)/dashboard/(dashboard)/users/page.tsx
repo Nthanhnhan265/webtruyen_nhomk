@@ -5,8 +5,10 @@ import {
   getUsers,
   searchUsers,
   updateUser,
-} from '@/app/_api/user.api'
+} from '@/app/api/user.api'
+import { AxiosError } from 'axios'
 import { Button, Label, Pagination, Select } from 'flowbite-react'
+import { redirect, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { GoPlus } from 'react-icons/go'
 import { toast } from 'react-toastify'
@@ -41,6 +43,7 @@ const UserPage = () => {
   ]
   const MAXIMUM_RECORDS = 10
   //===================== Handle hooks ======================//
+  const router = useRouter()
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -65,6 +68,16 @@ const UserPage = () => {
           setTotalPages(response.pagination.totalPages)
         }
       } catch (err) {
+        if (err instanceof AxiosError) {
+          switch (err.status) {
+            case 401:
+              toast.error(
+                `${MESSAGE.sys.fetchError}, ${MESSAGE.auth.unauthorized}`,
+              )
+              // return router.push('/dashboard/login')
+              redirect('/dashboard/login')
+          }
+        }
         console.log(err)
         toast.error(MESSAGE.sys.fetchError)
       }

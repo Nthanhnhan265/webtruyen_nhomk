@@ -1,7 +1,7 @@
 'use client'
 
-import { getChapters } from '@/app/_api/chapter.api' // Import API functions
-import { getStories } from '@/app/_api/story.api' // Import API functions
+import { getChapters } from '@/app/api/chapter.api' // Import API functions
+import { getStories } from '@/app/api/story.api' // Import API functions
 import { useEffect, useState } from 'react'
 import NavbarComponent from '../../../../components/navbar'
 

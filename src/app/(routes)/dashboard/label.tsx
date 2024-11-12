@@ -19,16 +19,16 @@ const LABEL = {
     user: 'Người dùng',
     admin: 'Quản trị',
   },
- author: {
+  author: {
     label: 'Tác Giả',
     createLabel: 'Thêm tác giả',
     editLabel: 'Sửa tác giả ',
     deleteLabel: 'Xóa tác giả',
     usernameLabel: 'Tên tác giả',
-    describeLabel: "Mô tả",
-    act: "Hành động",
+    describeLabel: 'Mô tả',
+    act: 'Hành động',
     createdAtLabel: 'Ngày tạo',
-    url: "URL",
+    url: 'URL',
   },
   story: {
     author: 'Tác giả',
@@ -44,6 +44,8 @@ const LABEL = {
   chapter: {
     new: 'Chương mới',
     label: 'Chương truyện',
+    storyName: 'Tên truyện',
+    star: 'Đánh giá',
     chapterOrderLabel: 'Chương',
     chapterNameLabel: 'Tên chương',
     interactionLabel: 'Tương tác',

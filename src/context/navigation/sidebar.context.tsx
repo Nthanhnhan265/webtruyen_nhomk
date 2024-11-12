@@ -32,7 +32,7 @@ export function SidebarProvider({ children }: { children: ReactNode }) {
 /** SIDE BAR CONTEXT
  * @returns {IpropSidebar} - Trả về đối tượng IpropSidebar
  */
-export function getSidebarContext() {
+export function useSidebarContext() {
   const sideBar = useContext(sideContext)
   return sideBar
 }

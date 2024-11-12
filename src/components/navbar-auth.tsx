@@ -15,11 +15,11 @@ const genres = [
 ]
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false)
-  const [isListOpen, setIsListOpen] = useState(false)
-  const [isCategoryOpen, setIsCategoryOpen] = useState(false)
-  const toggleList = () => setIsListOpen(!isListOpen)
-  const toggleCategory = () => setIsCategoryOpen(!isCategoryOpen)
-
+  // const [isListOpen, setIsListOpen] = useState(false)
+  // const [isCategoryOpen, setIsCategoryOpen] = useState(false)
+  // const toggleList = () => setIsListOpen(!isListOpen)
+  // const toggleCategory = () => setIsCategoryOpen(!isCategoryOpen)
+  // const { loggedInUser, setIsLoggedInUser } = useUserContext()
   return (
     <nav className="flex flex-col sm:flex-row justify-between items-center p-4 border-b-2 border-gray-200 bg-white px-5 md:px-10 lg:px-20">
       <div className="flex justify-center basis-1/5 md:justify-start items-center w-full text-2xl font-bold">
@@ -55,7 +55,6 @@ const NavBar = () => {
               </li>
             </ul>
           </li>
-
           <li className="relative group">
             <div
               className={styles.dropdownContainer}
