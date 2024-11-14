@@ -4,6 +4,7 @@ import { useDeleteModal } from '@/hooks/modals/useDeleteModal'
 import { AxiosError } from 'axios'
 import { Label, Pagination, Select } from 'flowbite-react'
 import { useEffect, useState } from 'react'
+import { IoIosStar } from 'react-icons/io'
 import { redirect } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import formatDate from '../../../../../components/ulti/formatDate'
@@ -37,7 +38,11 @@ export default function ReviewsPage() {
             return {
               user_id: rv.user_id,
               username: rv.User?.username,
-              star: rv.star,
+              star: (
+                <div className="flex justify-center items-center gap-0.5">
+                  {rv.star} <IoIosStar className="text-yellow-200" />
+                </div>
+              ),
               comment: rv.comment,
               story_id: rv.Story?.story_id,
               story_name: rv.Story?.story_name,
@@ -58,7 +63,11 @@ export default function ReviewsPage() {
             return {
               user_id: rv.user_id,
               username: rv.User?.username,
-              star: rv.star,
+              star: (
+                <div className="flex justify-center items-center gap-0.5">
+                  {rv.star} <IoIosStar className="text-yellow-200" />
+                </div>
+              ),
               comment: rv.comment,
               story_id: rv.story_id,
               story_name: rv.Story?.story_name,
@@ -85,6 +94,7 @@ export default function ReviewsPage() {
     }
     fetchUsers()
   }, [currentPage, sortBy, orderBy, keyword])
+
   const headerCells = [
     { label: 'user_id', name: 'user_id', hidden: true },
     { label: 'story_id', name: 'story_id', hidden: true },

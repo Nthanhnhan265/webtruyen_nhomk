@@ -170,7 +170,6 @@ const createUser = async (data: FormData) => {
     if (!accessToken) {
       throw new Error('No access token found')
     }
-
     const response = await api.post('/users', data, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
