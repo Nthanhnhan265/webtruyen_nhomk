@@ -5,7 +5,7 @@ import {
   getAuthorByid,
   getAuthors,
   updateAuthor,
-} from '@/app/_api/authorService'
+} from '@/app/api/authorService'
 import { Button, Pagination } from 'flowbite-react'
 import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'

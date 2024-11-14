@@ -80,10 +80,10 @@
 // =======
 // import React, { useState, useEffect } from 'react';
 // import { FileInput, Label } from "flowbite-react";
-// import { getAuthorsName } from '@/app/_api/authorService';
-// import { getAllgenreByName } from '@/app/_api/genre.api';
+// import { getAuthorsName } from '@/app/api/authorService';
+// import { getAllgenreByName } from '@/app/api/genre.api';
 // import { toast } from 'react-toastify';
-// import { updateStory } from '@/app/_api/story.api';
+// import { updateStory } from '@/app/api/story.api';
 // import Image from 'next/image';
 // interface StoryModalProps {
 //     show: boolean;

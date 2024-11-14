@@ -45,6 +45,11 @@ const MESSAGE = {
   chapter: {
     confirmDelete: 'Bạn có muốn xóa chương này không',
   },
+  review: {
+    deleteSuccess: 'Xóa đánh giá thành công',
+    deleteFailed: 'Xóa đánh giá thành công',
+    confirmDelete: 'Bạn có muốn xóa đánh giá này không?',
+  },
 }
 
 export default MESSAGE

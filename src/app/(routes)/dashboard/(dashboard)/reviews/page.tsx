@@ -1,5 +1,5 @@
 'use client'
-import { getReviews, searchReviews } from '@/app/api/review.api.'
+import { deleteReview, getReviews, searchReviews } from '@/app/api/review.api.'
 import { useDeleteModal } from '@/hooks/modals/useDeleteModal'
 import { AxiosError } from 'axios'
 import { Label, Pagination, Select } from 'flowbite-react'
@@ -18,7 +18,8 @@ export default function ReviewsPage() {
   const [orderBy, setOrderBy] = useState<string>('DESC')
   const [currentPage, setCurrentPage] = useState(1)
   const [sortBy, setSortBy] = useState<string>('created_at')
-  const [reviews, setReviews] = useState()
+  const [reviews, setReviews] = useState([])
+
   const [totalPages, setTotalPages] = useState<number>(0)
   const MAXIMUM_RECORDS = 10
   useEffect(() => {
@@ -34,11 +35,12 @@ export default function ReviewsPage() {
           )
           const data = response.data.map((rv) => {
             return {
-              id: rv.id,
+              user_id: rv.user_id,
               username: rv.User?.username,
               star: rv.star,
               comment: rv.comment,
-              story_id: rv.Story?.story_name,
+              story_id: rv.Story?.story_id,
+              story_name: rv.Story?.story_name,
               created_at: formatDate(rv.created_at),
             }
           })
@@ -53,13 +55,13 @@ export default function ReviewsPage() {
             MAXIMUM_RECORDS,
           )
           const data = response.data.map((rv) => {
-            console.log(rv)
             return {
-              id: rv.id,
+              user_id: rv.user_id,
               username: rv.User?.username,
               star: rv.star,
               comment: rv.comment,
-              story_id: rv.Story?.story_name,
+              story_id: rv.story_id,
+              story_name: rv.Story?.story_name,
               created_at: formatDate(rv.created_at),
             }
           })
@@ -84,10 +86,12 @@ export default function ReviewsPage() {
     fetchUsers()
   }, [currentPage, sortBy, orderBy, keyword])
   const headerCells = [
+    { label: 'user_id', name: 'user_id', hidden: true },
+    { label: 'story_id', name: 'story_id', hidden: true },
     { label: 'Tên độc giả', name: 'username' },
     { label: 'Điểm', name: 'star' },
     { label: 'Cảm nghĩ', name: 'comment' },
-    { label: 'Truyện', name: 'story_id' },
+    { label: 'Tên truyện', name: 'story_name' },
     { label: 'Ngày tạo', name: 'created_at' },
   ]
 
@@ -97,7 +101,7 @@ export default function ReviewsPage() {
     { label: LABEL.chapter.storyName, value: 'story_name' },
     { label: LABEL.chapter.star, value: 'star' },
   ]
-  const { setMessage, setHandleDelete } = useDeleteModal()
+  const { setMessage, setHandleDelete, closeDeleteModal } = useDeleteModal()
   //====================== HANDLES FUNCTIONS ======================//
   //click to change page
   const onPageChange = (page: number) => {
@@ -124,11 +128,28 @@ export default function ReviewsPage() {
   const handleUpdate = (id: any) => {
     console.log(id)
   }
-  const handleDelete = (id: number) => {
-    console.log('d function called')
+  const handleDelete = async (selected: object) => {
+    try {
+      await deleteReview(selected.user_id, selected.story_id)
+      setReviews((prev) =>
+        prev.filter((item) => {
+          if (
+            item.user_id !== selected.user_id ||
+            item.story_id !== selected.story_id
+          ) {
+            return true
+          }
+          return false
+        }),
+      )
+      toast.success(MESSAGE.review.deleteSuccess)
+    } catch (error) {
+      toast.error(MESSAGE.review.deleteFailed)
+    }
+    closeDeleteModal()
   }
   useEffect(() => {
-    setMessage('xoa rv')
+    setMessage(MESSAGE.review.confirmDelete)
     setHandleDelete(() => handleDelete)
     console.log(reviews)
   }, [])
