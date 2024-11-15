@@ -19,12 +19,13 @@ const NavBar = () => {
   useEffect(() => {
     const fetchGenres = async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/genres'); // Đường dẫn API
+        const res = await fetch(`http://localhost:3000/api/genres`);
         const data = await res.json();
+        console.log("Dữ liệu nhận được từ API(danh sách truyện theo thể loại):", data);
 
         // Kiểm tra xem dữ liệu trả về có phải là mảng không
-        if (Array.isArray(data)) {
-          setGenres(data); // Cập nhật genres nếu là mảng
+        if (Array.isArray(data.data)) {
+          setGenres(data.data); // Cập nhật genres nếu là mảng
         } else {
           console.error('Dữ liệu không phải là mảng', data);
           setGenres([]); // Đặt genres là mảng trống nếu không phải mảng
@@ -81,9 +82,9 @@ const NavBar = () => {
                       <Link
                         className={styles.genreItem}
                         key={index}
-                        href={`/genre/${genre.slug}`}
+                        href={`/genre/${genre.slug}`} // Dẫn đến trang thể loại theo slug
                       >
-                        {genre.genre_name} {/* Hiển thị genre_name thay vì slug */}
+                        {genre.genre_name} {/* Hiển thị genre_name */}
                       </Link>
                     ))
                   )}

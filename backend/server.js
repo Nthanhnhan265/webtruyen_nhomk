@@ -70,26 +70,26 @@ WHERE genres.slug = ?;
 // Backend (Express) - API để lấy danh sách thể loại 
 app.get('/api/genres', (req, res) => {
     const query = 'SELECT id, genre_name, slug FROM genres';
-  
+
     // Thực hiện truy vấn lấy danh sách thể loại từ cơ sở dữ liệu
     db.execute(query, (err, results) => {
-      if (err) {
-        console.error('Lỗi truy vấn:', err);
-        return res.status(500).json({ message: 'Lỗi khi truy vấn cơ sở dữ liệu.' });
-      }
-  
-      // Trả về danh sách thể loại
-      res.json(results);
+        if (err) {
+            console.error('Lỗi truy vấn:', err);
+            return res.status(500).json({ message: 'Lỗi khi truy vấn cơ sở dữ liệu.' });
+        }
+
+        // Trả về danh sách thể loại
+        res.json(results);
     });
-  });
+});
 
 // API để lấy thông tin tác giả và các sách của tác giả
 app.get('/api/author/:slug', (req, res) => {
     const { slug } = req.params;
-  
+
     // Truy vấn lấy thông tin tác giả và các sách của tác giả
     const query = `
-      SELECT 
+      SELECT           
         authors.id AS author_id,
         authors.author_name,
         authors.slug AS author_slug,
@@ -107,40 +107,40 @@ app.get('/api/author/:slug', (req, res) => {
       JOIN genres ON genre_story.genre_id = genres.id
       WHERE authors.slug = ?
     `;
-  
+
     db.execute(query, [slug], (err, results) => {
-      if (err) {
-        console.error('Lỗi truy vấn:', err);
-        return res.status(500).json({ message: 'Lỗi khi truy vấn cơ sở dữ liệu.' });
-      }
-  
-      // Kiểm tra nếu không có dữ liệu
-      if (results.length === 0) {
-        return res.status(404).json({ message: 'Không tìm thấy tác giả này hoặc truyện của tác giả.' });
-      }
-  
-      // Trả về thông tin tác giả và danh sách truyện
-      const author = {
-        author_id: results[0].author_id,
-        author_name: results[0].author_name,
-        author_slug: results[0].author_slug,
-        author_description: results[0].author_description,
-      };
-  
-      const books = results.map((row) => ({
-        story_id: row.story_id,
-        story_name: row.story_name,
-        story_slug: row.story_slug,
-        genre_name: row.genre_name,
-        genre_slug: row.genre_slug,
-        cover: row.cover,
-        total_chapters: row.total_chapters,
-      }));
-  
-      res.json({ author, books });
+        if (err) {
+            console.error('Lỗi truy vấn:', err);
+            return res.status(500).json({ message: 'Lỗi khi truy vấn cơ sở dữ liệu.' });
+        }
+
+        // Kiểm tra nếu không có dữ liệu
+        if (results.length === 0) {
+            return res.status(404).json({ message: 'Không tìm thấy tác giả này hoặc truyện của tác giả.' });
+        }
+
+        // Trả về thông tin tác giả và danh sách truyện
+        const author = {
+            author_id: results[0].author_id,
+            author_name: results[0].author_name,
+            author_slug: results[0].author_slug,
+            author_description: results[0].author_description,
+        };
+
+        const books = results.map((row) => ({
+            story_id: row.story_id,
+            story_name: row.story_name,
+            story_slug: row.story_slug,
+            genre_name: row.genre_name,
+            genre_slug: row.genre_slug,
+            cover: row.cover,
+            total_chapters: row.total_chapters,
+        }));
+
+        res.json({ author, books });
     });
-  });
-  
+});
+
 
 // Chạy server Express
 app.listen(port, () => {
