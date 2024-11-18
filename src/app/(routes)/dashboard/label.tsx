@@ -60,6 +60,7 @@ const LABEL = {
     label: 'Đánh giá',
   },
   sys: {
+    profile: 'Tài khoản',
     send: 'Gửi',
     publishedAtLabel: 'Ngày xuất bản',
     createdAtLabel: 'Ngày tạo',

@@ -52,3 +52,9 @@ interface IDashboardUserForm {
   role_id: number
   status: string
 }
+
+interface IProfilePasswordChange {
+  currentPassword: string
+  newPassword: string
+  confirmPassword: string
+}

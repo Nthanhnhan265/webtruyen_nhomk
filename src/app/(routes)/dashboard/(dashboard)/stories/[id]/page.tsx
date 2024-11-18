@@ -2,9 +2,13 @@
  * SỬ DỤNG ROUTE TẠM THỜI NÀY ĐỂ LÀM GIAO DIỆN: "XEM THÔNG TIN TRUYỆN VÀ QUẢN LÝ CHƯƠNG"
  */
 'use client'
+import { DeleteModal } from '@/app/(routes)/dashboard/_components/delete.modal'
 import Header from '@/app/(routes)/dashboard/_components/header'
+import LABEL from '@/app/(routes)/dashboard/label'
+import MESSAGE from '@/app/(routes)/dashboard/message'
 import { Button, Pagination, Select } from 'flowbite-react'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { BiBarChartAlt } from 'react-icons/bi'
 import { BsTags } from 'react-icons/bs'
@@ -13,14 +17,12 @@ import { GoCommentDiscussion } from 'react-icons/go'
 import { LuBadgeInfo } from 'react-icons/lu'
 import { MdOutlineStarBorder } from 'react-icons/md'
 import { TbUserPentagon } from 'react-icons/tb'
-import ChapterTable from '../../_components/chapters/table.chapter'
-import { DeleteModal } from '../../_components/users/user.modal'
-import LABEL from '../../label'
-import MESSAGE from '../../message'
-export default function DetailStory() {
+export default function DetailStory({ params }: { params: { id: number } }) {
   //====================== DECLARE VARIABLES, HOOKS ==========================//
   const [isExpand, setIsExpand] = useState<Boolean>(false)
   const [isOpenDModal, setOpenDModal] = useState<number>(-1)
+  console.log(params.id)
+  const router = useRouter()
   //**FAKE DATA */
   const COVER = '/images/default-cover-story.webp'
   const STORY_NAME =
@@ -69,10 +71,10 @@ Tiêu Hoà ngán ngẩm, cô thầm quyết tâm sẽ đưa bọn họ từ flop
     <>
       <Header handleSearch={onSearch}></Header>
       <DeleteModal
-        isOpenDModal={isOpenDModal}
+        isOpenDModal={{}}
         closeDModal={handleCloseDModal}
-        labelModal={MESSAGE.chapter.confirmDelete}
-        onDelete={handleDelete}
+        message={MESSAGE.chapter.confirmDelete}
+        onDelete={() => {}}
       ></DeleteModal>
       <div className="mt-10">
         {/* STORY'S DETAIL INFORMATION 
@@ -186,13 +188,20 @@ Tiêu Hoà ngán ngẩm, cô thầm quyết tâm sẽ đưa bọn họ từ flop
           </div>
           {/* button to add a new chapter */}
           <div>
-            <Button className="bg-[#33C2E9]">{LABEL.chapter.new}</Button>
+            <Button
+              className="bg-[#33C2E9]"
+              onClick={() =>
+                router.push(`/dashboard/stories/${params.id}/chapters/create`)
+              }
+            >
+              {LABEL.chapter.new}
+            </Button>
           </div>
         </div>
 
         {/* TABLE OF CHAPTERS */}
         <div className="my-2">
-          <ChapterTable openDModal={handleOpenDModal} />
+          {/* <ChapterTable openDModal={handleOpenDModal} /> */}
         </div>
 
         {/* PAGINATION */}

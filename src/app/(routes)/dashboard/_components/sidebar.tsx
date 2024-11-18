@@ -7,7 +7,7 @@ import { usePathname } from 'next/navigation'
 import { AiOutlineComment, AiOutlineStar } from 'react-icons/ai'
 import { BiCog } from 'react-icons/bi'
 import { GoX } from 'react-icons/go'
-import { HiOutlineUsers } from 'react-icons/hi'
+import { HiMiniSquares2X2, HiOutlineUserGroup } from 'react-icons/hi2'
 import { LuTag, LuUserCircle2 } from 'react-icons/lu'
 import { MdBook } from 'react-icons/md'
 import LABEL from '../label'
@@ -21,9 +21,14 @@ const Sidebar = () => {
   //===================== DECLARE VARIABLE, HOOKS ====================//
   const navItems: INavItem[] = [
     {
+      href: '/dashboard/profile',
+      label: LABEL.sys.profile,
+      icon: HiMiniSquares2X2,
+    },
+    {
       href: '/dashboard/users',
       label: LABEL.user.label,
-      icon: HiOutlineUsers, // Pass the component constructor
+      icon: HiOutlineUserGroup,
     },
     {
       href: '/dashboard/authors',
@@ -125,7 +130,6 @@ const Sidebar = () => {
                         <Link
                           key={index}
                           href={item.href}
-                          key={index}
                           className={
                             path === item.href
                               ? `${CENTER} text-[#013CC6] relative bg-gray-100 rounded-md`

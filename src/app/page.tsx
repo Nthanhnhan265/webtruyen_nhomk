@@ -4,7 +4,6 @@ import Image from 'next/image'
 import { useEffect, useState } from 'react'
 
 import { getAllStorieNew, getAllStorieView } from '@/app/api/story.api'
-import NavBar from '../components/navbar'
 import Footer from './(routes)/_component/footer'
 interface Story {
   story_name: string
@@ -48,9 +47,11 @@ export default function HomePage() {
     fetchStories()
   }, [currentPage])
 
+  // const { userProfile, accessToken } = await useProfile()
+  // console.log(userProfile)
   return (
     <div className="bg-gray-100 min-h-screen">
-      <NavBar />
+      {/* <NavBar /> */}
       {/* Featured Image Section */}
       <section className="py-8 bg-white">
         <div className="container mx-auto">
