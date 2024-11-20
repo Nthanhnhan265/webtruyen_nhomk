@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 // import 'bootstrap/dist/css/bootstrap.min.css';
 import { SidebarProvider } from '@/context/navigation/sidebar.context'
@@ -23,17 +22,6 @@ export default function LoginLayout({
           </div>
           {/* header and container */}
           <div className="w-full max-w-none md:col-span-9 lg:col-span-10 container px-4 md:px-6">
-            <ToastContainer
-              position="top-left"
-              autoClose={5000}
-              hideProgressBar={false}
-              newestOnTop={false}
-              closeOnClick
-              rtl={false}
-              pauseOnFocusLoss
-              draggable
-              pauseOnHover
-            />
             {children}
           </div>
         </div>

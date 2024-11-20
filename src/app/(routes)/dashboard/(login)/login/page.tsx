@@ -69,7 +69,6 @@ export default function LoginAdminPage() {
             id="email"
             type="email"
             icon={HiMail}
-            value={'userexampl2e@gmail.com'}
             placeholder={LABEL.user.enterEmail}
             {...register('email', {
               required: MESSAGE.auth.emailRequired,

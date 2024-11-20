@@ -1,0 +1,53 @@
+import { getChapterId } from '@/app/api/chapter.api'
+import useProfile from '@/hooks/users/useProfile'
+import { redirect } from 'react-router-dom'
+import { ChapterForm } from './chapter.form'
+export default async function CreateChapterPage({
+  params,
+}: {
+  params: { id: number; action: Array<any> }
+}) {
+  console.log('page called>>')
+  const { accessToken } = useProfile()
+  let chapter = null
+  if (params.action[1] == 'update') {
+    console.log('<<ok>>', accessToken)
+    try {
+      const id = Number(params.action[0])
+      chapter = await getChapterId(id, accessToken)
+      console.log('>>page: ', chapter)
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(error.message)
+      }
+    }
+  }
+  try {
+    // console.log(params.id, params.idChapter, params.action)
+    // const result = await getStoryAndChapters(params.id, accessToken || '')
+    // return <Editor></Editor>
+    return (
+      <>
+        {/* <Header handleSearch={() => {}}></Header> */}
+        <div className="mt-8 pb-4">
+          {/* TITLE AND BUTTON */}
+          <div className="sm:flex justify-between">
+            <h1>
+              <span className="uppercase text-2xl tracking-tight font-semibold">
+                {/* {result.story.story_name} */}
+              </span>
+            </h1>
+          </div>
+          {/* FORMS */}
+          <ChapterForm
+            initialData={chapter}
+            // story_id={result.story.id}
+            story_id={params.id}
+          ></ChapterForm>
+        </div>
+      </>
+    )
+  } catch (error) {
+    redirect('/dashboard/stories')
+  }
+}

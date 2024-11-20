@@ -70,8 +70,11 @@ export default function ProfileComponent(props: {
       toast.success('Cập nhật ảnh thành công!')
 
       console.log('Avatar mới:', avatarUrl)
-    } catch (error: any) {
-      toast.error(error.message || 'Có lỗi xảy ra trong quá trình lưu.')
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message || 'Có lỗi xảy ra trong quá trình lưu.')
+      }
+      console.log(error)
     }
   }
 
@@ -103,8 +106,11 @@ export default function ProfileComponent(props: {
       )
       toast.success(message)
       profileForm.reset()
-    } catch (error: any) {
-      toast.error(error.message || 'Có lỗi xảy ra!')
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message || 'Có lỗi xảy ra trong quá trình lưu.')
+      }
+      console.log(error)
     }
   }
 

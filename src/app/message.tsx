@@ -4,6 +4,7 @@ const MESSAGE = {
     loading: 'Đang tải dữ liệu...',
     unknownError: 'Lỗi không xác định',
     serverError: 'Lỗi từ máy chủ Node.js.',
+    noAccessToken: 'Thiếu token truy cập. Vui lòng đăng nhập lại.',
   },
   file: {
     noFileSelected: 'Chưa chọn tệp tin nào',
@@ -17,6 +18,14 @@ const MESSAGE = {
     updatePasswordFailed: 'Cập nhật mật khẩu thất bại.',
     loginRedirect: 'Bạn cần đăng nhập để tiếp tục.',
     unexpectedError: 'Đã xảy ra lỗi không mong muốn.',
+  },
+  chapter: {
+    createSuccess: 'Tạo chương mới thành công.',
+    createFailed: 'Tạo chương mới thất bại.',
+    updateSuccess: 'Cập nhật chương thành công.',
+    updateFailed: 'Cập nhật chương thất bại.',
+    deleteSuccess: 'Xóa chương thành công.',
+    deleteFailed: 'Xóa chương thất bại.',
   },
 }
 
