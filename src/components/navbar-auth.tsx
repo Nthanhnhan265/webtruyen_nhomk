@@ -94,7 +94,7 @@ const NavBar = () => {
             <div className="space-y-1 font-medium dark:text-white hidden md:block">
               <div>Xin chào</div>
               <div className="text-sm text-gray-500 dark:text-gray-400">
-                username
+              username
               </div>
             </div>
           </Avatar>
