@@ -4,16 +4,17 @@ import { HiOutlineExclamationCircle } from 'react-icons/hi'
 import LABEL from '../../../label'
 //============DELETE=================//
 interface IDeleteModalProps {
-  isOpenDModal: number
+  isOpenDModal: object
   closeDModal: () => void
-  onDelete: (id: number) => void
+  onDelete: (selected: object) => void
   message: string
 }
 function DeleteModal(prop: IDeleteModalProps) {
+  console.log(prop.isOpenDModal)
   return (
     <>
       <Modal
-        show={prop.isOpenDModal != -1}
+        show={Object.keys(prop.isOpenDModal).length != 0 ? true : false}
         size="md"
         onClose={prop.closeDModal}
         popup

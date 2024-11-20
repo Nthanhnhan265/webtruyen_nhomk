@@ -7,7 +7,7 @@
 //   getAllStories,
 //   getAllStorieView,
 //   getAllStorieNew,
-// } from "../../_api/story.api";
+// } from "../../api/story.api";
 
 // export default function HomePage() {
 //   const [currentPage, setCurrentPage] = useState(1);

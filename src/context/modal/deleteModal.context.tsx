@@ -3,10 +3,12 @@ import { createContext, useState } from 'react'
 import { DeleteModal } from '../../app/(routes)/dashboard/_components/delete.modal'
 interface IDeleteModalContext {
   isOpen: boolean
-  openDeleteModal: (id: number) => void
+  openDeleteModal: (selected: object) => void
   closeDeleteModal: () => void
-  setHandleDelete: React.Dispatch<React.SetStateAction<(id: number) => void>>
-  id: number | null
+  setHandleDelete: React.Dispatch<
+    React.SetStateAction<(selected: object) => void>
+  >
+  selected: object | null
   message: string
   setMessage: React.Dispatch<React.SetStateAction<string>>
 }
@@ -20,26 +22,26 @@ export const DeleteModalProvider: React.FC<{
 }> = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false)
   const [message, setMessage] = useState('')
-  const [handleDelete, setHandleDelete] = useState<(id: number) => void>(
+  const [handleDelete, setHandleDelete] = useState<(selected: object) => void>(
     () => {},
   )
-  const [id, setId] = useState<number>(-1)
+  const [selected, setSelected] = useState<object>({})
 
-  const openDeleteModal = (id: number) => {
+  const openDeleteModal = (selected: object) => {
     setIsOpen(true)
-    setId(id)
+    setSelected(selected)
   }
 
   const closeDeleteModal = () => {
     setIsOpen(false)
-    setId(-1)
+    setSelected({})
   }
   const value: IDeleteModalContext = {
     isOpen: isOpen,
     openDeleteModal: openDeleteModal,
     closeDeleteModal: closeDeleteModal,
     setHandleDelete: setHandleDelete,
-    id,
+    selected,
     message,
     setMessage: setMessage,
   }
@@ -48,7 +50,7 @@ export const DeleteModalProvider: React.FC<{
   return (
     <DeleteModalContext.Provider value={value}>
       <DeleteModal
-        isOpenDModal={id}
+        isOpenDModal={selected}
         closeDModal={closeDeleteModal}
         onDelete={handleDelete}
         message={message}

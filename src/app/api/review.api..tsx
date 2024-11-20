@@ -134,31 +134,76 @@ const updateReview = async (id: number, data: FormData) => {
 }
 
 //=======Delete========//
-const deleteReview = async (id: number) => {
+// const deleteReview = async (id: number) => {
+//   try {
+//     const accessToken = getCookie('accessToken') // Retrieve token from cookies
+//     if (!accessToken) {
+//       throw new Error('No access token found')
+//     }
+
+//     const response: IResponse = await api.delete(`/reviews/${id}`, {
+//       headers: {
+//         Authorization: `Bearer ${accessToken}`,
+//       },
+//     })
+//     const result = response.data
+//     console.log(result)
+//     if (!result.success) {
+//       throw new Error(result.message)
+//     }
+//     return result
+//   } catch (error) {
+//     if (error instanceof AxiosError) {
+//       throw new Error(error?.response?.data?.message)
+//     } else {
+//       console.error(error)
+//       throw new Error(MESSAGE.sys.unknownError)
+//     }
+//   }
+// }
+// Hàm xóa
+const deleteReview = async (user_id: number, story_id: number) => {
   try {
-    const accessToken = getCookie('accessToken') // Retrieve token from cookies
+    const accessToken = getCookie('accessToken')
     if (!accessToken) {
       throw new Error('No access token found')
     }
 
-    const response: IResponse = await api.delete(`/reviews/${id}`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    })
-    const result = response.data
-    console.log(result)
-    if (!result.success) {
-      throw new Error(result.message)
+    if (!user_id || !story_id) {
+      throw new Error('Missing required parameters: user_id or story_id')
     }
-    return result
+
+    try {
+      const response: IResponse = await api.delete(
+        `/reviews/users/${user_id}/stories/${story_id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
+      )
+
+      const result = response.data
+
+      if (!result.success) {
+        throw new Error(result.message || 'Failed to delete story')
+      }
+
+      console.log(`Story ${story_id} deleted successfully for user ${user_id}`)
+      return result
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        throw new Error(
+          error?.response?.data?.message || 'Failed to delete story',
+        )
+      } else {
+        console.error(error)
+        throw new Error(MESSAGE.sys.unknownError)
+      }
+    }
   } catch (error) {
-    if (error instanceof AxiosError) {
-      throw new Error(error?.response?.data?.message)
-    } else {
-      console.error(error)
-      throw new Error(MESSAGE.sys.unknownError)
-    }
+    console.error(error)
+    throw new Error(MESSAGE.sys.unknownError)
   }
 }
 

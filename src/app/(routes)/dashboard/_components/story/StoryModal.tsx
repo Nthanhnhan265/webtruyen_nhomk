@@ -1,9 +1,9 @@
 // import React, { useState, useEffect } from 'react';
 // import { FileInput, Label } from "flowbite-react";
-// import { getAuthorsName } from '@/app/_api/authorService';
+// import { getAuthorsName } from '@/app/api/authorService';
 // import { toast } from 'react-toastify';
-// import { createStory } from '@/app/_api/story.api'
-// import { getAllgenreByName } from '@/app/_api/genre.api'
+// import { createStory } from '@/app/api/story.api'
+// import { getAllgenreByName } from '@/app/api/genre.api'
 // import Image from 'next/image';
 // interface StoryModalProps {
 //     show: boolean;

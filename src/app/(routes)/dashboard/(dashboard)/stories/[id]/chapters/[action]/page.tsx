@@ -1,18 +1,23 @@
+'use client'
+import Header from '@/app/(routes)/dashboard/_components/header'
+import LABEL from '@/app/(routes)/dashboard/label'
+import TextEditor from '@/components/editor/editor'
 import { Button, Label, Select, TextInput } from 'flowbite-react'
 import { HiCheck, HiX } from 'react-icons/hi'
 import { IoCaretForwardSharp } from 'react-icons/io5'
-import TextEditor from '../../../../../components/editor/editor'
-import Header from '../../_components/header'
-import LABEL from '../../label'
 
-export default function CreateChapterPage() {
+export default function CreateChapterPage({
+  params,
+}: {
+  params: { id: number }
+}) {
   const STORY_NAME =
     'Xuyên Không, Tôi Trở Thành Quản Lí Vàng Trong Làng Showbiz'
 
   // return <Editor></Editor>
   return (
     <>
-      <Header></Header>
+      <Header handleSearch={() => {}}></Header>
       <div className="mt-8 pb-4">
         {/* TITLE AND BUTTON */}
         <div className="sm:flex justify-between">
@@ -160,7 +165,10 @@ export default function CreateChapterPage() {
                 />
               </div>
 
-              <TextEditor></TextEditor>
+              <TextEditor
+                editorContent=""
+                onChange={() => {}}
+              ></TextEditor>
             </div>
           </div>
         </div>
