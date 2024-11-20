@@ -1,4 +1,4 @@
-import { chapterByStory, getChapterByStoryidAll } from "@/app/_api/chapter.api";
+import { chapterByStory, getChapterByStoryidAll } from "@/app/api/chapter.api";
 import React, { useState, useEffect } from "react";
 
 interface Chapter {

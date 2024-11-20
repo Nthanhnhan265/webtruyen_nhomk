@@ -25,7 +25,6 @@ export default function LoginAdminPage() {
     formState: { errors },
     handleSubmit,
   } = useForm<ILoginForm>()
-  const { loggedInUser } = useUserContext()
   const { login, loading } = useLogin()
   const router = useRouter()
 

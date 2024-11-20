@@ -13,12 +13,6 @@ interface Author {
   description: string
   slug: string
 }
-interface Authorone {
-  id: number
-  author_name: string
-  description: string
-  slug: string
-}
 
 interface Erorr {
   authorName?: string
@@ -60,7 +54,7 @@ const UpdateAuthorModal: React.FC<AuthorModalProps> = ({
   // Validate the form before submitting
   const validateForm = () => {
     let isValid = true
-    let formErrors: FormErrors = {}
+    const formErrors: FormErrors = {}
 
     // Validate author name
     if (!authorName) {
@@ -108,7 +102,15 @@ const UpdateAuthorModal: React.FC<AuthorModalProps> = ({
     setErrors(formErrors)
     return isValid
   }
-
+  const generateSlug = (name: string) => {
+    return name
+      .normalize('NFD')
+      .toLowerCase() // Convert to lowercase
+      .trim() // Remove leading and trailing spaces
+      .replace(/[^\w\s-]/g, '') // Remove special characters
+      .replace(/\s+/g, '-') // Replace spaces with hyphens
+      .replace(/-+/g, '-'); // Avoid multiple consecutive hyphens
+  };
   // Handle the form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -143,10 +145,12 @@ const UpdateAuthorModal: React.FC<AuthorModalProps> = ({
             <label className="block mb-2">Tên tác giả</label>
             <input
               value={authorName}
-              onChange={(e) => setAuthorName(e.target.value)}
-              className={`w-full p-2 border ${
-                errors.authorName ? 'border-red-500' : 'border-gray-300'
-              } rounded`}
+              onChange={(e) => {
+                setAuthorName(e.target.value)
+                setSlug(generateSlug(e.target.value))
+              }}
+              className={`w-full p-2 border ${errors.authorName ? 'border-red-500' : 'border-gray-300'
+                } rounded`}
               placeholder="Nhập tên tác giả"
               required
             />
@@ -159,9 +163,8 @@ const UpdateAuthorModal: React.FC<AuthorModalProps> = ({
             <input
               value={slug}
               onChange={(e) => setSlug(e.target.value)}
-              className={`w-full p-2 border ${
-                errors.slug ? 'border-red-500' : 'border-gray-300'
-              } rounded`}
+              className={`w-full p-2 border ${errors.slug ? 'border-red-500' : 'border-gray-300'
+                } rounded`}
               placeholder="tac-gia/..."
               required
             />
@@ -172,9 +175,8 @@ const UpdateAuthorModal: React.FC<AuthorModalProps> = ({
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className={`w-full p-2 border ${
-                errors.description ? 'border-red-500' : 'border-gray-300'
-              } rounded`}
+              className={`w-full p-2 border ${errors.description ? 'border-red-500' : 'border-gray-300'
+                } rounded`}
               rows={5}
               placeholder="Mô tả không vượt quá 500 ký tự"
             ></textarea>

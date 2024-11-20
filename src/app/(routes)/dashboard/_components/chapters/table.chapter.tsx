@@ -11,7 +11,6 @@ interface Iprops {
 }
 export default function ChapterTable(props: Iprops) {
   //====Declare variables, hooks==========//
-  const [imageErrors, setImageErrors] = useState<{ [key: number]: boolean }>({})
   const chapters = [
     {
       id: 1,
@@ -30,13 +29,6 @@ export default function ChapterTable(props: Iprops) {
   /*
       Hàm xử lý khi ảnh không load thành công  
   */
-  const handleImageError = (id: number) => {
-    setImageErrors((prevErrors) => ({
-      ...prevErrors,
-      [id]: true,
-    }))
-  }
-
   return (
     <div className="overflow-x-auto w-full">
       <table
@@ -64,44 +56,44 @@ export default function ChapterTable(props: Iprops) {
         <tbody>
           {chapters
             ? chapters.map((chapter) => (
-                <tr
-                  className="bg-white"
-                  key={chapter.id}
-                >
-                  <td className="py-2 px-3  text-center text-sm">
-                    {chapter.id}
-                  </td>
+              <tr
+                className="bg-white"
+                key={chapter.id}
+              >
+                <td className="py-2 px-3  text-center text-sm">
+                  {chapter.id}
+                </td>
 
-                  {/* whitespace-nowrap overflow-hidden text-ellipsis max-w-xs */}
-                  <td className="py-2 px-2 text-sm text-center">
-                    {chapter.order}
-                  </td>
-                  <td className="py-2 px-2 text-sm text-center">
-                    {chapter.name}
-                  </td>
-                  <td className="py-2 px-2 text-sm text-center">
-                    {chapter.status}
-                  </td>
-                  <td className="py-2 px-2 text-sm text-center">
-                    {chapter.views}, {chapter.reviews}, {chapter.comments}
-                  </td>
-                  <td className="py-2 px-2 text-sm text-center">
-                    {formatDate(chapter.create_at)}
-                  </td>
-                  <td className="py-2 px-2 text-sm text-center">
-                    {formatDate(chapter.published_at)}
-                  </td>
-                  <td className="py-2 px-2 text-sm text-center flex justify-center items-center gap-2 rounded">
-                    <Button color="warning">{LABEL.sys.edit}</Button>
-                    <Button
-                      color="failure"
-                      onClick={() => props.openDModal(chapter.id)}
-                    >
-                      {LABEL.sys.delete}
-                    </Button>
-                  </td>
-                </tr>
-              ))
+                {/* whitespace-nowrap overflow-hidden text-ellipsis max-w-xs */}
+                <td className="py-2 px-2 text-sm text-center">
+                  {chapter.order}
+                </td>
+                <td className="py-2 px-2 text-sm text-center">
+                  {chapter.name}
+                </td>
+                <td className="py-2 px-2 text-sm text-center">
+                  {chapter.status}
+                </td>
+                <td className="py-2 px-2 text-sm text-center">
+                  {chapter.views}, {chapter.reviews}, {chapter.comments}
+                </td>
+                <td className="py-2 px-2 text-sm text-center">
+                  {formatDate(chapter.create_at)}
+                </td>
+                <td className="py-2 px-2 text-sm text-center">
+                  {formatDate(chapter.published_at)}
+                </td>
+                <td className="py-2 px-2 text-sm text-center flex justify-center items-center gap-2 rounded">
+                  <Button color="warning">{LABEL.sys.edit}</Button>
+                  <Button
+                    color="failure"
+                    onClick={() => props.openDModal(chapter.id)}
+                  >
+                    {LABEL.sys.delete}
+                  </Button>
+                </td>
+              </tr>
+            ))
             : ''}
         </tbody>
       </table>
