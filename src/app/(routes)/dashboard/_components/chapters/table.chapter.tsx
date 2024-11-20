@@ -1,30 +1,22 @@
 import formatDate from '@/components/ulti/formatDate'
 import { Button } from 'flowbite-react'
 import { useState } from 'react'
+import { FaRegEye } from 'react-icons/fa'
 import LABEL from '../../label'
 import MESSAGE from '../../message'
 
+import { useDeleteModal } from '@/hooks/modals/useDeleteModal'
+import { useRouter } from 'next/navigation'
 interface Iprops {
-  chapters: IChapter[]
-  openDModal: (id: number) => void
-  closeDModal: () => void
+  story_id: number
+  chapters: IChapter[] | undefined
 }
 export default function ChapterTable(props: Iprops) {
   //====Declare variables, hooks==========//
   const [imageErrors, setImageErrors] = useState<{ [key: number]: boolean }>({})
-  const chapters = [
-    {
-      id: 1,
-      order: 1,
-      name: 'abc',
-      status: 'dang',
-      views: 2,
-      reviews: 2,
-      comments: 2,
-      create_at: '22/2/2024',
-      published_at: '22/2/2024',
-    },
-  ]
+  const { openDeleteModal, closeDeleteModal } = useDeleteModal()
+  const router = useRouter()
+
   //==========Handle Function============//
   //Nơi tạo các hàm xử lý cho bảng
   /*
@@ -62,8 +54,8 @@ export default function ChapterTable(props: Iprops) {
           </tr>
         </thead>
         <tbody>
-          {chapters
-            ? chapters.map((chapter) => (
+          {props.chapters
+            ? props.chapters.map((chapter) => (
                 <tr
                   className="bg-white"
                   key={chapter.id}
@@ -74,28 +66,50 @@ export default function ChapterTable(props: Iprops) {
 
                   {/* whitespace-nowrap overflow-hidden text-ellipsis max-w-xs */}
                   <td className="py-2 px-2 text-sm text-center">
-                    {chapter.order}
+                    {chapter.chapter_order}
                   </td>
                   <td className="py-2 px-2 text-sm text-center">
-                    {chapter.name}
+                    {chapter.chapter_name}
                   </td>
                   <td className="py-2 px-2 text-sm text-center">
-                    {chapter.status}
+                    {chapter.status == true ? (
+                      <span className="py-1 px-2 bg-yellow-100 text-sm text-black/50 rounded-md">
+                        {LABEL.chapter.publish}
+                      </span>
+                    ) : (
+                      <span className="py-1 px-2 bg-green-200 text-sm text-black/50 rounded-md">
+                        {LABEL.chapter.draft}
+                      </span>
+                    )}
+                  </td>
+                  <td className="py-2 px-2 text-sm text-center flex justify-center">
+                    <span className="flex items-center gap-1">
+                      {chapter.views} <FaRegEye />
+                    </span>
+                    {/* , {chapter.reviews}, {chapter.comments} */}
                   </td>
                   <td className="py-2 px-2 text-sm text-center">
-                    {chapter.views}, {chapter.reviews}, {chapter.comments}
-                  </td>
-                  <td className="py-2 px-2 text-sm text-center">
-                    {formatDate(chapter.create_at)}
+                    {formatDate(chapter.created_at)}
                   </td>
                   <td className="py-2 px-2 text-sm text-center">
                     {formatDate(chapter.published_at)}
                   </td>
                   <td className="py-2 px-2 text-sm text-center flex justify-center items-center gap-2 rounded">
-                    <Button color="warning">{LABEL.sys.edit}</Button>
+                    <Button
+                      color="warning"
+                      onClick={() => {
+                        router.push(
+                          `/dashboard/stories/${props.story_id}/chapters/${chapter.id}/update`,
+                        )
+                        router.refresh()
+                      }}
+                    >
+                      {LABEL.sys.edit}
+                    </Button>
+
                     <Button
                       color="failure"
-                      onClick={() => props.openDModal(chapter.id)}
+                      onClick={() => openDeleteModal(chapter)}
                     >
                       {LABEL.sys.delete}
                     </Button>
@@ -105,7 +119,7 @@ export default function ChapterTable(props: Iprops) {
             : ''}
         </tbody>
       </table>
-      {!chapters || chapters.length === 0 ? (
+      {!props.chapters || props.chapters.length === 0 ? (
         <div className="flex justify-center text-sm">
           {MESSAGE.sys.noRecord}
         </div>

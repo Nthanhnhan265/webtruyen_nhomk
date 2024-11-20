@@ -13,6 +13,8 @@ const MESSAGE = {
   },
   review: {
     confirmDelete: 'Bạn có muốn xóa đánh giá này không?',
+    deleteSuccess: 'Xóa đánh giá thành công',
+    deleteFailed: 'Xóa đánh giá thành công',
   },
   user: {
     createSuccess: 'Tạo người dùng thành công',
@@ -46,12 +48,9 @@ const MESSAGE = {
     uploadFail: 'Tải lên ảnh bìa thất bại, vui lòng thử lại sau.',
   },
   chapter: {
+    deleteSuccess: 'Xóa chương thành công',
+    deleteFaild: 'Xoá chương thất bại',
     confirmDelete: 'Bạn có muốn xóa chương này không',
-  },
-  review: {
-    deleteSuccess: 'Xóa đánh giá thành công',
-    deleteFailed: 'Xóa đánh giá thành công',
-    confirmDelete: 'Bạn có muốn xóa đánh giá này không?',
   },
 }
 

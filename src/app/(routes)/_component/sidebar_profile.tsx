@@ -5,10 +5,10 @@ import { AiFillAppstore } from 'react-icons/ai'
 import { BsBagHeart } from 'react-icons/bs'
 import { IoBagCheckOutline, IoSettingsOutline } from 'react-icons/io5'
 
-interface Iprop {
-  onClickNavbar: (navbar: string) => void
-  isActiveNav: string
-}
+// interface Iprop {
+//   onClickNavbar: (navbar: string) => void
+//   isActiveNav: string
+// }
 const UserSidebar = () => {
   const CENTER = 'flex items-center gap-4 justify-start'
   return (
