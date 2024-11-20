@@ -142,7 +142,7 @@ const AuthorPage = () => {
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value)}
         >
-          <option value="id">Id</option>
+          {/* <option value="id">Id</option> */}
           <option value="author_name">Tên tác giả</option>
           <option value="description">Mô tả</option>
         </select>
@@ -161,7 +161,7 @@ const AuthorPage = () => {
         <table className="min-w-full border-separate border-spacing-y-1">
           <thead>
             <tr className="bg-white">
-              <th className="py-4 px-3">ID</th>
+              <th className="py-4 px-3">STT</th>
               <th className="py-2">Tên tác giả</th>
               <th className="py-2">Mô tả</th>
               <th className="py-2">URL</th>
@@ -179,12 +179,12 @@ const AuthorPage = () => {
                 </td>
               </tr>
             ) : (
-              authors.map((author) => (
+              authors.map((author, index) => (
                 <tr
                   className="bg-white"
                   key={author.id}
                 >
-                  <td className="py-2 px-1 text-center">{author.id}</td>
+                  <td className="py-2 px-1 text-center">{index}</td>
                   <td className="py-2 px-1 text-center">
                     {author.author_name}
                   </td>

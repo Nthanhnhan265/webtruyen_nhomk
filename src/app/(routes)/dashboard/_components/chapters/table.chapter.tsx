@@ -22,13 +22,6 @@ export default function ChapterTable(props: Iprops) {
   /*
       Hàm xử lý khi ảnh không load thành công  
   */
-  const handleImageError = (id: number) => {
-    setImageErrors((prevErrors) => ({
-      ...prevErrors,
-      [id]: true,
-    }))
-  }
-
   return (
     <div className="overflow-x-auto w-full">
       <table

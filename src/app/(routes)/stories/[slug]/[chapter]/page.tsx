@@ -1,14 +1,10 @@
-'use client'
-import Footer from '@/app/(routes)/_component/footer'
-import { getAllStorieView } from '@/app/api/story.api'
-import NavbarComponent from '@/components/navbar'
-import { useEffect, useState } from 'react'
-import { toast } from 'react-toastify'
-import {
-  getChapterBySlug,
-  getChapterByStoryidAll,
-} from '../../../../api/chapter.api'
-import Modal from '../../compoment/chapterModal'
+"use client";
+import React, { useEffect, useState } from 'react';
+// import { toast } from 'react-toastify'; // ĐÚNG
+import NavbarComponent from '@/components/navbar';
+import Footer from '@/app/(routes)/_component/footer';
+import Modal from '../../compoment/chapterModal';
+import { getAllStorieView } from '@/app/api/story.api';
 
 interface Chapter {
   id: number
@@ -25,9 +21,10 @@ interface Chapter {
   }
 }
 interface Story {
-  id: number
-  story_name: string
-  cover: string
+  id: number;
+  story_name: string;
+  cover: string;
+  slug: string
 }
 
 const ChapterPage = ({
@@ -46,12 +43,15 @@ const ChapterPage = ({
     page: 1,
   }
   const fetchStory = async () => {
-    const { slug, chapter } = params
+    const { slug, chapter } = params;
+    // alert(chapter)
     try {
-      const response = await getChapterBySlug(chapter) // Get chapter details from API
-      setChapter(response.data)
-      toast.success('Lấy dữ liệu thành công')
-
+      const response = await getChapterBySlug(chapter); // Get chapter details from API
+      setChapter(response.data);
+      // toast.success("Lấy dữ liệu thành công");
+      if (response) {
+        // toast.success("lay du lieu thanh cong")
+      }
       // const { chapters: chaptersData } = await chapterByStory(response.data.Story.id, 1);
       const responseChapter = await getChapterByStoryidAll(
         response.data.Story.id,
@@ -67,15 +67,17 @@ const ChapterPage = ({
   }
 
   useEffect(() => {
-    fetchStory()
-  }, [params])
-
+    fetchStory();
+  }, [params]);
+  const handleRead = (slug: string) => {
+    window.location.href = `/stories/${slug}`
+  }
   const readBook = (slug: string, direction: 'next' | 'previous') => {
     const currentIndex = chapters.findIndex((chap) => chap.slug === slug)
 
     if (currentIndex === -1) {
-      console.error('Chapter not found.')
-      return
+      console.error("Không tìm thấy nội dung chương!");
+      return;
     }
 
     if (direction === 'next') {
@@ -84,7 +86,7 @@ const ChapterPage = ({
           chapters[currentIndex + 1]?.slug
         }`
       } else {
-        console.log('This is the last chapter.')
+        console.log("Đây là chương cuối cùng.");
       }
     } else if (direction === 'previous') {
       if (currentIndex > 0) {
@@ -92,7 +94,7 @@ const ChapterPage = ({
           chapters[currentIndex - 1]?.slug
         }`
       } else {
-        console.log('This is the first chapter.')
+        console.log("đây là chương đầu tiên.");
       }
     }
   }
@@ -199,9 +201,8 @@ const ChapterPage = ({
             <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
               {storys.map((story, index) => {
                 return (
-                  <div
-                    key={index}
-                    className="bg-white p-2 rounded shadow hover:shadow-md"
+                  <div key={index} className="bg-white p-2 rounded shadow hover:shadow-md"
+                    onClick={() => handleRead(story.slug)}
                   >
                     <img
                       src={

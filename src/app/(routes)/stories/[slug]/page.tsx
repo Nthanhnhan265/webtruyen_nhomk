@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import NavbarComponent from '../../../../components/navbar'
 import Footer from '../../_component/footer'
 import { toast } from 'react-toastify'
+import { Avatar } from 'flowbite-react'
 
 interface Chapter {
   chapter_title: string
@@ -74,22 +75,30 @@ const page = ({ params }: { params: { slug: string } }) => {
   return (
     <div className="min-h-screen flex flex-col bg-gray-100">
       <NavbarComponent></NavbarComponent>
+      <p className="bg-gray-100 py-2 border-t border-gray-400 border-b ms-5 pl-14">
+        Truyen Chom \ {story?.story_name}
+      </p>
       {/* Main Content */}
       <main className="flex flex-grow max-w-7xl mx-auto py-8 px-4 space-x-6">
         {/* Left Column - Book Details and Chapter List */}
         <div className="w-2/3 bg-white p-6 rounded-lg shadow">
           {/* Book Details */}
           <div className="flex space-x-4">
-            <div className="rounded w-48 h-64">
-              <img
-                src={
-                  'http://localhost:3000/' +
-                  (story?.cover || '/default-cover.jpg')
-                }
-                alt="Book Cover"
-                className="w-48 h-64 object-cover rounded"
-              />
+            <div className="w-48 h-64 rounded overflow-hidden">
+              {story?.cover ? (
+                <img
+                  src={`http://localhost:3000/${story.cover}`}
+                  alt={story.story_name || 'Book Cover'}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                // Nếu không có ảnh bìa, hiển thị Avatar với kích thước cố định
+                <Avatar className="w-full h-full rounded-md shadow object-cover" />
+
+              )}
             </div>
+
+
             <div className="space-y-4">
               <h1 className="text-3xl font-bold">{story?.story_name}</h1>
               <p className="text-gray-600">Tác giả: {story?.author_name}</p>
@@ -101,7 +110,7 @@ const page = ({ params }: { params: { slug: string } }) => {
                 Nguồn: {story?.source || 'Sưu tầm'}
               </p>
               <button
-                onClick={() => readBook(story?.slug)}
+                onClick={() => readBook('')}
                 className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
               >
                 Đọc truyện

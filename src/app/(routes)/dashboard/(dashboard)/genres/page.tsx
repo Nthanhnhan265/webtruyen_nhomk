@@ -1,3 +1,4 @@
+
 'use client'
 import {
   createGenre,
@@ -154,7 +155,7 @@ const AuthorPage = () => {
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value)}
         >
-          <option value="id">Id</option>
+          {/* <option value="id">Id</option> */}
           <option value="genre_name">Tên thể loại</option>
           <option value="description">Mô tả</option>
         </select>
@@ -172,7 +173,7 @@ const AuthorPage = () => {
         <table className="min-w-full border-separate border-spacing-y-1">
           <thead>
             <tr className="bg-white">
-              <th className="py-4 px-3">ID</th>
+              <th className="py-4 px-3">STT</th>
               <th className="py-2">Tên tác giả</th>
               <th className="py-2">Mô tả</th>
               <th className="py-2">URL</th>
@@ -190,12 +191,9 @@ const AuthorPage = () => {
                 </td>
               </tr>
             ) : (
-              Genres.map((genre) => (
-                <tr
-                  className="bg-white"
-                  key={genre.id}
-                >
-                  <td className="py-2 px-1 text-center">{genre.id}</td>
+              Genres.map((genre, index) => (
+                <tr className="bg-white" key={genre.id}>
+                  <td className="py-2 px-1 text-center">{index}</td>
                   <td className="py-2 px-1 text-center">{genre.genre_name}</td>
                   <td className="py-2 px-1 text-center">{genre.description}</td>
                   <td className="py-2 px-1 text-center">{genre.slug}</td>
