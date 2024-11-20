@@ -27,16 +27,13 @@ interface Storie {
     author_name: string
   }
 }
-// import StoryModal from '../../_components/story/StoryModal'
-// import UpdateStoryModal from '../../_components/story/UpdateStoryModal'
-const StoryPage = () => {
+const storyPage = () => {
   //============ Declare variables and hooks ================//
   const [stories, setStories] = useState<Storie[]>([])
   const [modalState, setModalState] = useState<{
     type: 'create' | 'update' | null
     story: Storie | null
   }>({ type: null, story: null })
-
   const [sortOrder, setSortOrder] = useState('asc')
   const [sortBy, setSortBy] = useState('id')
   const [currentPage, setCurrentPage] = useState(1)
@@ -45,7 +42,7 @@ const StoryPage = () => {
   const [showModalEdit, setShowModalEdit] = useState(false)
   const [storyIdToDelete, setStoryIdToDelete] = useState<number | null>(null)
   const [keyword, setKeyWord] = useState<string>('')
-  const [editingStory, setEditingStory] = useState(null) // State to hold the story being edited
+  const [editingStory, setEditingStory] = useState(null)
   const fetchStories = async () => {
     try {
       const response = await getAllStories({
@@ -79,7 +76,7 @@ const StoryPage = () => {
       const response = await getStoryById(id)
 
       if (response?.data) {
-        setEditingStory(response.data) // Set the story to be edited
+        setEditingStory(response.data)
         setShowModalEdit(true)
       } else {
         toast.error('không tìm thấy id')
@@ -297,3 +294,4 @@ const StoryPage = () => {
 }
 
 export default StoryPage
+

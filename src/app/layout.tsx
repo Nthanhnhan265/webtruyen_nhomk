@@ -1,9 +1,11 @@
 import type { Metadata } from 'next'
 import localFont from 'next/font/local'
 // ***********************
+import Navbar from '@/components/navbar-auth'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+import useProfile from '../hooks/users/useProfile'
 import './globals.css'
-// *******************
-// import 'bootstrap/dist/css/bootstrap.min.css';
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -26,11 +28,27 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const { accessToken, userProfile } = useProfile()
+
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <Navbar
+          accessToken={accessToken || ''}
+          userProfile={userProfile || ''}
+        ></Navbar>
+        <ToastContainer
+          position="top-left"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+        />
         {children}
       </body>
     </html>

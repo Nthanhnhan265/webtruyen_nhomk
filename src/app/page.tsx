@@ -4,7 +4,6 @@ import Image from 'next/image'
 import { useEffect, useState } from 'react'
 
 import { getAllStorieNew, getAllStorieView } from '@/app/api/story.api'
-import NavBar from '../components/navbar'
 import Footer from './(routes)/_component/footer'
 interface Story {
   story_name: string
@@ -46,14 +45,13 @@ export default function HomePage() {
   useEffect(() => {
     fetchStories()
   }, [currentPage])
+  // const { userProfile, accessToken } = await useProfile()
+  // console.log(userProfile)
   return (
     <div className="bg-gray-100 min-h-screen">
-      <NavBar />
-      <p className="bg-gray-100 py-2 border-t border-gray-400 border-b ms-5 pl-14">
-        Truyen Chom - Web đọc truyện online hay, cập nhật mới nhất
-      </p>
-      {/* Featured Image  */}
-      <section className="py-6">
+      {/* <NavBar /> */}
+      {/* Featured Image Section */}
+      <section className="py-8 bg-white">
         <div className="container mx-auto">
           <h2 className="text-2xl font-bold mb-4 ms-48 text-gray-900 ">TRUYỆN HOT 🔥</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 px-3 md:px-5 lg:px-40"> {/* Giảm gap ở đây */}

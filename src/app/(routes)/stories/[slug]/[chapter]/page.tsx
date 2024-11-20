@@ -4,21 +4,20 @@ import React, { useEffect, useState } from 'react';
 import NavbarComponent from '@/components/navbar';
 import Footer from '@/app/(routes)/_component/footer';
 import Modal from '../../compoment/chapterModal';
-import { getChapterBySlug, getChapterByStoryidAll } from '@/app/api/chapter.api';
 import { getAllStorieView } from '@/app/api/story.api';
 
 interface Chapter {
-  id: number;
-  chapter_name: string;
-  content: string;
-  slug: string;
-  views: number;
-  chapter_order: number;
-  published_at: Date;
+  id: number
+  chapter_name: string
+  content: string
+  slug: string
+  views: number
+  chapter_order: number
+  published_at: Date
   Story: {
-    id: number;
-    story_name: string;
-    slug: string;
+    id: number
+    story_name: string
+    slug: string
   }
 }
 interface Story {
@@ -28,11 +27,15 @@ interface Story {
   slug: string
 }
 
-const ChapterPage = ({ params }: { params: { slug: string; chapter: string } }) => {
-  const [chapter, setChapter] = useState<Chapter>();
-  const [chapters, setChapters] = useState<Chapter[]>([]);
-  const [storys, setStorys] = useState<Story[]>([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+const ChapterPage = ({
+  params,
+}: {
+  params: { slug: string; chapter: string }
+}) => {
+  const [chapter, setChapter] = useState<Chapter>()
+  const [chapters, setChapters] = useState<Chapter[]>([])
+  const [storys, setStorys] = useState<Story[]>([])
+  const [isModalOpen, setIsModalOpen] = useState(false)
   const data = {
     author_storie: '',
     description: '',
@@ -50,17 +53,18 @@ const ChapterPage = ({ params }: { params: { slug: string; chapter: string } }) 
         // toast.success("lay du lieu thanh cong")
       }
       // const { chapters: chaptersData } = await chapterByStory(response.data.Story.id, 1);
-      const responseChapter = await getChapterByStoryidAll(response.data.Story.id);
-      setChapters(responseChapter.data);
+      const responseChapter = await getChapterByStoryidAll(
+        response.data.Story.id,
+      )
+      setChapters(responseChapter.data)
 
       const storynew = await getAllStorieView(data)
       setStorys(storynew.stories)
-      console.log(storynew);
-
+      console.log(storynew)
     } catch (error) {
-      // toast.error('Lấy chương truyện thất bại');
+      toast.error('Lấy chương truyện thất bại')
     }
-  };
+  }
 
   useEffect(() => {
     fetchStory();
@@ -69,7 +73,7 @@ const ChapterPage = ({ params }: { params: { slug: string; chapter: string } }) 
     window.location.href = `/stories/${slug}`
   }
   const readBook = (slug: string, direction: 'next' | 'previous') => {
-    const currentIndex = chapters.findIndex(chap => chap.slug === slug);
+    const currentIndex = chapters.findIndex((chap) => chap.slug === slug)
 
     if (currentIndex === -1) {
       console.error("Không tìm thấy nội dung chương!");
@@ -78,32 +82,41 @@ const ChapterPage = ({ params }: { params: { slug: string; chapter: string } }) 
 
     if (direction === 'next') {
       if (currentIndex < chapters.length - 1) {
-        window.location.href = `/stories/${chapter?.Story?.slug}/${chapters[currentIndex + 1]?.slug}`;
+        window.location.href = `/stories/${chapter?.Story?.slug}/${
+          chapters[currentIndex + 1]?.slug
+        }`
       } else {
         console.log("Đây là chương cuối cùng.");
       }
     } else if (direction === 'previous') {
       if (currentIndex > 0) {
-        window.location.href = `/stories/${chapter?.Story?.slug}/${chapters[currentIndex - 1]?.slug}`;
+        window.location.href = `/stories/${chapter?.Story?.slug}/${
+          chapters[currentIndex - 1]?.slug
+        }`
       } else {
         console.log("đây là chương đầu tiên.");
       }
     }
-  };
+  }
   const selectChapter = (chapterSlug: any) => {
     if (chapterSlug) {
       // Redirect to the selected chapter's page
-      window.location.href = `/stories/${chapter?.Story?.slug}/${chapterSlug}`;
+      window.location.href = `/stories/${chapter?.Story?.slug}/${chapterSlug}`
     } else {
-      console.error("Invalid chapter or story slug");
+      console.error('Invalid chapter or story slug')
     }
-  };
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
+  }
+  const openModal = () => setIsModalOpen(true)
+  const closeModal = () => setIsModalOpen(false)
 
   return (
     <>
-      <Modal isOpen={isModalOpen} data={chapter?.Story?.id ?? 0} selectChapter={selectChapter} closeModal={closeModal} />
+      <Modal
+        isOpen={isModalOpen}
+        data={chapter?.Story?.id ?? 0}
+        selectChapter={selectChapter}
+        closeModal={closeModal}
+      />
       <NavbarComponent />
 
       <p className="bg-gray-100 py-2 border-t border-gray-400 lg:ps-20 border-b pl-14">
@@ -113,22 +126,29 @@ const ChapterPage = ({ params }: { params: { slug: string; chapter: string } }) 
       <div className="bg-[#f6f7eb] text-[#333] lg:mx-52 mt-2">
         <div className="container mx-auto p-4">
           <div className="container mx-auto max-w-3xl text-center">
-            <h1 className="text-2xl font-semibold text-red-600 mb-1">{chapter?.Story?.story_name}</h1>
-            <h2 className="text-lg text-gray-500 mb-4">Chương {chapter?.chapter_order}</h2>
+            <h1 className="text-2xl font-semibold text-red-600 mb-1">
+              {chapter?.Story?.story_name}
+            </h1>
+            <h2 className="text-lg text-gray-500 mb-4">
+              Chương {chapter?.chapter_order}
+            </h2>
 
             <div className="flex justify-center gap-4 mb-6">
-              <button className="px-4 py-2 bg-green-100 text-green-700 rounded-md font-semibold hover:bg-green-200"
-                onClick={() => readBook(chapter?.slug || "", 'previous')}
+              <button
+                className="px-4 py-2 bg-green-100 text-green-700 rounded-md font-semibold hover:bg-green-200"
+                onClick={() => readBook(chapter?.slug || '', 'previous')}
               >
                 &lt;&lt; Chương trước
               </button>
-              <button className="px-4 py-2 bg-green-500 text-white rounded-md font-semibold hover:bg-green-600"
+              <button
+                className="px-4 py-2 bg-green-500 text-white rounded-md font-semibold hover:bg-green-600"
                 onClick={openModal}
               >
                 Menu
               </button>
-              <button className="px-4 py-2 bg-green-100 text-green-700 rounded-md font-semibold hover:bg-green-200"
-                onClick={() => readBook(chapter?.slug || "", 'next')}
+              <button
+                className="px-4 py-2 bg-green-100 text-green-700 rounded-md font-semibold hover:bg-green-200"
+                onClick={() => readBook(chapter?.slug || '', 'next')}
               >
                 Chương tiếp &gt;&gt;
               </button>
@@ -140,18 +160,21 @@ const ChapterPage = ({ params }: { params: { slug: string; chapter: string } }) 
           </div>
 
           <div className="flex justify-center gap-4 mb-6">
-            <button className="px-4 py-2 bg-green-100 text-green-700 rounded-md font-semibold hover:bg-green-200"
-              onClick={() => readBook(chapter?.slug || "", 'previous')}
+            <button
+              className="px-4 py-2 bg-green-100 text-green-700 rounded-md font-semibold hover:bg-green-200"
+              onClick={() => readBook(chapter?.slug || '', 'previous')}
             >
               &lt;&lt; Chương trước
             </button>
-            <button className="px-4 py-2 bg-green-500 text-white rounded-md font-semibold hover:bg-green-600"
+            <button
+              className="px-4 py-2 bg-green-500 text-white rounded-md font-semibold hover:bg-green-600"
               onClick={openModal}
             >
               Menu
             </button>
-            <button className="px-4 py-2 bg-green-100 text-green-700 rounded-md font-semibold hover:bg-green-200"
-              onClick={() => readBook(chapter?.slug || "", 'next')}
+            <button
+              className="px-4 py-2 bg-green-100 text-green-700 rounded-md font-semibold hover:bg-green-200"
+              onClick={() => readBook(chapter?.slug || '', 'next')}
             >
               Chương tiếp &gt;&gt;
             </button>
@@ -182,26 +205,28 @@ const ChapterPage = ({ params }: { params: { slug: string; chapter: string } }) 
                     onClick={() => handleRead(story.slug)}
                   >
                     <img
-                      src={story?.cover ? `http://localhost:3000/${story.cover}` : '/default-cover.jpg'}
+                      src={
+                        story?.cover
+                          ? `http://localhost:3000/${story.cover}`
+                          : '/default-cover.jpg'
+                      }
                       alt="Story Thumbnail"
                       className="w-full h-32 object-cover rounded"
                     />
                     <p className="text-sm mt-2">{story?.story_name}</p>
                   </div>
-                );
+                )
               })}
             </div>
           </div>
-
         </div>
       </div>
       <Footer></Footer>
     </>
-  );
-};
+  )
+}
 
-export default ChapterPage;
-
+export default ChapterPage
 
 // export default async function Page() {
 //   let data = await fetch('https://api.vercel.app/blog')

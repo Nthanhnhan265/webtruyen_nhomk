@@ -40,9 +40,14 @@ const LABEL = {
     comments: 'Lượt bình luận',
     description: 'Thông tin truyện',
     keywords: 'Từ khóa',
+    updating: 'Đang cập nhật',
+    completed: 'Hoàn thành',
   },
   chapter: {
+    status: 'Trạng thái',
+    viewsLabel: 'Lượt xem',
     new: 'Chương mới',
+    edit: 'Sửa chương',
     label: 'Chương truyện',
     storyName: 'Tên truyện',
     star: 'Đánh giá',
@@ -52,6 +57,8 @@ const LABEL = {
     contentLabel: 'Nội dung',
     enterChapterOrderLabel: 'Nhập số chương',
     enterChapterNameLabel: 'Nhập tên chương',
+    draft: 'Bản nháp',
+    publish: 'Xuất bản',
   },
   genre: {
     label: 'Thể loại',
@@ -60,6 +67,7 @@ const LABEL = {
     label: 'Đánh giá',
   },
   sys: {
+    profile: 'Tài khoản',
     send: 'Gửi',
     publishedAtLabel: 'Ngày xuất bản',
     createdAtLabel: 'Ngày tạo',

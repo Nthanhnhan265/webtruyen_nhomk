@@ -9,6 +9,9 @@ const formatDate = (dateString: string) => {
     // hour12: false,
     dayStyle: 'short',
   }
+  if (!dateString) {
+    return '-'
+  }
   return new Date(dateString).toLocaleString('vi-VN', options)
 }
 
