@@ -37,7 +37,7 @@ const Modal: React.FC<ModalProps> = ({
     try {
       const response = await getChapterByStoryidAll(data)
 
-      setChapters(response.data)
+      setChapters(response.data.chapters)
       console.log(response.data)
     } catch (error) {
       console.error('Failed to fetch chapters:', error)

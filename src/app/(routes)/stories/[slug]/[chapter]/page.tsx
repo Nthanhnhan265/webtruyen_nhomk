@@ -5,6 +5,8 @@ import NavbarComponent from '@/components/navbar';
 import Footer from '@/app/(routes)/_component/footer';
 import Modal from '../../compoment/chapterModal';
 import { getAllStorieView } from '@/app/api/story.api';
+import { getChapterBySlug, getChapterByStoryidAll } from '@/app/api/chapter.api';
+import { toast } from 'react-toastify';
 
 interface Chapter {
   id: number
@@ -48,19 +50,23 @@ const ChapterPage = ({
     try {
       const response = await getChapterBySlug(chapter); // Get chapter details from API
       setChapter(response.data);
+      // console.log(response);
+
       // toast.success("Lấy dữ liệu thành công");
       if (response) {
         // toast.success("lay du lieu thanh cong")
       }
       // const { chapters: chaptersData } = await chapterByStory(response.data.Story.id, 1);
       const responseChapter = await getChapterByStoryidAll(
-        response.data.Story.id,
+        response.data.story_id,
       )
-      setChapters(responseChapter.data)
+      console.log(responseChapter);
+
+      setChapters(responseChapter.data.chapters)
 
       const storynew = await getAllStorieView(data)
       setStorys(storynew.stories)
-      console.log(storynew)
+      // console.log(storynew)
     } catch (error) {
       toast.error('Lấy chương truyện thất bại')
     }
@@ -82,17 +88,15 @@ const ChapterPage = ({
 
     if (direction === 'next') {
       if (currentIndex < chapters.length - 1) {
-        window.location.href = `/stories/${chapter?.Story?.slug}/${
-          chapters[currentIndex + 1]?.slug
-        }`
+        window.location.href = `/stories/${chapter?.Story?.slug}/${chapters[currentIndex + 1]?.slug
+          }`
       } else {
         console.log("Đây là chương cuối cùng.");
       }
     } else if (direction === 'previous') {
       if (currentIndex > 0) {
-        window.location.href = `/stories/${chapter?.Story?.slug}/${
-          chapters[currentIndex - 1]?.slug
-        }`
+        window.location.href = `/stories/${chapter?.Story?.slug}/${chapters[currentIndex - 1]?.slug
+          }`
       } else {
         console.log("đây là chương đầu tiên.");
       }
@@ -108,6 +112,7 @@ const ChapterPage = ({
   }
   const openModal = () => setIsModalOpen(true)
   const closeModal = () => setIsModalOpen(false)
+  // console.log("chapter", chapters);
 
   return (
     <>
@@ -117,7 +122,7 @@ const ChapterPage = ({
         selectChapter={selectChapter}
         closeModal={closeModal}
       />
-      <NavbarComponent />
+      {/* <NavbarComponent /> */}
 
       <p className="bg-gray-100 py-2 border-t border-gray-400 lg:ps-20 border-b pl-14">
         Truyện plus / {params.slug} / {params.chapter}
