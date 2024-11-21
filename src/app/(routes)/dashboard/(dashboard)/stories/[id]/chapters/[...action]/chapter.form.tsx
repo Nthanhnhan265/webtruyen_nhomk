@@ -31,13 +31,11 @@ export function ChapterForm({
   //========================== DECLARES VARS, HOOKS =========================//
   const isEditMode = !initialData ? false : true
   console.log('form>>', initialData)
-  const { register, handleSubmit, setValue, watch, control, reset } =
-    useForm<IChapter>({
-      defaultValues: initialData || {},
-    })
+  const { register, handleSubmit, setValue, watch, reset } = useForm<IChapter>({
+    defaultValues: initialData || {},
+  })
   const router = useRouter()
   const chapterName = watch('chapter_name')
-  const status = watch('status')
   // Auto-generate slug from chapter name
   useEffect(() => {
     if (chapterName) {
@@ -198,12 +196,7 @@ export function ChapterForm({
                 {...register('status', { required: true })}
               >
                 <option value="true">{LABEL.chapter.publish}</option>
-                <option
-                  value="false"
-                  selected
-                >
-                  {LABEL.chapter.draft}
-                </option>
+                <option value="false">{LABEL.chapter.draft}</option>
               </Select>
             </div>
 

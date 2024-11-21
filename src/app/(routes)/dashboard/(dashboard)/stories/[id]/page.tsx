@@ -50,7 +50,9 @@ export default function DetailStory({ params }: { params: { id: number } }) {
 
   const router = useRouter()
   let { setMessage, setHandleDelete, closeDeleteModal } = useDeleteModal()
-  setMessage(MESSAGE.chapter.confirmDelete)
+  useEffect(() => {
+    setMessage(MESSAGE.chapter.confirmDelete)
+  }, [])
 
   const sortableProps = [
     { label: LABEL.chapter.chapterOrderLabel, value: 'chapter_order' },
@@ -69,7 +71,7 @@ export default function DetailStory({ params }: { params: { id: number } }) {
         sortBy,
         keywords: keyword,
         page: currentPage,
-        limit: 10, // Adjust limit as needed
+        limit: 10,
         includeStory,
       })
 
@@ -85,16 +87,12 @@ export default function DetailStory({ params }: { params: { id: number } }) {
   }
 
   useEffect(() => {
-    // Chỉ lấy thông tin truyện lần đầu tiên khi tải trang
     fetchChapters(true)
   }, [])
 
   useEffect(() => {
-    // Không lấy lại thông tin truyện khi thực hiện các thao tác khác
     fetchChapters(false)
   }, [orderBy, sortBy, keyword, currentPage])
-
-  const onPageChange = (page: number) => setCurrentPage(page)
 
   const handleChangeSortBy = (e: React.ChangeEvent<HTMLSelectElement>) =>
     setSortBy(e.target.value)
@@ -102,10 +100,7 @@ export default function DetailStory({ params }: { params: { id: number } }) {
   const handleChangeOrderBy = (e: React.ChangeEvent<HTMLSelectElement>) =>
     setOrderBy(e.target.value)
 
-  const onSearch = (keyword: string) => setKeyWord(keyword)
-
   const handleClickExpand = () => setIsExpand(!isExpand)
-
   const handleDelete = async (data: IChapter) => {
     try {
       await deleteChapter(data.id)
@@ -120,14 +115,13 @@ export default function DetailStory({ params }: { params: { id: number } }) {
       }
     }
   }
-
   useEffect(() => {
     setHandleDelete(() => handleDelete)
   }, [])
 
   return (
     <>
-      <Header handleSearch={onSearch}></Header>
+      <Header handleSearch={(keyword: string) => setKeyWord(keyword)}></Header>
       <div className="mt-10">
         {/* STORY'S DETAIL INFORMATION 
         (name, author, genres, status, number of views, number of reviews, number of comments) */}
@@ -183,7 +177,7 @@ export default function DetailStory({ params }: { params: { id: number } }) {
             {/* total chapter */}
             <li className="flex items-center gap-3">
               <BiBarChartAlt /> {LABEL.story.total_chapters}:{' '}
-              {pagination?.total}
+              {story?.totalChapters}
             </li>
             {/* views, stars, comments  */}
             <li className="flex items-center gap-3">
@@ -242,12 +236,12 @@ export default function DetailStory({ params }: { params: { id: number } }) {
                   required
                   className=""
                   onChange={(e) => handleChangeSortBy(e)}
+                  defaultValue="chapter_order"
                 >
                   {sortableProps.map((property) => (
                     <option
                       key={property.value}
                       value={property.value}
-                      selected={property.value === 'chapter_order'}
                     >
                       {property.label}
                     </option>

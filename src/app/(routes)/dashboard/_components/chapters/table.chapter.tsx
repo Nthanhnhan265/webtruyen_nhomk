@@ -47,69 +47,63 @@ export default function ChapterTable(props: Iprops) {
           </tr>
         </thead>
         <tbody>
-          {props.chapters
-            ? props.chapters.map((chapter) => (
-                <tr
-                  className="bg-white"
-                  key={chapter.id}
-                >
-                  <td className="py-2 px-3  text-center text-sm">
-                    {chapter.id}
-                  </td>
-
-                  {/* whitespace-nowrap overflow-hidden text-ellipsis max-w-xs */}
-                  <td className="py-2 px-2 text-sm text-center">
-                    {chapter.chapter_order}
-                  </td>
-                  <td className="py-2 px-2 text-sm text-center">
-                    {chapter.chapter_name}
-                  </td>
-                  <td className="py-2 px-2 text-sm text-center">
-                    {chapter.status == true ? (
-                      <span className="py-1 px-2 bg-yellow-100 text-sm text-black/50 rounded-md">
-                        {LABEL.chapter.publish}
-                      </span>
-                    ) : (
-                      <span className="py-1 px-2 bg-green-200 text-sm text-black/50 rounded-md">
-                        {LABEL.chapter.draft}
-                      </span>
-                    )}
-                  </td>
-                  <td className="py-2 px-2 text-sm text-center flex justify-center">
-                    <span className="flex items-center gap-1">
-                      {chapter.views} <FaRegEye />
+          {props.chapters &&
+            props.chapters.map((chapter) => (
+              <tr
+                className="bg-white"
+                key={chapter.id}
+              >
+                <td className="py-2 px-3  text-center text-sm">{chapter.id}</td>
+                {/* whitespace-nowrap overflow-hidden text-ellipsis max-w-xs */}
+                <td className="py-2 px-2 text-sm text-center">
+                  {chapter.chapter_order}
+                </td>
+                <td className="py-2 px-2 text-sm text-center">
+                  {chapter.chapter_name}
+                </td>
+                <td className="py-2 px-2 text-sm text-center">
+                  {chapter.status == true ? (
+                    <span className="py-1 px-2 bg-yellow-100 text-sm text-black/50 rounded-md">
+                      {LABEL.chapter.publish}
                     </span>
-                    {/* , {chapter.reviews}, {chapter.comments} */}
-                  </td>
-                  <td className="py-2 px-2 text-sm text-center">
-                    {formatDate(chapter.created_at)}
-                  </td>
-                  <td className="py-2 px-2 text-sm text-center">
-                    {formatDate(chapter.published_at)}
-                  </td>
-                  <td className="py-2 px-2 text-sm text-center flex justify-center items-center gap-2 rounded">
-                    <Button
-                      color="warning"
-                      onClick={() => {
-                        router.push(
-                          `/dashboard/stories/${props.story_id}/chapters/${chapter.id}/update`,
-                        )
-                        router.refresh()
-                      }}
-                    >
-                      {LABEL.sys.edit}
-                    </Button>
-
-                    <Button
-                      color="failure"
-                      onClick={() => openDeleteModal(chapter)}
-                    >
-                      {LABEL.sys.delete}
-                    </Button>
-                  </td>
-                </tr>
-              ))
-            : ''}
+                  ) : (
+                    <span className="py-1 px-2 bg-green-200 text-sm text-black/50 rounded-md">
+                      {LABEL.chapter.draft}
+                    </span>
+                  )}
+                </td>
+                <td className="py-2 px-2 text-sm text-center flex justify-center">
+                  <span className="flex items-center gap-1">
+                    {chapter.views} <FaRegEye />
+                  </span>
+                </td>
+                <td className="py-2 px-2 text-sm text-center">
+                  {formatDate(chapter.created_at)}
+                </td>
+                <td className="py-2 px-2 text-sm text-center">
+                  {formatDate(chapter.published_at)}
+                </td>
+                <td className="py-2 px-2 text-sm text-center flex justify-center items-center gap-2 rounded">
+                  <Button
+                    color="warning"
+                    onClick={() => {
+                      router.push(
+                        `/dashboard/stories/${props.story_id}/chapters/${chapter.id}/update`,
+                      )
+                      router.refresh()
+                    }}
+                  >
+                    {LABEL.sys.edit}
+                  </Button>
+                  <Button
+                    color="failure"
+                    onClick={() => openDeleteModal(chapter)}
+                  >
+                    {LABEL.sys.delete}
+                  </Button>
+                </td>
+              </tr>
+            ))}
         </tbody>
       </table>
       {!props.chapters || props.chapters.length === 0 ? (

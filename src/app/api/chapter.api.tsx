@@ -167,7 +167,6 @@ export async function getChapterId(id: number, accessToken?: string) {
     }
     console.log(result)
     const chapter = result.data
-    const pagination = result.pagination
     return chapter
   } catch (error) {
     console.error(error)

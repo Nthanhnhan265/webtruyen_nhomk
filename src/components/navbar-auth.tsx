@@ -20,10 +20,10 @@ const genres = [
 
 export default function NavBar({
   userProfile,
-  accessToken,
-}: {
+}: // accessToken,
+{
   userProfile: object
-  accessToken: string
+  accessToken?: string
 }) {
   const pathname = usePathname()
   const [keyword, setKeyword] = useState('')

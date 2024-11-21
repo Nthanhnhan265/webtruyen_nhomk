@@ -10,7 +10,6 @@ interface IDeleteModalProps<T> {
   message: string
 }
 function DeleteModal(prop: IDeleteModalProps<IChapter>) {
-  console.log(prop.isOpenDModal)
   return (
     <>
       <Modal
