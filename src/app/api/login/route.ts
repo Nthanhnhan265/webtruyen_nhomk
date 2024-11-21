@@ -1,15 +1,40 @@
 import axios, { AxiosError } from 'axios'
 import { NextRequest, NextResponse } from 'next/server'
+
+// Định nghĩa kiểu dữ liệu
+type LoginRequestBody = {
+  email: string
+  password: string
+}
+
+type LoginResponse = {
+  success: boolean
+  message: string
+  data: {
+    user: {
+      id: string
+      email: string
+      name: string
+    }
+  }
+  token: {
+    accessToken: string
+    refreshToken: string
+  }
+}
+
 const api = axios.create({
   baseURL: process.env.NODE_API_URL,
   timeout: 3000,
 })
+
 export async function POST(request: NextRequest) {
   try {
-    const { email, password } = await request.json()
+    const body = (await request.json()) as LoginRequestBody
+    const { email, password } = body
 
     // Gửi request đến Node.js server
-    const res = await api.post('auth/login', { email, password })
+    const res: { data: LoginResponse } = await api.post('auth/login', { email, password })
     const result = res.data
 
     if (!result.success) {
@@ -19,7 +44,7 @@ export async function POST(request: NextRequest) {
     // Nếu đăng nhập thành công
     const response = NextResponse.json({
       success: true,
-      message: result.token.data,
+      message: 'Đăng nhập thành công.',
       data: result.data,
       accessToken: result.token.accessToken,
     })
@@ -29,36 +54,32 @@ export async function POST(request: NextRequest) {
       sameSite: 'strict',
     })
     return response
-  } catch (error) {
-    // Xử lý lỗi Axios
+  } catch (error: unknown) {
     if (error instanceof AxiosError) {
       console.error('Axios error:', error.response?.data)
       return NextResponse.json(
         {
           success: false,
-          message: error?.response?.data?.message || 'Lỗi từ máy chủ Node.js',
-          status: error?.response?.status || 500,
+          message: error.response?.data?.message || 'Lỗi từ máy chủ Node.js',
+          status: error.response?.status || 500,
         },
-        { status: error?.response?.status || 500 },
+        { status: error.response?.status || 500 },
       )
     }
 
-    // Xử lý lỗi thông thường
     if (error instanceof Error) {
       console.error('Error:', error.message)
       return NextResponse.json(
         {
           success: false,
-          message: error.message || 'Đã xảy ra lỗi.',
-          cause: error.cause || 'Unknown',
+          message: error.message || 'Đã xảy ra lỗi không xác định.',
         },
         { status: 500 },
       )
     }
 
-    // Catch-all cho các lỗi không xác định
     console.error('Unknown error:', error)
-    return NextResponse.json(
+    return NextResponse.json<{ success: boolean; message: string }>(
       {
         success: false,
         message: 'Đã xảy ra lỗi không xác định.',
@@ -67,9 +88,3 @@ export async function POST(request: NextRequest) {
     )
   }
 }
-// export async function GET(request: NextRequest) {
-//   console.log('nextjs server got a request')
-//   return NextResponse.json({
-//     hello: 'world',
-//   })
-// }
