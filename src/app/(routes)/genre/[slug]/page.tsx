@@ -14,14 +14,14 @@ const GenrePage = () => {
 
   const [books, setBooks] = useState<any[]>([]); // Khởi tạo books là một mảng
   const [loading, setLoading] = useState(true);
-  const currentPage = 1;
-  const totalPages = 5;
+  const [currentPage, setCurrentPage] = useState(1); // Số trang hiện tại từ API
+  const [totalPages, setTotalPages] = useState(1); // Tổng số trang từ API
 
   useEffect(() => {
     const fetchBooks = async () => {
       try {
         // Gọi API để lấy danh sách truyện của thể loại này
-        const res = await fetch(`http://localhost:3000/api/story/genre/${slug}`);
+        const res = await fetch(`http://localhost:3000/api/story/genre/${slug}?page=${currentPage}`);
 
         if (!res.ok) {
           throw new Error("Không thể tải dữ liệu từ API.");
@@ -29,9 +29,11 @@ const GenrePage = () => {
 
         const data = await res.json();
         console.log("Dữ liệu nhận được từ API(danh sách truyện theo thể loại):", data);
-        // Kiểm tra và đảm bảo data có trường `stories` là mảng
-        if (data && data.stories && Array.isArray(data.stories)) {
-          setBooks(data.stories);
+
+        // Kiểm tra và đảm bảo data có trường stories là mảng
+        if (data && data.data && Array.isArray(data.data.stories)) {
+          setBooks(data.data.stories);
+          setTotalPages(data.pagination.totalPages); // Cập nhật tổng số trang từ API
         } else {
           setBooks([]); // Nếu không có truyện, đặt books là mảng rỗng
         }
@@ -46,7 +48,7 @@ const GenrePage = () => {
     if (slug) {
       fetchBooks();
     }
-  }, [slug]);
+  }, [slug, currentPage]); // Thêm currentPage vào dependency để khi chuyển trang sẽ gọi lại API
 
   if (loading) {
     return <div>Đang tải dữ liệu...</div>;
@@ -68,10 +70,10 @@ const GenrePage = () => {
     <div>
       {/* SEO phần đầu trang */}
       <Head>
-        <title>{`Truyện Plus - ${genreName} - Danh sách truyện`}</title>
-        <meta name="description" content={`Xem các truyện ${genreName} hay nhất trên Truyện Plus`} />
-        <meta property="og:title" content={`Truyện Plus - ${genreName} - Danh sách truyện`} />
-        <meta property="og:description" content={`Xem các truyện ${genreName} hay nhất trên Truyện Plus`} />
+        <title>{`Truyện Chom - ${genreName} - Danh sách truyện`}</title>
+        <meta name="description" content={`Xem các truyện ${genreName} hay nhất trên Truyện Chom`} />
+        <meta property="og:title" content={`Truyện Chom - ${genreName} - Danh sách truyện`} />
+        <meta property="og:description" content={`Xem các truyện ${genreName} hay nhất trên Truyện Chom`} />
         <meta property="og:image" content="https://truyenplus.vn/path-to-image.jpg" />
         <meta property="og:url" content={`https://truyenplus.vn/genre/${slug}`} />
         <meta name="robots" content="index, follow" />
@@ -81,7 +83,7 @@ const GenrePage = () => {
       <div>
         {books.map((book, index) => (
           <p key={index} className="bg-gray-100 py-2 border-t border-gray-400 border-b pl-4 sm:pl-14 text-center sm:text-left">
-            Truyện plus {book.genres[0].genre_name} / Trang 1
+            Truyện {book.genres[0].genre_name} / Trang 1
           </p>
         ))}
 
@@ -119,7 +121,7 @@ const GenrePage = () => {
                     </Link>
                     <br />
                     <span>Tác giả:</span>
-                    <Link className={styles.hoverName} href={`/author/${book.author.slug}`}>
+                    <Link className={styles.hoverName} href={`/author/${book.author.author_slug}`}>
                       {book.author.author_name}
                     </Link>
                     <br />
@@ -138,7 +140,7 @@ const GenrePage = () => {
       {/* Footer với SEO cải tiến */}
       <footer className="bg-gray-100 p-4 grid grid-cols-1 sm:grid-cols-2 mt-5 pl-4 sm:pl-14 ml-14">
         <div className="mb-4 sm:mb-0">
-          Truyện Plus – Trang đọc truyện online, thường xuyên cập nhật những bộ truyện hay nhất thuộc các thể loại đặc sắc như: truyện ngôn tình, truyện tiên hiệp, truyện kiếm hiệp, truyện đam mỹ, light novel…
+          Truyện Chom – Trang đọc truyện online, thường xuyên cập nhật những bộ truyện hay nhất thuộc các thể loại đặc sắc như: truyện ngôn tình, truyện tiên hiệp, truyện kiếm hiệp, truyện đam mỹ, light novel…
           <br />
           Mọi vấn đề vi phạm bản quyền vui lòng liên hệ qua email: <span className={styles.textFoot}>truyenchomonline@gmail.com</span>
         </div>
