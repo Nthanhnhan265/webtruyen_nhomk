@@ -56,7 +56,7 @@ const GenrePage = ({ params }: { params: { slug: string } }) => {
 
     return (
         <div>
-            <NavbarComponent />
+            {/* <NavbarComponent /> */}
             <p className="bg-gray-100 py-2 border-t border-gray-400 border-b pl-14">
                 Truyện plus / Tiềm kiếm / Trang {currentPage}
             </p>

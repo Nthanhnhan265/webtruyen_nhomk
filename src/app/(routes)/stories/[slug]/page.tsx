@@ -74,7 +74,7 @@ const page = ({ params }: { params: { slug: string } }) => {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-100">
-      <NavbarComponent></NavbarComponent>
+      {/* <NavbarComponent></NavbarComponent> */}
       <p className="bg-gray-100 py-2 border-t border-gray-400 border-b ms-5 pl-14">
         Truyen Chom \ {story?.story_name}
       </p>

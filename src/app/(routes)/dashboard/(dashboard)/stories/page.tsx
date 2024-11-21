@@ -27,7 +27,7 @@ interface Storie {
     author_name: string
   }
 }
-const storyPage = () => {
+const StoryPage = () => {
   //============ Declare variables and hooks ================//
   const [stories, setStories] = useState<Storie[]>([])
   const [modalState, setModalState] = useState<{

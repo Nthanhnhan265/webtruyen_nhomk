@@ -47,7 +47,7 @@ export const getChapterBySlug = async (slug: string) => {
     // Tạo đối tượng params cho truy vấn
 
     // Sử dụng axios để gọi API với params
-    const response = await api.get(`/chapters/${slug}`)
+    const response = await api.get(`/chapters/getChapterByslug/${slug}`)
     // Trả về dữ liệu từ phản hồi
     return response.data
   } catch (error) {
