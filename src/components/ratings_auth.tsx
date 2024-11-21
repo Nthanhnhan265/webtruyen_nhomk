@@ -49,8 +49,8 @@ const RatingComponent = ({ storyId }: { storyId: number }) => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const data = await fetchRatingsByStory(storyId);
-        setRatings(data.ratings || []);
+        // const data = await fetchRatingsByStory(storyId);
+        // setRatings(data.ratings || []);
         setLoading(false);
       } catch (err: any) {
         setError(err.message);
