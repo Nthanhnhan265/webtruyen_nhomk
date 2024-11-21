@@ -4,7 +4,9 @@ import { getStoryBySlug } from '@/app/api/story.api' // Import API functions
 import { useEffect, useState } from 'react'
 import NavbarComponent from '../../../../components/navbar'
 import Footer from '../../_component/footer'
+import RatingComponent from '../../../../components/ratings_auth'
 import { toast } from 'react-toastify'
+import { UserProvider } from '@/context/user/user.context' 
 
 interface Chapter {
   chapter_title: string
@@ -14,6 +16,7 @@ interface Chapter {
 }
 
 interface Story {
+  id: number
   story_name: string
   author_name: string
   keywords: string
@@ -31,6 +34,7 @@ const page = ({ params }: { params: { slug: string } }) => {
   const [totalPages, setTotalPages] = useState<number>(1) // State for total pages
   const { slug } = params // Lấy slug từ params của route
   // const URL = `${}`;
+  
   useEffect(() => {
     // Log thông tin slug khi thay đổi
     console.log('check useparam', slug)
@@ -38,7 +42,7 @@ const page = ({ params }: { params: { slug: string } }) => {
     const fetchStory = async () => {
       try {
         const data = await getStoryBySlug(slug) // Lấy thông tin story từ API
-        console.log('check dât', data)
+        console.log('check data', data)
         setStory(data.data) // Lưu dữ liệu story vào state
         const { chapters, totalPages } = await chapterByStory(
           data.data.id, // Truyền id của story vào hàm getChapters
@@ -90,8 +94,9 @@ const page = ({ params }: { params: { slug: string } }) => {
                 className="w-48 h-64 object-cover rounded"
               />
             </div>
+            
             <div className="space-y-4">
-              <h1 className="text-3xl font-bold">{story?.story_name}</h1>
+              <h1 className="text-3xl font-bold">{story?.story_name}</h1> 
               <p className="text-gray-600">Tác giả: {story?.author_name}</p>
               <p className="text-gray-600">Thể loại: {story?.keywords}</p>
               <p className="text-gray-600">
@@ -153,9 +158,11 @@ const page = ({ params }: { params: { slug: string } }) => {
                 Next
               </button>
             </div>
+            <UserProvider>
+            {story?.id && <RatingComponent storyId= {story.id}/>}</UserProvider>
           </div>
         </div>
-
+              
         {/* Right Column */}
         <div
           className="w-1/3 bg-white p-3 rounded-lg shadow"

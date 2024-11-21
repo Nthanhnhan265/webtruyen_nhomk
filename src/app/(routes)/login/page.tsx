@@ -63,32 +63,11 @@ const Login = () => {
     //   }
     // }
     try {
-<<<<<<< HEAD
-      const response = await axios.post('http://localhost:3000/api/login', {
-        username,
-        password,
-      })
 
-      if (response.status === 200) {
-        const { token } = response.data
-        localStorage.setItem('token', token)
-
-        if (rememberMe) {
-          localStorage.setItem('username', username)
-        } else {
-          localStorage.removeItem('username')
-        }
-
-        setTimeout(() => {
-          router.push('/')
-        }, 1000)
-      }
-=======
       await login(data.email, data.password)
       // toast.success(MESSAGE.auth.loginSuccess)
       console.log('login ok')
       router.push('/')
->>>>>>> origin/dev
     } catch (error) {
       if (error instanceof Error) {
         // toast.error(error.message)
