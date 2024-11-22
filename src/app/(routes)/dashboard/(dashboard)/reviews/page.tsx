@@ -135,7 +135,7 @@ export default function ReviewsPage() {
   const handleSearch = (keyword: string) => {
     setKeyWord(keyword)
   }
-  const handleUpdate = (id: any) => {
+  const handleUpdate = (id: number) => {
     console.log(id)
   }
   const handleDelete = async (selected: object) => {
@@ -154,6 +154,9 @@ export default function ReviewsPage() {
       )
       toast.success(MESSAGE.review.deleteSuccess)
     } catch (error) {
+      if (error) {
+        console.error(error)
+      }
       toast.error(MESSAGE.review.deleteFailed)
     }
     closeDeleteModal()

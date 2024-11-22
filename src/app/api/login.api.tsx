@@ -19,7 +19,7 @@ const checkUsername = async (username: string) => {
     }
 
     return true // Username exists
-  } catch (error: any) {
+  } catch (error) {
     if (error instanceof AxiosError) {
       throw new Error(
         error?.response?.data?.message || 'Username check failed.',
@@ -42,7 +42,7 @@ const checkEmail = async (email: string) => {
     }
 
     return true // Email does not exist
-  } catch (error: any) {
+  } catch (error) {
     if (error instanceof AxiosError) {
       throw new Error(error?.response?.data?.message || 'Email check failed.')
     } else {
@@ -70,7 +70,7 @@ const loginUser = async (data: { username: string; password: string }) => {
     }
 
     return user
-  } catch (error: any) {
+  } catch (error) {
     if (error instanceof AxiosError) {
       throw new Error(error?.response?.data?.message || 'Lỗi đăng nhập.') // Thêm thông điệp mặc định
     } else {
@@ -120,7 +120,7 @@ const registerUser = async (data: {
     }
 
     return newUser
-  } catch (error: any) {
+  } catch (error) {
     if (error instanceof AxiosError) {
       throw new Error(error?.response?.data?.message)
     } else {

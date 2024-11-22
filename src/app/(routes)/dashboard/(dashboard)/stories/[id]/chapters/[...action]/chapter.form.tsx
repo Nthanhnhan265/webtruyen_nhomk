@@ -56,9 +56,9 @@ export function ChapterForm({
   const onSubmit = async (data: IChapter) => {
     console.log('Form submitted:', data)
     try {
-      if (isEditMode) {
+      if (isEditMode && initialData) {
         await updateChapter(
-          initialData?.id!,
+          initialData?.id,
           data.chapter_name,
           data.content,
           story_id,

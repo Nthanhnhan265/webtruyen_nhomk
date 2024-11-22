@@ -20,7 +20,7 @@ import { toast } from 'react-toastify'
 import MESSAGE from '../../../message'
 export default function DetailStory({ params }: { params: { id: number } }) {
   //====================== DECLARE VARIABLES, HOOKS ==========================//
-  const [isExpand, setIsExpand] = useState<Boolean>(false)
+  const [isExpand, setIsExpand] = useState<boolean>(false)
   const [sortBy, setSortBy] = useState<string>('id')
   const [orderBy, setOrderBy] = useState<string>('DESC')
   const [keyword, setKeyWord] = useState<string>('')
@@ -49,7 +49,7 @@ export default function DetailStory({ params }: { params: { id: number } }) {
   const [chapters, setChapters] = useState<Array<IChapter>>()
 
   const router = useRouter()
-  let { setMessage, setHandleDelete, closeDeleteModal } = useDeleteModal()
+  const { setMessage, setHandleDelete, closeDeleteModal } = useDeleteModal()
   useEffect(() => {
     setMessage(MESSAGE.chapter.confirmDelete)
   }, [])

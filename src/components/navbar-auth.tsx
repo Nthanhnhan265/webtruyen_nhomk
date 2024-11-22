@@ -1,6 +1,7 @@
 'use client'
 
 import styles from '@/app/(routes)/_component/GenreDropdown.module.css'
+import useUserContext from '@/hooks/users/userUserContext'
 import { Avatar } from 'flowbite-react'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -8,7 +9,6 @@ import { usePathname } from 'next/navigation'
 import React, { useState } from 'react'
 import { FaSearch } from 'react-icons/fa'
 import { RxHamburgerMenu } from 'react-icons/rx'
-
 const genres = [
   { id: 1, name: 'Tiên Hiệp', slug: 'tien-hiep' },
   { id: 2, name: 'Kiếm Hiệp', slug: 'kiem-hiep' },
@@ -18,18 +18,11 @@ const genres = [
   { id: 6, name: 'Trinh Thám', slug: 'trinh-tham' },
 ]
 
-export default function NavBar({
-  userProfile,
-}: // accessToken,
-{
-  userProfile: object
-  accessToken?: string
-}) {
+export default function NavBar() {
   const pathname = usePathname()
   const [keyword, setKeyword] = useState('')
-
+  const { loggedInUser } = useUserContext()
   const isDashboardPage = pathname?.includes('dashboard')
-
   if (isDashboardPage) return null
   // Handle change in the search input
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -68,7 +61,7 @@ export default function NavBar({
           <li className="relative group py-4">
             <div className={styles.dropdownContainer}>
               <div>THỂ LOẠI</div>
-              <ul className="absolute mt-4 bg-white shadow top-full left-0 w-[calc(100%_+_8rem)] h-auto hidden group-hover:flex flex-col">
+              <ul className="absolute mt-4 bg-white shadow z-10 top-full left-0 w-[calc(100%_+_8rem)] h-auto hidden group-hover:flex flex-col">
                 {genres.map((genre, index) => (
                   <li
                     key={index}
@@ -88,7 +81,7 @@ export default function NavBar({
             placeholder="Tìm kiếm truyện..."
             className="border border-gray-300 rounded-l-md px-3 py-1 focus:outline-none"
             onChange={handleSearch}
-            onKeyDown={handleKeyPress} // Add keydown event for Enter key
+            onKeyDown={handleKeyPress}
           />
           <button
             className="bg-gray-300 px-3 py-2 rounded-r-md border"
@@ -99,13 +92,13 @@ export default function NavBar({
         </div>
 
         <div className="flex items-center space-x-4">
-          {userProfile ? (
+          {loggedInUser.username ? (
             <Link href="/profile">
               <Avatar rounded>
                 <div className="font-medium dark:text-white hidden md:block">
                   <span className="text-sm font-bold">Xin chào!</span>
                   <div className="text-sm text-gray-500 dark:text-gray-400">
-                    {userProfile.username}
+                    {loggedInUser.username}
                   </div>
                 </div>
               </Avatar>

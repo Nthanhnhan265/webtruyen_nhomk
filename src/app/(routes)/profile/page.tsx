@@ -4,6 +4,7 @@ import UserSidebar from '../_component/sidebar_profile'
 const ProfilePage = async () => {
   //------------- DECLARE VARIABES ---------------//
   const { userProfile, accessToken } = await useProfile()
+
   //------------- HANDLE FUNCTIONS ---------------//
   return (
     <>

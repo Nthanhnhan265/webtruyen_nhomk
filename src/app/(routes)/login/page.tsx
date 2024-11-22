@@ -1,13 +1,17 @@
 'use client'
 
+import useUserContext from '@/hooks/users/userUserContext'
 import { Checkbox, Label, TextInput } from 'flowbite-react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { FcGoogle } from 'react-icons/fc'
+import { toast } from 'react-toastify'
+import { getAccessToken } from '../../../auth/token'
 import useLogin from '../../../hooks/users/useLogin'
+import MESSAGE from '../../message'
 import Footer from '../_component/footer'
-
 // Định nghĩa kiểu cho dữ liệu biểu mẫu
 interface FormData {
   email: string
@@ -20,56 +24,34 @@ const Login = () => {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-    setError,
   } = useForm<FormData>() // Sử dụng FormData làm kiểu cho useForm
   const router = useRouter()
-  const { login, loading } = useLogin()
-
+  const { login } = useLogin()
+  const { setIsLoggedInUser } = useUserContext()
+  useEffect(() => {
+    async function reloadData() {
+      console.log('rerender >> ', await getAccessToken())
+      if (!(await getAccessToken())) {
+        setIsLoggedInUser({
+          avatar: undefined,
+          email: undefined,
+          id: undefined,
+          username: undefined,
+        })
+      }
+    }
+    reloadData()
+  }, [])
   // Định nghĩa hàm onSubmit với kiểu SubmitHandler của FormData
   const onSubmit: SubmitHandler<FormData> = async (data: FormData) => {
-    // try {
-    //   const response = await axios.post('http://localhost:3000/api/login', {
-    //     username,
-    //     password,
-    //   })
-
-    //   if (response.status === 200) {
-    //     const { token } = response.data
-    //     localStorage.setItem('token', token)
-
-    //     if (rememberMe) {
-    //       localStorage.setItem('username', username)
-    //     } else {
-    //       localStorage.removeItem('username')
-    //     }
-
-    //     setTimeout(() => {
-    //       router.push('/')
-    //     }, 1000)
-    //   }
-    // } catch (error) {
-    //   if (error instanceof AxiosError && error.response) {
-    //     const errorMsg = error.response.data.message
-
-    //     if (errorMsg === 'Tên đăng nhập không tồn tại') {
-    //       setError('username', { message: Message.auth.nameError })
-    //     } else if (errorMsg === 'Mật khẩu không chính xác') {
-    //       setError('password', { message: 'Mật khẩu không chính xác' })
-    //     } else {
-    //       setError('username', {
-    //         message: 'Đăng nhập thất bại, vui lòng kiểm tra lại thông tin.',
-    //       })
-    //     }
-    //   }
-    // }
     try {
       await login(data.email, data.password)
-      // toast.success(MESSAGE.auth.loginSuccess)
+      toast.success(MESSAGE.auth.loginSuccess)
       console.log('login ok')
       router.push('/')
     } catch (error) {
       if (error instanceof Error) {
-        // toast.error(error.message)
+        toast.error(error.message)
       }
       console.error(error)
     }
@@ -94,6 +76,7 @@ const Login = () => {
                 <TextInput
                   id="email"
                   type="email"
+                  autoComplete="username"
                   {...register('email', {
                     required: 'Email là bắt buộc',
                     maxLength: {
@@ -118,6 +101,7 @@ const Login = () => {
                 <TextInput
                   id="password"
                   type="password"
+                  autoComplete="current-password"
                   {...register('password', {
                     required: 'Mật khẩu là bắt buộc',
                     maxLength: {

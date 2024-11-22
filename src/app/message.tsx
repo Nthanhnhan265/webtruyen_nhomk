@@ -18,6 +18,8 @@ const MESSAGE = {
     updatePasswordFailed: 'Cập nhật mật khẩu thất bại.',
     loginRedirect: 'Bạn cần đăng nhập để tiếp tục.',
     unexpectedError: 'Đã xảy ra lỗi không mong muốn.',
+    loginSuccess: 'Đăng nhập thành công',
+    loginFailed: 'Đăng nhập thất bại',
   },
   chapter: {
     createSuccess: 'Tạo chương mới thành công.',
