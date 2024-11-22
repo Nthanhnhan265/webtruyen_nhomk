@@ -16,7 +16,7 @@ const CreateModalGenre: React.FC<CreateModalGenreProps> = ({ show, onClose, onSu
     const [description, setDescription] = useState('');
     const [slug, setSlug] = useState('');
     const [errors, setErrors] = useState<FormErrors>({}); // Store errors for each field
-    let formErrors: FormErrors = {};
+    const formErrors: FormErrors = {};
 
     useEffect(() => {
         if (show) {

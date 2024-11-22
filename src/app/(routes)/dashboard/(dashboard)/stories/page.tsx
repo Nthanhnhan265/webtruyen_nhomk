@@ -120,8 +120,8 @@ const StoryPage = () => {
     setKeyWord(keyword)
     fetchStories()
   }
-  const detailStory = () => {
-    alert('hiển thị chi tiết')
+  const detailStory = (id: Number) => {
+    window.location.href = `stories/${id}`
   }
 
   return (
@@ -200,7 +200,7 @@ const StoryPage = () => {
                         <span>{index}</span>
                         <button
                           onClick={() => {
-                            detailStory()
+                            detailStory(story.id)
                           }}
                         >
                           <BsBoxArrowUpRight />
@@ -229,7 +229,7 @@ const StoryPage = () => {
                       {story?.Author?.author_name ? story?.Author?.author_name : "không tìm thấy"}
                     </td>
                     <td className="px-2 text-center text-sm">
-                      {story.status === 1 ? 'Đã xuất bản' : 'Chưa xuất bản'}
+                      {story.status === 0 ? 'hoàn thành' : 'Chưa xuất bản'}
                     </td>
                     <td className="px-2 text-center text-sm">{story.views}</td>
                     <td className="px-2 text-center text-sm">

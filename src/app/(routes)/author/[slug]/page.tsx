@@ -17,7 +17,6 @@ const AuthorPage = () => {
   //   const { slug } = useParams(); // Lấy slug từ URL
   const currentPage = 1 // Bạn có thể thay thế bằng giá trị thực tế từ props hoặc query
   const totalPages = 5 // Số trang tối đa
-  const [genre, setGenre] = useState(null)
 
   // Bạn có thể thay đổi cách lấy thông tin tác giả dựa trên slug
   const authors = {
