@@ -2,7 +2,7 @@ import axios, { AxiosError } from 'axios'
 import { NextRequest, NextResponse } from 'next/server'
 import MESSAGE from '../../../message'
 const apiNode = axios.create({
-  baseURL: process.env.NEXT_API_URL,
+  baseURL: process.env.NODE_API_URL,
   timeout: 3000,
 })
 export async function GET(request: NextRequest) {
