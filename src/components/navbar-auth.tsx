@@ -97,7 +97,6 @@ export default function NavBar({
             <FaSearch />
           </button>
         </div>
-
         <div className="flex items-center space-x-4">
           {userProfile ? (
             <Link href="/profile">
@@ -126,7 +125,6 @@ export default function NavBar({
               </Link>
             </>
           )}
-
           <div className="inline-block md:hidden">
             <RxHamburgerMenu />
           </div>
