@@ -19,7 +19,6 @@ interface Genre {
     id: number;
 }
 const StoryModal: React.FC<StoryModalProps> = ({ show, onClose, onSuccess }) => {
-    if (!show) return null;
     const [authors, setAuthors] = useState<Author[]>([])
     const [genres, setGenres] = useState<Genre[]>([])
 
@@ -276,8 +275,8 @@ const StoryModal: React.FC<StoryModalProps> = ({ show, onClose, onSuccess }) => 
 
                                     >
                                         <option value="">Chọn trạng thái</option>
-                                        <option value="ongoing">Đang cập nhật</option>
-                                        <option value="completed">Hoàn thành</option>
+                                        <option value="1">Đang cập nhật</option>
+                                        <option value="0">Hoàn thành</option>
                                     </select>
                                     {errors.status && <p className="text-red-500 text-sm">{errors.status}</p>}
 

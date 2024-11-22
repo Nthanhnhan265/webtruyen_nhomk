@@ -14,6 +14,7 @@ import AuthorModal from '../../_components/author/AuthorModal'
 import UpdateAuthorModal from '../../_components/author/UpdateAuthorModal'
 import Header from '../../_components/header'
 import ConfirmDeleteModal from '../../_components/story/ConfirmDeleteModal'
+import { error } from 'console'
 interface Author {
   id: number
   author_name: string
@@ -69,6 +70,8 @@ const AuthorPage = () => {
       fetchAuthors()
     } catch (err) {
       toast.error('thêm tác giả thất bại')
+      console.log(err);
+
     }
   }
   const handalUpdateAuthor = async (id: number, data: Author) => {
@@ -81,6 +84,8 @@ const AuthorPage = () => {
       fetchAuthors()
     } catch (err) {
       toast.error('câp nhật thất bại')
+      console.log(err);
+
     }
   }
   const handleEdit = async (id: number) => {
@@ -114,6 +119,8 @@ const AuthorPage = () => {
         setAuthorToDelete(null)
       } catch (err) {
         toast.error('Đã xảy ra lỗi khi xóa tác giả.')
+        console.log(err);
+
       }
     }
   }

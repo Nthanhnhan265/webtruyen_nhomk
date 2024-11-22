@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useState } from 'react';
 // import { toast } from 'react-toastify'; // ĐÚNG
-import NavbarComponent from '@/components/navbar';
 import Footer from '@/app/(routes)/_component/footer';
 import Modal from '../../compoment/chapterModal';
 import { getAllStorieView } from '@/app/api/story.api';
@@ -45,7 +44,7 @@ const ChapterPage = ({
     page: 1,
   }
   const fetchStory = async () => {
-    const { slug, chapter } = params;
+    const { chapter } = params;
     // alert(chapter)
     try {
       const response = await getChapterBySlug(chapter); // Get chapter details from API
@@ -68,6 +67,8 @@ const ChapterPage = ({
       setStorys(storynew.stories)
       // console.log(storynew)
     } catch (error) {
+      console.log(error);
+
       toast.error('Lấy chương truyện thất bại')
     }
   }

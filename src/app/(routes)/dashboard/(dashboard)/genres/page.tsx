@@ -49,6 +49,8 @@ const AuthorPage = () => {
       settotalPages(response.pagination.totalPages)
     } catch (err) {
       console.log('Đã xảy ra lỗi khi lấy dữ liệu.')
+      console.log(err);
+
     }
   }
 
@@ -65,6 +67,8 @@ const AuthorPage = () => {
       }
     } catch (err) {
       toast.error('thể loại không tồn tại')
+      console.log(err);
+
     }
   }
   const handleCreateSuccess = async (data) => {
@@ -78,6 +82,8 @@ const AuthorPage = () => {
       fetchGenre() // Refresh the genre list or handle success as needed
     } catch (error) {
       toast.error('Đã xảy ra lỗi khi thêm thể loại.')
+      console.log(error);
+
     }
   }
   const handleUpdateSuccess = async (id: number, data: Genre) => {
@@ -88,6 +94,8 @@ const AuthorPage = () => {
       fetchGenre()
     } catch (err) {
       toast.error('cập nhật thất bại')
+      console.log(err);
+
     }
   }
   const handleEdit = async (id: number) => {
@@ -99,6 +107,8 @@ const AuthorPage = () => {
       }
     } catch (err) {
       toast.error('thể loại không tồn tại')
+      console.log(err);
+
     }
   }
   const handleSearch = async (keyword: string) => {
@@ -128,6 +138,8 @@ const AuthorPage = () => {
       } catch (err) {
         // Handle any errors that occur during deletion
         toast.error('Đã xảy ra lỗi khi xóa thể loại.')
+        console.log(err);
+
       }
     }
   }

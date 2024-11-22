@@ -13,7 +13,6 @@ interface Iprops {
 }
 export default function ChapterTable(props: Iprops) {
   //====Declare variables, hooks==========//
-  const [imageErrors, setImageErrors] = useState<{ [key: number]: boolean }>({})
   const { openDeleteModal, closeDeleteModal } = useDeleteModal()
   const router = useRouter()
 
