@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
-import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 // import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -19,21 +18,10 @@ export default function RootLayout({
       <Image
         src={'/images/bg-lib.webp'}
         alt="background image"
-        className="fixed top-0 -z-10 blur-sm w-full left-0"
+        className="fixed top-0 -z-10 blur-sm w-full left-0 h-full"
         width={1440}
         height={1024}
       ></Image>
-      <ToastContainer
-        position="top-left"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
       {children}
     </div>
   )

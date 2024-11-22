@@ -17,7 +17,8 @@ interface Iprops {
 }
 export default function UserTable(props: Iprops) {
   //====Declare variables, hooks==========//
-  console.log(props.users[0])
+  const userId: number = 114
+
   return (
     <div className="overflow-x-auto w-full">
       <table
@@ -67,10 +68,10 @@ export default function UserTable(props: Iprops) {
                     )}
                   </td>
                   {/* whitespace-nowrap overflow-hidden text-ellipsis max-w-xs */}
-                  <td className="py-2 px-2 text-sm text-center">
+                  <td className="py-2 px-2 text-sm text-center whitespace-nowrap overflow-hidden text-ellipsis max-w-20">
                     {user.username}
                   </td>
-                  <td className="py-2 px-2 text-sm text-center">
+                  <td className="py-2 px-2 text-sm text-center whitespace-nowrap overflow-hidden text-ellipsis max-w-xs">
                     {user.email}
                   </td>
                   <td className="py-2 px-2 text-sm text-center">
@@ -83,18 +84,22 @@ export default function UserTable(props: Iprops) {
                     {formatDate(user.created_at)}
                   </td>
                   <td className="py-2 px-2 text-sm text-center flex justify-center items-center gap-2 rounded">
-                    <Button
-                      color="warning"
-                      onClick={() => props.openUModal(user)}
-                    >
-                      {LABEL.sys.edit}
-                    </Button>
-                    <Button
-                      color="failure"
-                      onClick={() => props.openDModal(user.id)}
-                    >
-                      {LABEL.sys.delete}
-                    </Button>
+                    {Number(user.id) !== Number(userId) ? (
+                      <>
+                        <Button
+                          color="warning"
+                          onClick={() => props.openUModal(user)}
+                        >
+                          {LABEL.sys.edit}
+                        </Button>
+                        <Button
+                          color="failure"
+                          onClick={() => props.openDModal(user.id)}
+                        >
+                          {LABEL.sys.delete}
+                        </Button>
+                      </>
+                    ) : null}
                   </td>
                 </tr>
               ))

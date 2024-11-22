@@ -1,5 +1,5 @@
 const formatDate = (dateString: string) => {
-  const options: Object = {
+  const options: object = {
     day: '2-digit',
     month: '2-digit',
     year: 'numeric',
@@ -8,6 +8,9 @@ const formatDate = (dateString: string) => {
     // second: '2-digit',
     // hour12: false,
     dayStyle: 'short',
+  }
+  if (!dateString) {
+    return '-'
   }
   return new Date(dateString).toLocaleString('vi-VN', options)
 }

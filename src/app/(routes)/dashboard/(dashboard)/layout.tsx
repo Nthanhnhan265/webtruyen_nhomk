@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
-import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 // import 'bootstrap/dist/css/bootstrap.min.css';
+import { SidebarProvider } from '@/context/navigation/sidebar.context'
 import Sidebar from '../_components/sidebar'
 export const metadata: Metadata = {
   title: 'Dashboard',
@@ -13,30 +13,20 @@ export default function LoginLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
-      <body>
-        <div className="layout w-full lg:grid grid-cols-12 bg-[#f8f8f8]">
+    <>
+      <SidebarProvider>
+        <div className="layout w-full lg:grid grid-cols-12 bg-slate-500/5 backdrop-blur-2xl">
           {/* Render sidebar for dashboard */}
           <div className="  md:block md:col-span-3 lg:col-span-2">
             <Sidebar></Sidebar>
           </div>
           {/* header and container */}
-          <div className="w-full max-w-none md:col-span-9 lg:col-span-10 container px-2 md:px-6">
-            <ToastContainer
-              position="top-left"
-              autoClose={5000}
-              hideProgressBar={false}
-              newestOnTop={false}
-              closeOnClick
-              rtl={false}
-              pauseOnFocusLoss
-              draggable
-              pauseOnHover
-            />
+          <div className="w-full max-w-none md:col-span-9 lg:col-span-10 container px-4 md:px-6">
             {children}
           </div>
         </div>
-      </body>
-    </html>
+      </SidebarProvider>
+      <div className="w-96 h-96 fixed top-0 right-0 -z-[10] rounded-full"></div>
+    </>
   )
 }

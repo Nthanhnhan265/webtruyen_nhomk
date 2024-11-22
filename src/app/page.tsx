@@ -1,101 +1,174 @@
-import Image from "next/image";
+'use client'
+import { Avatar, Pagination } from 'flowbite-react'
+import Image from 'next/image'
+import { useEffect, useState } from 'react'
 
-export default function Home() {
+import { getAllStorieNew, getAllStorieView } from '@/app/api/story.api'
+import Footer from './(routes)/_component/footer'
+interface Story {
+  story_name: string
+  total_chapters: number
+  keywords: string
+  slug: string
+  cover: string
+}
+export default function HomePage() {
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
+  const [hotStories, setHotStories] = useState<Story[]>([])
+  const [newStories, setNewStories] = useState<Story[]>([])
+  const fetchStories = async () => {
+    const params = {
+      author_storie: '',
+      description: '',
+      sort: 'ASC',
+      page: currentPage,
+    }
+    try {
+      const response = await getAllStorieView(params)
+      const responseNew = await getAllStorieNew(params)
+      setNewStories(responseNew.stories || [])
+      setHotStories(response.stories || [])
+      setTotalPages(response.totalPages || 1)
+    } catch (error) {
+      console.error('Error fetching stories:', error)
+    }
+  }
+
+  const handleRead = (slug: string) => {
+    window.location.href = `/stories/${slug}`
+  }
+  const onPageChange = (page: number) => {
+    setCurrentPage(page)
+  }
+  // asjjsa
+  useEffect(() => {
+    fetchStories()
+  }, [currentPage])
+  // const { userProfile, accessToken } = await useProfile()
+  // console.log(userProfile)
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <div className="bg-gray-100 min-h-screen">
+      {/* Featured Image Section */}
+      <section className="py-8 bg-white">
+        <div className="container mx-auto">
+          <h2 className="text-2xl font-bold mb-4 ms-48 text-gray-900 ">
+            TRUYỆN HOT 🔥
+          </h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 px-3 md:px-5 lg:px-40">
+            {' '}
+            {/* Giảm gap ở đây */}
+            {hotStories.map((story, index) => (
+              <div
+                key={index}
+                onClick={() => handleRead(story.slug)}
+                className="cursor-pointer"
+              >
+                <div className="relative w-[140px] h-[200px] mx-auto">
+                  {story?.cover ? (
+                    <Image
+                      src={`http://localhost:3000/${story.cover}`}
+                      alt={story.story_name || 'Story Image'}
+                      fill
+                      className="rounded-md shadow object-cover"
+                    />
+                  ) : (
+                    <Avatar className="w-full h-full rounded-md shadow object-cover" />
+                  )}
+                </div>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+                <p
+                  className="text-center mt-2 text-sm font-medium text-gray-800 truncate"
+                  title={story.story_name || 'No Title'} // Hiển thị tên đầy đủ khi hover
+                >
+                  {story.story_name || 'No Title'}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </section>
+
+      {/* Latest Updates Section */}
+      <section className="py-8 px-5 md:px-10 lg:mx-10 lg:px-20 min-h-20">
+        <div className="container mx-auto">
+          <h2 className="text-2xl font-semibold mb-4 lg:ms-20">
+            Truyện Mới Cập Nhật
+          </h2>
+          <div className="bg-white rounded shadow-lg px-10 mx-20">
+            <div className="divide-y divide-gray-200">
+              {newStories.map((story, i) => (
+                <div
+                  key={i}
+                  className="flex items-center justify-between p-4"
+                  onClick={() => handleRead(story.slug)}
+                >
+                  <span className="text-gray-700 font-semibold">
+                    {story.story_name || 'No Title'}
+                  </span>
+                  <span className="text-gray-500">
+                    {story.keywords || 'No Keywords'}
+                  </span>
+                  <span className="text-red-500">
+                    {story.total_chapters
+                      ? `${story.total_chapters} Chương`
+                      : '0'}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Pagination */}
+      <div className="flex overflow-x-auto justify-center mt-4 px-5 md:px-10 lg:px-20">
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={onPageChange}
+        />
+      </div>
+      <section className="py-8 px-5 md:px-10 lg:mx-28 lg:px-20 min-h-20">
+        <div className="">
+          <b> Web đọc truyện online hay và cập nhật mới nhất - TruyenChom.vn</b>
+        </div>
+        Trang web dành cho những tín đồ mê đọc truyện online đêm khuya với các
+        thể loại hot nhất hiện nay như là đọc truyện ngôn tình, đọc truyện ma,
+        truyện tiên hiệp, kiếm hiệp. Tất cả được truyenchom cập nhật thường
+        xuyên từ các dịch giả truyện chuyên nghiệp và đăng tải hằng ngày.
+        <br />
+        <br />
+        Bạn đang tìm kiếm một trang web đọc truyện mới nhất? Bạn không biết đọc
+        truyện ở đâu? Nếu bạn đang loay hoay giữa hàng ngàn danh mục truyện, bạn
+        vẫn không biết nên đọc truyện gì hay nhất?
+        <br />
+        <br />
+        Nhưng đừng lo, đã có truyenchom cùng bạn đồng hành bạn qua những bộ
+        truyện full với hồi kết đẫm nước mắt, hay một cái kết viên mãn hài lòng.
+        Đến với truyenchom là đến với kho tàng truyện tranh khổng lồ, và không
+        ngừng cập nhật những xu hướng truyện đọc mới nhất. Để xứng đáng một
+        trang web đọc truyện miễn phí, giải trí hữu ích, thân thiện, nhanh nhất
+        và đầy đủ nhất. Tất cả mang đến một trải nghiệm tuyệt vời nhất cho bạn
+        đọc.
+        <br />
+        <br />
+        Nếu bạn là người đam mê những câu truyện võ hiệp, đấu kiếm thì các bộ
+        như “Kiếm động cửu thiên”, “Thế giới hoàn mỹ đồng”,…là những top truyện
+        kiếm hiệp hay nhất. Hay những câu truyện ma như “Kết hôn âm dương”,
+        “Hành tẩu âm dương” có làm bạn rùng mình, mất ngủ đêm khuya. Những cái
+        kết đẫm nước mắt của bộ truyện “ngôn tình hoàn”, “ngôn tình ngược” sẽ
+        làm bạn có suy nghĩ khác đi về tình yêu đôi lứa.
+        <br />
+        <br />
+        Ngoài ra, truyenchom còn tổng hợp những truyện tuổi thơ, truyện teen như
+        Once peace, Doraemon,…để đây sẽ là trang web đọc truyện dành cho cả gia
+        đình, và không giới hạn lứa tuổi. Với phương châm “bạn đọc vui, chúng
+        tôi vui” thì truyenchom sẽ luôn phát triển và cập nhật những mẫu truyện
+        hay và miễn phí mới nhất vì đọc giả thân yêu. Chúc bạn có những phút
+        giây giải trí bên bộ truyện mình ưng ý.
+      </section>
+      <Footer></Footer>
     </div>
-  );
+  )
 }
