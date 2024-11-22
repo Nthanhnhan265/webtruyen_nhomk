@@ -8,7 +8,7 @@ import {
 } from '@/app/api/user.api'
 import { AxiosError } from 'axios'
 import { Button, Label, Pagination, Select } from 'flowbite-react'
-import { redirect, useRouter } from 'next/navigation'
+import { redirect } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { GoPlus } from 'react-icons/go'
 import { toast } from 'react-toastify'

@@ -12,7 +12,7 @@ interface IUser {
   created_at: string
 }
 interface ILoggedinUser {
-  id: string | undefined
+  id: id | string | undefined
   username: string | undefined
   email: string | undefined
   avatar: string | undefined

@@ -1,4 +1,5 @@
 import { cookies } from 'next/headers'
+
 import { handleGetProfileInfo } from '../../auth/auth.services'
 
 /** RETURN PROFILE OF USER
@@ -6,12 +7,10 @@ import { handleGetProfileInfo } from '../../auth/auth.services'
  * chỉ dùng cho server components
  * @returns userProfie
  */
-export default function useProfile() {
+export default async function useProfile() {
   const cookieStore = cookies()
   const accessToken = cookieStore.get('accessToken')?.value
-  async function getProfile() {
-    return await handleGetProfileInfo(accessToken || '')
-  }
-  const userProfile = getProfile()
+  const userProfile = await handleGetProfileInfo(accessToken || '')
+
   return { userProfile, accessToken }
 }

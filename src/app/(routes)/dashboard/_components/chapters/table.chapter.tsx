@@ -1,6 +1,5 @@
 import formatDate from '@/components/ulti/formatDate'
 import { Button } from 'flowbite-react'
-import { useState } from 'react'
 import { FaRegEye } from 'react-icons/fa'
 import LABEL from '../../label'
 import MESSAGE from '../../message'
@@ -13,7 +12,8 @@ interface Iprops {
 }
 export default function ChapterTable(props: Iprops) {
   //====Declare variables, hooks==========//
-  const { openDeleteModal, closeDeleteModal } = useDeleteModal()
+  // const [imageErrors, setImageErrors] = useState<{ [key: number]: boolean }>({})
+  const { openDeleteModal } = useDeleteModal()
   const router = useRouter()
 
   //==========Handle Function============//

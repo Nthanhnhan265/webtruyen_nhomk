@@ -2,7 +2,7 @@ import axios, { AxiosError } from 'axios'
 import MESSAGE from '../app/message'
 const apiNext = axios.create({
   baseURL: process.env.NEXT_API_URL,
-  timeout: 3000,
+  timeout: 3001,
 })
 const apiNode = axios.create({
   baseURL: process.env.NODE_API_URL,
@@ -16,9 +16,8 @@ const apiNode = axios.create({
  */
 async function handleLogin(email: string, password: string) {
   try {
-    const respone = await apiNode.post('/api/login', { email, password })
+    const respone = await apiNext.post('api/login', { email, password })
     const result = respone.data
-    console.log(result)
     if (!result.success) {
       throw new Error(result.message)
     }
@@ -36,13 +35,13 @@ async function handleLogin(email: string, password: string) {
  */
 async function handleGetProfileInfo(accessToken: string) {
   try {
+    // const accessToken = await getAccessToken()
     const respone = await apiNode.get('/auth/me', {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
     })
     const result = respone.data
-    // console.log(result)
     // console.log('called')
     if (!result.success) {
       throw new Error(result.message)
@@ -52,7 +51,8 @@ async function handleGetProfileInfo(accessToken: string) {
     // if (error instanceof AxiosError) {
     //   console.log(error)
     // }
-    console.log(error)
+    console.log('error56::', error)
+    // throw error
   }
 }
 

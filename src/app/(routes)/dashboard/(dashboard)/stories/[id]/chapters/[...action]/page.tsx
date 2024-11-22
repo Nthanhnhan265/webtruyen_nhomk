@@ -5,17 +5,15 @@ import { ChapterForm } from './chapter.form'
 export default async function CreateChapterPage({
   params,
 }: {
-  params: { id: number; action: Array<any> }
+  params: { id: number; action: Array<string> }
 }) {
   console.log('page called>>')
-  const { accessToken } = useProfile()
+  const { accessToken } = await useProfile()
   let chapter = null
   if (params.action[1] == 'update') {
-    console.log('<<ok>>', accessToken)
     try {
       const id = Number(params.action[0])
       chapter = await getChapterId(id, accessToken)
-      console.log('>>page: ', chapter)
     } catch (error) {
       if (error instanceof Error) {
         console.error(error.message)
@@ -48,6 +46,7 @@ export default async function CreateChapterPage({
       </>
     )
   } catch (error) {
+    console.error(error)
     redirect('/dashboard/stories')
   }
 }

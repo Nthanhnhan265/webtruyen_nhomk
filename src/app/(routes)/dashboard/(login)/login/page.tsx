@@ -1,9 +1,7 @@
 'use client'
 import useLogin from '@/hooks/users/useLogin'
-import { useUserContext } from '@/hooks/users/userUserContext'
 import { Button, Checkbox, Label, TextInput } from 'flowbite-react'
 import Link from 'next/link'
-
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { HiMail } from 'react-icons/hi'
@@ -17,7 +15,6 @@ interface ILoginForm {
   password: string
   rememberMe: boolean
 }
-
 export default function LoginAdminPage() {
   //================= Declares vars, hooks ==============//
   const {
@@ -27,7 +24,6 @@ export default function LoginAdminPage() {
   } = useForm<ILoginForm>()
   const { login, loading } = useLogin()
   const router = useRouter()
-
   //================= Handle function ====================//
   /** SUBMIT EMAIL AND PASSWORD
    *  Gửi email và password lên api và trả về kết quả
