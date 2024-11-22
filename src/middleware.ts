@@ -34,6 +34,7 @@ export async function middleware(request: NextRequest) {
           request.url,
         ),
       )
+
       expiredTokenResponse.cookies.delete('accessToken')
       return expiredTokenResponse
     }
@@ -44,6 +45,7 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL('/', request.url))
     }
   }
+
   return res
 }
 

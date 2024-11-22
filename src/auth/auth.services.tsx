@@ -36,7 +36,7 @@ async function handleLogin(email: string, password: string) {
 async function handleGetProfileInfo(accessToken: string) {
   try {
     // const accessToken = await getAccessToken()
-    const respone = await apiNode.get('/auth/me', {
+    const respone = await apiNode.get('/api/auth/me', {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
