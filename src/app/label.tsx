@@ -1,6 +1,7 @@
 const LABEL = {
   auth: {},
   sys: {
+    joinedAt: 'Ngày tham gia:',
     appName: 'Web Truyện',
     edit: 'Sửa',
     delete: 'Xóa',

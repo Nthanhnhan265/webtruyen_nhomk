@@ -19,14 +19,16 @@ interface ILoggedinUser {
 }
 interface IChapter {
   id: number
-  order: number
-  name: string
-  status: string
+  chapter_order: number
+  chapter_name: string
+  status: boolean
   views: number
   reviews: number
   comments: number
-  create_at: string
+  created_at: string
   published_at: string
+  content: string
+  slug: string
 }
 interface IAuthor {
   id: number
@@ -51,4 +53,10 @@ interface IDashboardUserForm {
   confirmPassword: string
   role_id: number
   status: string
+}
+
+interface IProfilePasswordChange {
+  currentPassword: string
+  newPassword: string
+  confirmPassword: string
 }

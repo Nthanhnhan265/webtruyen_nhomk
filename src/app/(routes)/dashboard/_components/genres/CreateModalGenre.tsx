@@ -27,7 +27,15 @@ const CreateModalGenre: React.FC<CreateModalGenreProps> = ({ show, onClose, onSu
             setErrors({});
         }
     }, [show]);
-
+    const generateSlug = (name: string) => {
+        return name
+            .normalize('NFD')
+            .toLowerCase() // Convert to lowercase
+            .trim() // Remove leading and trailing spaces
+            .replace(/[^\w\s-]/g, '') // Remove special characters
+            .replace(/\s+/g, '-') // Replace spaces with hyphens
+            .replace(/-+/g, '-'); // Avoid multiple consecutive hyphens
+    };
     // Validate input data
     const validateForm = () => {
         let isValid = true;
@@ -87,7 +95,11 @@ const CreateModalGenre: React.FC<CreateModalGenreProps> = ({ show, onClose, onSu
                         <label className="block mb-2">Tên thể loại</label>
                         <input
                             value={genre_name}
-                            onChange={(e) => setGenreName(e.target.value)}
+                            onChange={(e) => {
+                                setGenreName(e.target.value);
+                                setSlug(generateSlug(e.target.value))
+                            }
+                            }
                             className={`w-full p-2 border ${errors.genre_name ? 'border-red-500' : 'border-gray-300'} rounded`}
                             placeholder="Nhập tên thể loại"
                         />

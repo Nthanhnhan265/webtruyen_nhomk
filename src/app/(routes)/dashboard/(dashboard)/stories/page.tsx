@@ -1,7 +1,7 @@
 'use client'
 import UpdateStoryModal from '@/app/(routes)/dashboard/_components/story/UpdateStoryModal'
-import { deleteStory, getAllStories, getStoryById } from '@/app/_api/story.api'
-import { Button, Pagination } from 'flowbite-react'
+import { deleteStory, getAllStories, getStoryById } from '@/app/api/story.api'
+import { Avatar, Button, Pagination } from 'flowbite-react'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import { BsBoxArrowUpRight } from 'react-icons/bs'
@@ -23,17 +23,17 @@ interface Storie {
   slug: string
   created_at: string
   updated_at: string
+  Author: {
+    author_name: string
+  }
 }
-// import StoryModal from '../../_components/story/StoryModal'
-// import UpdateStoryModal from '../../_components/story/UpdateStoryModal'
-const storyPage = () => {
+const StoryPage = () => {
   //============ Declare variables and hooks ================//
   const [stories, setStories] = useState<Storie[]>([])
   const [modalState, setModalState] = useState<{
     type: 'create' | 'update' | null
     story: Storie | null
   }>({ type: null, story: null })
-
   const [sortOrder, setSortOrder] = useState('asc')
   const [sortBy, setSortBy] = useState('id')
   const [currentPage, setCurrentPage] = useState(1)
@@ -42,7 +42,7 @@ const storyPage = () => {
   const [showModalEdit, setShowModalEdit] = useState(false)
   const [storyIdToDelete, setStoryIdToDelete] = useState<number | null>(null)
   const [keyword, setKeyWord] = useState<string>('')
-  const [editingStory, setEditingStory] = useState(null) // State to hold the story being edited
+  const [editingStory, setEditingStory] = useState(null)
   const fetchStories = async () => {
     try {
       const response = await getAllStories({
@@ -76,13 +76,15 @@ const storyPage = () => {
       const response = await getStoryById(id)
 
       if (response?.data) {
-        setEditingStory(response.data) // Set the story to be edited
+        setEditingStory(response.data)
         setShowModalEdit(true)
       } else {
         toast.error('không tìm thấy id')
       }
     } catch (err) {
       toast.error('khong tìm thấy tryện')
+      console.log(err);
+
     }
   }
 
@@ -97,9 +99,13 @@ const storyPage = () => {
       setStories((prevStories) =>
         prevStories.filter((story) => story.id !== storyIdToDelete),
       )
+      toast.success('xóa thành công')
+
       // Update the stories state after successful deletion if needed
     } catch (err) {
       toast.error('xóa thất bại')
+      console.log(err);
+
     }
   }
   const handleCreateSuccess = () => {
@@ -202,19 +208,25 @@ const storyPage = () => {
                       </div>
                     </td>
                     <td className="px-2 flex justify-center text-sm">
-                      <Image
-                        alt=""
-                        src={`http://localhost:3000/${story.cover}`}
-                        width={103}
-                        height={133}
-                        className="my-2 h-full"
-                      />
+                      {story?.cover ? (
+                        <Image
+                          alt={story.story_name || 'Story Image'}
+                          src={`http://localhost:3000/${story.cover}`}
+                          width={103}
+                          height={133}
+                          className="my-2 h-full"
+                        />
+                      ) : (
+                        <Avatar className="my-2 h-full w-full"
+                        />
+                      )}
                     </td>
+
                     <td className="px-2 text-center text-sm">
                       {story.story_name}
                     </td>
                     <td className="px-2 text-center text-sm">
-                      {story.author_id}
+                      {story?.Author?.author_name ? story?.Author?.author_name : "không tìm thấy"}
                     </td>
                     <td className="px-2 text-center text-sm">
                       {story.status === 1 ? 'Đã xuất bản' : 'Chưa xuất bản'}
@@ -281,4 +293,5 @@ const storyPage = () => {
   )
 }
 
-export default storyPage
+export default StoryPage
+

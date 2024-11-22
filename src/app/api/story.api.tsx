@@ -8,8 +8,19 @@ const api = axios.create({
   baseURL: "http://localhost:3000/api", // API address
   timeout: 10000, // Timeout (milliseconds)
 });
-interface Genre {
-
+interface getAllStorieView {
+  author_storie: string
+  description: string
+  sort: number
+  page: number
+}
+interface getAllStories {
+  author_storie: string
+  description: string
+  story_name: string
+  sortBy: string
+  sort: number
+  page: number
 }
 //=======Create========//
 export const createStory = async (data: FormData, selectedGenre: any) => {
@@ -90,7 +101,7 @@ export const getAllStorieView = async ({
   description,
   sort,
   page,
-}) => {
+}: getAllStorieView) => {
   try {
     const response = await api.get(`/story/getAllStorieView`, {
       params: {
@@ -111,7 +122,7 @@ export const getAllStorieNew = async ({
   description,
   sort,
   page,
-}) => {
+}: getAllStories) => {
   try {
     // Use backticks for template literals
     const response = await api.get(`/story/getAllStorieNew`, {
@@ -134,7 +145,7 @@ export const getAllStories = async ({
   sortBy,
   sort,
   page,
-}) => {
+}: getAllStories) => {
   try {
     const response = await api.get(`/story`, {
       params: {
@@ -151,10 +162,27 @@ export const getAllStories = async ({
     throw error;
   }
 };
+export const getSearchStorie = async (
+  keyword: string,
+  page: number
+) => {
+  try {
+    const response = await api.get(`/story/search/${keyword}`, {
+      params: {
+        page,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching stories:", error);
+    throw error;
+  }
+};
 
 export const deleteStory = async (id: number) => {
   try {
     const response = await api.delete(`/story/delete/${id}`);
+    const deleteStoryId = await api.delete(`/chapters/handleDeleteStoryId/${id}`);
     return response.data;
   } catch (error) {
     console.error("Error deleting story:", error);
@@ -169,6 +197,7 @@ export default {
   getAllStorieNew,
   getStoryBySlug,
   createStory,
-  getStoryById
+  getStoryById,
+  getSearchStorie
 }
 

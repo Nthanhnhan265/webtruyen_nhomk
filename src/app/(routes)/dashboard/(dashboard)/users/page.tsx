@@ -43,7 +43,6 @@ const UserPage = () => {
   ]
   const MAXIMUM_RECORDS = 10
   //===================== Handle hooks ======================//
-  const router = useRouter()
   useEffect(() => {
     const fetchUsers = async () => {
       try {

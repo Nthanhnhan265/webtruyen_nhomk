@@ -3,17 +3,17 @@ import { Button, Modal } from 'flowbite-react'
 import { HiOutlineExclamationCircle } from 'react-icons/hi'
 import LABEL from '../../../label'
 //============DELETE=================//
-interface IDeleteModalProps {
-  isOpenDModal: number
+interface IDeleteModalProps<T> {
+  isOpenDModal: T
   closeDModal: () => void
-  onDelete: (id: number) => void
+  onDelete: (selected: T) => void
   message: string
 }
-function DeleteModal(prop: IDeleteModalProps) {
+function DeleteModal(prop: IDeleteModalProps<IChapter>) {
   return (
     <>
       <Modal
-        show={prop.isOpenDModal != -1}
+        show={prop.isOpenDModal ? true : false}
         size="md"
         onClose={prop.closeDModal}
         popup

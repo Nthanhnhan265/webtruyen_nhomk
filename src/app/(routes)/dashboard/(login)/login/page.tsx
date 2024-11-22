@@ -25,7 +25,6 @@ export default function LoginAdminPage() {
     formState: { errors },
     handleSubmit,
   } = useForm<ILoginForm>()
-  const { loggedInUser } = useUserContext()
   const { login, loading } = useLogin()
   const router = useRouter()
 
@@ -69,7 +68,6 @@ export default function LoginAdminPage() {
             id="email"
             type="email"
             icon={HiMail}
-            value={'userexampl2e@gmail.com'}
             placeholder={LABEL.user.enterEmail}
             {...register('email', {
               required: MESSAGE.auth.emailRequired,

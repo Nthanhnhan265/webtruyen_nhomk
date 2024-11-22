@@ -5,7 +5,6 @@ import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { FcGoogle } from 'react-icons/fc'
-import NavbarComponent from '../../../components/navbar'
 import useLogin from '../../../hooks/users/useLogin'
 import Footer from '../_component/footer'
 
@@ -25,6 +24,7 @@ const Login = () => {
   } = useForm<FormData>() // Sử dụng FormData làm kiểu cho useForm
   const router = useRouter()
   const { login, loading } = useLogin()
+
   // Định nghĩa hàm onSubmit với kiểu SubmitHandler của FormData
   const onSubmit: SubmitHandler<FormData> = async (data: FormData) => {
     // try {
@@ -63,7 +63,6 @@ const Login = () => {
     //   }
     // }
     try {
-
       await login(data.email, data.password)
       // toast.success(MESSAGE.auth.loginSuccess)
       console.log('login ok')
@@ -78,7 +77,6 @@ const Login = () => {
 
   return (
     <>
-      <NavbarComponent></NavbarComponent>
       <div className="min-h-screen flex items-center justify-center bg-white">
         <div className="bg-white rounded-lg p-6 flex">
           {/* Form Đăng Nhập */}

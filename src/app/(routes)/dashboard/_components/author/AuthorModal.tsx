@@ -39,7 +39,7 @@ const AuthorModal: React.FC<AuthorModalProps> = ({
   // Validate form data
   const validateForm = () => {
     let isValid = true
-    let formErrors: FormErrors = {}
+    const formErrors: FormErrors = {}
 
     // Validate author name
     if (!author_name) {
@@ -68,14 +68,14 @@ const AuthorModal: React.FC<AuthorModalProps> = ({
 
     // Validate description (optional, but must be less than 500 characters)
     if (
-      description.length > 500 ||
-      /[^a-zA-Z0-9\sàáạảãâầấậẩẫèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữđ]/.test(
-        description,
-      )
+      !description.trim() || // Check if empty
+      description.length > 500 || // Check if too long
+      /[^a-zA-Z0-9\sàáạảãâầấậẩẫèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữđ]/.test(description) // Check for invalid characters
     ) {
-      formErrors.description = 'Vui lòng nhập mô tả hợp lệ (1 - 500 ký tự).'
-      isValid = false
+      formErrors.description = 'Vui lòng nhập mô tả hợp lệ (1 - 500 ký tự, không chứa ký tự đặc biệt).';
+      isValid = false;
     }
+
 
     setErrors(formErrors)
     return isValid
@@ -96,7 +96,15 @@ const AuthorModal: React.FC<AuthorModalProps> = ({
   const handleCancel = () => {
     onClose()
   }
-
+  const generateSlug = (name: string) => {
+    return name
+      .normalize('NFD')
+      .toLowerCase() // Convert to lowercase
+      .trim() // Remove leading and trailing spaces
+      .replace(/[^\w\s-]/g, '') // Remove special characters
+      .replace(/\s+/g, '-') // Replace spaces with hyphens
+      .replace(/-+/g, '-'); // Avoid multiple consecutive hyphens
+  };
   // Return null if modal is not visible
   if (!show) return null
 
@@ -109,10 +117,12 @@ const AuthorModal: React.FC<AuthorModalProps> = ({
             <label className="block mb-2">Tên tác giả</label>
             <input
               value={author_name}
-              onChange={(e) => setAuthorName(e.target.value)}
-              className={`w-full p-2 border ${
-                errors.author_name ? 'border-red-500' : 'border-gray-300'
-              } rounded`}
+              onChange={(e) => {
+                setAuthorName(e.target.value)
+                setSlug(generateSlug(e.target.value))
+              }}
+              className={`w-full p-2 border ${errors.author_name ? 'border-red-500' : 'border-gray-300'
+                } rounded`}
               placeholder="Nhập tên tác giả"
             />
             {errors.author_name && (
@@ -124,9 +134,8 @@ const AuthorModal: React.FC<AuthorModalProps> = ({
             <input
               value={slug}
               onChange={(e) => setSlug(e.target.value)}
-              className={`w-full p-2 border ${
-                errors.slug ? 'border-red-500' : 'border-gray-300'
-              } rounded`}
+              className={`w-full p-2 border ${errors.slug ? 'border-red-500' : 'border-gray-300'
+                } rounded`}
               placeholder="tac-gia/..."
             />
             {errors.slug && <p className="text-red-500">{errors.slug}</p>}
@@ -136,9 +145,8 @@ const AuthorModal: React.FC<AuthorModalProps> = ({
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className={`w-full p-2 border ${
-                errors.description ? 'border-red-500' : 'border-gray-300'
-              } rounded`}
+              className={`w-full p-2 border ${errors.description ? 'border-red-500' : 'border-gray-300'
+                } rounded`}
               rows={5}
               placeholder="Mô tả không vượt quá 500 ký tự"
             ></textarea>
