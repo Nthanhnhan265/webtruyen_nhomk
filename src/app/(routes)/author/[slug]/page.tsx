@@ -116,8 +116,10 @@ const AuthorPage = () => {
                     />
                   </div>
                   <div className="col-span-1 sm:col-span-9">
+                  {/* sang trang chi tiết truyện */}
                     <Link href={`/story/${book.story_slug}`} className={styles.hoverNameTitle}>{book.story_name}</Link>
                     <br />
+                     {/* sang trang tác giả */}
                     <span>Tác giả:</span>
                     <Link className={styles.hoverName} href={`/author/${author.slug}`}>{authorName}</Link>
                     <br />
@@ -148,7 +150,7 @@ const AuthorPage = () => {
         {/* Footer */}
        <footer className="bg-gray-100 p-4 grid grid-cols-1 sm:grid-cols-2 mt-5 pl-4 sm:pl-14 ml-12">
          <div className="mb-4 sm:mb-0">
-           Truyện Plus – Trang đọc truyện online, thường xuyên cập nhật những bộ truyện hay nhất thuộc các thể loại đặc sắc như: truyện ngôn tình, truyện tiên hiệp, truyện kiếm hiệp, truyện đam mỹ, light novel…
+           Truyện Plus – Trang đọc truyện online, thường xuyên cập nhật những bộ truyện hay nhất thuộc các thể loại đặc sắc như: action , adventure , romance…
            <br />
            Mọi vấn đề vi phạm bản quyền vui lòng liên hệ qua email: <span className={styles.textFoot}>truyenchomonline@gmail.com</span>
          </div>
