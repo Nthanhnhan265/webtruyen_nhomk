@@ -1,11 +1,11 @@
 import axios, { AxiosError } from 'axios'
 import MESSAGE from '../app/message'
 const apiNext = axios.create({
-  baseURL: process.env.NEXT_API_URL,
+  baseURL: 'http://localhost:3001',
   timeout: 3001,
 })
 const apiNode = axios.create({
-  baseURL: process.env.NODE_API_URL,
+  baseURL: 'http://localhost:3000/',
   timeout: 3000,
 })
 /** Handle login
