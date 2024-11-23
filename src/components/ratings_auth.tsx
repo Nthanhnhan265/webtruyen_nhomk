@@ -100,7 +100,7 @@ const RatingComponent = ({ storyId }: { storyId: number }) => {
       {successMessage && <p className="text-green-500">{successMessage}</p>}
       {loading && <p>Đang tải...</p>}
 
-      <ul className="space-y-4">
+      {/* <ul className="space-y-4">
         {ratings.length > 0 &&
           ratings.map((rating, index) => (
             <li key={index} className="border p-4 rounded-md shadow">
@@ -110,7 +110,7 @@ const RatingComponent = ({ storyId }: { storyId: number }) => {
               <p>{rating?.comment ?? "Không có nhận xét"}</p>
             </li>
           ))}
-      </ul>
+      </ul> */}
 
       <div className="mt-4">
         <h3 className="text-lg font-bold">Thêm đánh giá mới</h3>
