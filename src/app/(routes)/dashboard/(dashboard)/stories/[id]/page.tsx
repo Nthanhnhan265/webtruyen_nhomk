@@ -11,6 +11,7 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { BiBarChartAlt } from 'react-icons/bi'
 import { BsTags } from 'react-icons/bs'
+import { CiImageOff } from 'react-icons/ci'
 import { FaRegEye } from 'react-icons/fa'
 import { GoCommentDiscussion } from 'react-icons/go'
 import { LuBadgeInfo } from 'react-icons/lu'
@@ -21,7 +22,7 @@ import MESSAGE from '../../../message'
 export default function DetailStory({ params }: { params: { id: number } }) {
   //====================== DECLARE VARIABLES, HOOKS ==========================//
   const [isExpand, setIsExpand] = useState<boolean>(false)
-  const [sortBy, setSortBy] = useState<string>('id')
+  const [sortBy, setSortBy] = useState<string>('chapter_order')
   const [orderBy, setOrderBy] = useState<string>('DESC')
   const [keyword, setKeyWord] = useState<string>('')
   const [currentPage, setCurrentPage] = useState<number>(1)
@@ -30,7 +31,7 @@ export default function DetailStory({ params }: { params: { id: number } }) {
     cover: string
     story_name: string
     author_id: number
-    Author: { author_name: string }
+    author: { author_name: string }
     genres: Array<{ id: number; genre_name: string }>
     status: string
     totalChapters: number
@@ -47,7 +48,7 @@ export default function DetailStory({ params }: { params: { id: number } }) {
     totalPages: number
   }>()
   const [chapters, setChapters] = useState<Array<IChapter>>()
-
+  const [imageErrors, setImageErrors] = useState<boolean>(false)
   const router = useRouter()
   const { setMessage, setHandleDelete, closeDeleteModal } = useDeleteModal()
   useEffect(() => {
@@ -82,12 +83,15 @@ export default function DetailStory({ params }: { params: { id: number } }) {
       setChapters(result.chapters)
     } catch (error) {
       toast.error(MESSAGE.sys.fetchError)
+
       console.error(error)
+      router.push('/dashboard/stories')
     }
   }
 
   useEffect(() => {
     fetchChapters(true)
+    console.log(imageErrors)
   }, [])
 
   useEffect(() => {
@@ -118,7 +122,6 @@ export default function DetailStory({ params }: { params: { id: number } }) {
   useEffect(() => {
     setHandleDelete(() => handleDelete)
   }, [])
-
   return (
     <>
       <Header handleSearch={(keyword: string) => setKeyWord(keyword)}></Header>
@@ -127,13 +130,27 @@ export default function DetailStory({ params }: { params: { id: number } }) {
         (name, author, genres, status, number of views, number of reviews, number of comments) */}
         <div className="w-full flex flex-col sm:flex-row">
           {/* cover */}
-          <Image
-            src={'http://localhost:3000/' + story?.cover || ''}
-            alt="story-cover"
-            width={143}
-            height={186}
-            className="shadow-lg mb-2 sm:mb-0 md:w-1/6 me-6"
-          ></Image>
+          {!imageErrors ? (
+            <Image
+              src={'http://localhost:3000/' + story?.cover}
+              alt="avatar"
+              width={400}
+              height={400}
+              className="basis-2/12 md:mx-2 h-auto z-[1]"
+              onError={() => {
+                setImageErrors(true)
+              }}
+            />
+          ) : (
+            <div className="px-14 mx-3 flex bg-black/5 justify-center items-center">
+              <div className="rounded-full bg-black/5 w-7 h-7 mx-auto leading-7">
+                <div className="h-full flex justify-center items-center">
+                  <CiImageOff />
+                </div>
+              </div>
+            </div>
+          )}
+
           <ul className="flex flex-col gap-2 text-black/70">
             {/* story name */}
             <li className="me-5">
@@ -144,7 +161,7 @@ export default function DetailStory({ params }: { params: { id: number } }) {
             {/* author */}
             <li className="flex items-center gap-3">
               <TbUserPentagon /> {LABEL.story.author}:{' '}
-              {story?.Author.author_name}
+              {story?.author.author_name}
             </li>
             {/* genres */}
             <li className="flex items-center gap-3">
@@ -236,7 +253,7 @@ export default function DetailStory({ params }: { params: { id: number } }) {
                   required
                   className=""
                   onChange={(e) => handleChangeSortBy(e)}
-                  defaultValue="chapter_order"
+                  defaultValue={sortBy}
                 >
                   {sortableProps.map((property) => (
                     <option
@@ -253,6 +270,7 @@ export default function DetailStory({ params }: { params: { id: number } }) {
                   name="order"
                   required
                   className=""
+                  defaultValue={orderBy}
                   onChange={(e) => handleChangeOrderBy(e)}
                 >
                   <option value="ASC">{LABEL.sys.ASC}</option>

@@ -2,13 +2,14 @@
 
 import LABEL from '@/app/(routes)/dashboard/label'
 import { createChapter, updateChapter } from '@/app/api/chapter.api'
+import { getStories } from '@/app/api/story.api'
 import MESSAGE from '@/app/message'
 import TextEditor from '@/components/editor/editor'
 import formatDate from '@/components/ulti/formatDate'
 import { Button, Label, Select, TextInput } from 'flowbite-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { HiCheck, HiX } from 'react-icons/hi'
 import { IoCaretForwardSharp } from 'react-icons/io5'
@@ -30,11 +31,11 @@ export function ChapterForm({
 }) {
   //========================== DECLARES VARS, HOOKS =========================//
   const isEditMode = !initialData ? false : true
-  console.log('form>>', initialData)
   const { register, handleSubmit, setValue, watch, reset } = useForm<IChapter>({
     defaultValues: initialData || {},
   })
   const router = useRouter()
+  const [storyName, setStoryName] = useState<string>('')
   const chapterName = watch('chapter_name')
   // Auto-generate slug from chapter name
   useEffect(() => {
@@ -48,7 +49,16 @@ export function ChapterForm({
     if (initialData) {
       reset(initialData)
     }
-  }, [initialData, reset])
+    async function getStoryName() {
+      if (story_id && !storyName) {
+        try {
+          const result = await getStories(story_id)
+          setStoryName(result.data.story_name)
+        } catch (error) {}
+      }
+    }
+    getStoryName()
+  }, [initialData, reset, storyName])
   //========================== HANDLE FUNCTIONS =========================//
   /** HANDLE SUBMIT FORM
    * @param data
@@ -90,12 +100,12 @@ export function ChapterForm({
   }
 
   //========================== RENDER COMPONENTS =========================//
-
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
       className=""
     >
+      <h2 className="text-3xl opacity-90 uppercase">{storyName}</h2>
       <div className="flex justify-between mb-10">
         <div className="flex mt-2 gap-1 items-center capitalize text-xl font-medium opacity-50">
           <IoCaretForwardSharp />{' '}

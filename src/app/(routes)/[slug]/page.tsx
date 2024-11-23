@@ -25,7 +25,6 @@ interface genre {
     genre_name: string
 }
 const GenrePage = ({ params }: { params: { slug: string } }) => {
-    // const { slug } = useParams()
     const [stories, setStories] = useState<Story[]>([]) // Holds the stories for the current page
     const [totalPages, setTotalPages] = useState(0) // Total number of pages
     const [currentPage, setCurrentPage] = useState(1) // Current page

@@ -17,7 +17,7 @@ interface Chapter {
 }
 interface ModalProps {
   isOpen: boolean
-  data: number // Assuming data is a story ID (number)
+  data: number
   closeModal: () => void
   selectChapter: (chapterSlug: string) => void // Function that takes a chapterSlug
 }

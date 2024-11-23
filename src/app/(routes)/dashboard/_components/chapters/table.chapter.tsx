@@ -29,7 +29,7 @@ export default function ChapterTable(props: Iprops) {
       >
         <thead>
           <tr className="bg-white capitalize">
-            <th className="py-4 px-3 text-sm ">{LABEL.sys.id}</th>
+            {/* <th className="py-4 px-3 text-sm ">{LABEL.sys.id}</th> */}
             <th className="py-4 px-2 text-sm">
               {LABEL.chapter.chapterOrderLabel}
             </th>
@@ -52,7 +52,7 @@ export default function ChapterTable(props: Iprops) {
                 className="bg-white"
                 key={chapter.id}
               >
-                <td className="py-2 px-3  text-center text-sm">{chapter.id}</td>
+                {/* <td className="py-2 px-3  text-center text-sm">{chapter.id}</td> */}
                 {/* whitespace-nowrap overflow-hidden text-ellipsis max-w-xs */}
                 <td className="py-2 px-2 text-sm text-center">
                   {chapter.chapter_order}

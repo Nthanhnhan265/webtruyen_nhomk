@@ -32,11 +32,10 @@ interface Story {
 const page = ({ params }: { params: { slug: string } }) => {
   const [story, setStory] = useState<Story | null>(null)
   const [chapters, setChapters] = useState<Chapter[]>([])
-  // State for chapters
+
   const [currentPage, setCurrentPage] = useState<number>(1) // State for current page
   const [totalPages, setTotalPages] = useState<number>(1) // State for total pages
   const { slug } = params // Lấy slug từ params của route
-  // const URL = `${}`;
 
   useEffect(() => {
     // Log thông tin slug khi thay đổi
