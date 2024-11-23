@@ -3,9 +3,15 @@ import { Avatar, Pagination } from 'flowbite-react'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
 
-import { getAllStorieNew, getAllStorieView } from '@/app/api/story.api'
+import {
+  getAllStorieNew,
+  getAllStorieView,
+  incrementStoryViews,
+} from '@/app/api/story.api'
+import { toast } from 'react-toastify'
 import Footer from './(routes)/_component/footer'
 interface Story {
+  id: number
   story_name: string
   total_chapters: number
   keywords: string
@@ -35,8 +41,14 @@ export default function HomePage() {
     }
   }
 
-  const handleRead = (slug: string) => {
+  const handleRead = async (slug: string, id: number) => {
     window.location.href = `/stories/${slug}`
+    const view = await incrementStoryViews(id)
+    console.log(view)
+
+    if (!view) {
+      toast.error('lỗi khi tăng view')
+    }
   }
   const onPageChange = (page: number) => {
     setCurrentPage(page)
@@ -61,7 +73,7 @@ export default function HomePage() {
             {hotStories.map((story, index) => (
               <div
                 key={index}
-                onClick={() => handleRead(story.slug)}
+                onClick={() => handleRead(story.slug, story.id)}
                 className="cursor-pointer"
               >
                 <div className="relative w-[140px] h-[200px] mx-auto">
@@ -100,8 +112,8 @@ export default function HomePage() {
               {newStories.map((story, i) => (
                 <div
                   key={i}
-                  className="flex items-center justify-between p-4 cursor-pointer"
-                  onClick={() => handleRead(story.slug)}
+                  className="cursor-pointer flex items-center justify-between p-4"
+                  onClick={() => handleRead(story.slug, story.id)}
                 >
                   <span className="text-gray-700 font-semibold">
                     {story.story_name || 'No Title'}

@@ -105,6 +105,8 @@ const AuthorPage = () => {
         setSelectedGenre(response.data)
         setShowUpdateModal(true)
       }
+      console.log(response);
+
     } catch (err) {
       toast.error('thể loại không tồn tại')
       console.log(err);
