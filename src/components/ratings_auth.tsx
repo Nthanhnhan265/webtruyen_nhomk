@@ -45,17 +45,16 @@ const RatingComponent = ({ storyId }: { storyId: number }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setLoading(true);
-        // Giả sử fetchRatingsByStory trả về một mảng các đánh giá hợp lệ
+        // setLoading(true);
         // const data = await fetchRatingsByStory(storyId);
         // if (data?.ratings && Array.isArray(data.ratings)) {
         //   // Kiểm tra dữ liệu đánh giá trước khi set
         //   const validRatings = data.ratings.filter((rating: any) => rating.star && rating.comment);
         //   setRatings(validRatings);
         // } else {
-        //   setRatings([]); // Nếu không có đánh giá nào hoặc không có dữ liệu hợp lệ
+        //   setRatings([]);
         // }
-        setLoading(false);
+        // setLoading(false);
       } catch (err: any) {
         setError("Không thể tải đánh giá. Vui lòng thử lại!");
         setLoading(false);
@@ -101,7 +100,7 @@ const RatingComponent = ({ storyId }: { storyId: number }) => {
       {successMessage && <p className="text-green-500">{successMessage}</p>}
       {loading && <p>Đang tải...</p>}
 
-      <ul className="space-y-4">
+      {/* <ul className="space-y-4">
         {ratings.length > 0 &&
           ratings.map((rating, index) => (
             <li key={index} className="border p-4 rounded-md shadow">
@@ -111,7 +110,7 @@ const RatingComponent = ({ storyId }: { storyId: number }) => {
               <p>{rating?.comment ?? "Không có nhận xét"}</p>
             </li>
           ))}
-      </ul>
+      </ul> */}
 
       <div className="mt-4">
         <h3 className="text-lg font-bold">Thêm đánh giá mới</h3>
