@@ -40,7 +40,7 @@ export default function Header(prop: IHeaderProp) {
           <Avatar
             className="shadow items-center"
             status="online"
-            img={'http://localhost:3001/' + loggedInUser.avatar}
+            img={'http://localhost:3000/' + loggedInUser.avatar}
           ></Avatar>
           <button
             onClick={() => {

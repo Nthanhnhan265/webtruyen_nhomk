@@ -100,7 +100,7 @@ export default function HomePage() {
               {newStories.map((story, i) => (
                 <div
                   key={i}
-                  className="flex items-center justify-between p-4"
+                  className="flex items-center justify-between p-4 cursor-pointer"
                   onClick={() => handleRead(story.slug)}
                 >
                   <span className="text-gray-700 font-semibold">
