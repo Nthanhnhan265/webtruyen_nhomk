@@ -1,41 +1,47 @@
 'use client'
+import useLogin from '@/hooks/users/useLogin'
 import { Button, Checkbox, Label, TextInput } from 'flowbite-react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { HiMail } from 'react-icons/hi'
 import { MdOutlineLockPerson } from 'react-icons/md'
 import { RiShieldUserFill } from 'react-icons/ri'
+import { toast } from 'react-toastify'
 import LABEL from '../../label'
 import MESSAGE from '../../message'
-
 interface ILoginForm {
   email: string
   password: string
   rememberMe: boolean
 }
-interface ILoginAdminProps {
-  onSubmit: (form: ILoginForm) => void
-}
-export default function LoginAdminPage(prop: ILoginAdminProps) {
+export default function LoginAdminPage() {
   //================= Declares vars, hooks ==============//
   const {
-    getValues,
-    setValue,
     register,
     formState: { errors },
-    reset,
     handleSubmit,
   } = useForm<ILoginForm>()
-  //=================Handle function ====================//
-  /**
-   *
+  const { login, loading } = useLogin()
+  const router = useRouter()
+  //================= Handle function ====================//
+  /** SUBMIT EMAIL AND PASSWORD
+   *  Gửi email và password lên api và trả về kết quả
    * @param data
    */
-  const onSubmit = (data: ILoginForm) => {
-    console.log(data)
-    // prop.onSubmit(data) // Gọi hàm handleSubmit được truyền từ props với dữ liệu form
+  const onSubmit = async (data: ILoginForm) => {
+    try {
+      await login(data.email, data.password)
+      toast.success(MESSAGE.auth.loginSuccess)
+      return router.push('/dashboard')
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message)
+      }
+    }
   }
-  //=================Render page=========================//
+
+  //================= Render page =========================//
   return (
     <div className="flex justify-center">
       <form
@@ -108,6 +114,7 @@ export default function LoginAdminPage(prop: ILoginAdminProps) {
           type="submit"
           gradientDuoTone="purpleToBlue"
           className="mx-8 mt-2 shadow-md shadow-black/30"
+          disabled={loading}
         >
           {LABEL.sys.loginLabel}
         </Button>

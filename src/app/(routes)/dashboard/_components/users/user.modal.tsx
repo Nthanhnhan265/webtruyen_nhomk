@@ -28,8 +28,8 @@ interface IModalProps {
 
 function UserModal(prop: IModalProps) {
   // ===================== Declare hooks, variables ==================//
-  const [avatarFile, setAvatarFile] = useState<any>()
-  const [imageErrors, setImageErrors] = useState<Boolean>(false)
+  const [avatarFile, setAvatarFile] = useState()
+  const [imageErrors, setImageErrors] = useState<boolean>(false)
   const {
     register,
     handleSubmit,

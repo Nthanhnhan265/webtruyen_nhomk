@@ -1,41 +1,86 @@
 'use client'
+import useUtil from '@/hooks/utils/useUtil'
+import axios from 'axios'
 import {
   createContext,
   Dispatch,
   ReactNode,
   SetStateAction,
-  useContext,
+  useEffect,
   useState,
 } from 'react'
-
 interface IpropLoggedInUer {
   loggedInUser: ILoggedinUser
   setIsLoggedInUser: Dispatch<SetStateAction<ILoggedinUser>>
 }
-/** CREATE CONTEXT FOR SIDEBAR
+/** CREATE CONTEXT FOR LOGGED IN USER
  * Tại và khai báo trạng thái mặt định cho Context
  */
-const sideContext = createContext<IpropLoggedInUer>({
-  loggedInUser: { userId: -1, username: '', email: '', token: '' },
+export const userContext = createContext<IpropLoggedInUer>({
+  loggedInUser: {
+    username: undefined,
+    email: undefined,
+    //  token: '',
+    avatar: undefined,
+    id: undefined,
+  },
   setIsLoggedInUser: () => {},
 })
-/** SIDEBAR PROVIDER
+/** USER PROVIDER
  * Tạo ra nơi cung cấp dữ liệu cho toàn bộ con được bọc bên trong
  * @param ()
  * @returns
  */
-export function SidebarProvider({ children }: { children: ReactNode }) {
-  const [loggedInUser, setIsLoggedInUser] = useState<ILoggedinUser>()
+
+export function UserProvider({ children }: { children: ReactNode }) {
+  const { getCookie } = useUtil()
+  const [loggedInUser, setIsLoggedInUser] = useState<ILoggedinUser>({
+    username: undefined,
+    email: undefined,
+    //  token: '',
+    avatar: undefined,
+    id: undefined,
+  })
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const token = getCookie('accessToken')
+        if (token) {
+          const response = await axios.get('/api/auth/me', {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true,
+          })
+          const result = await response.data.data
+          if (result) {
+            const {
+              username,
+              avatar,
+              email,
+              id,
+            }: { username: string; avatar: string; email: string; id: number } =
+              result
+            console.log(username, avatar, email, id)
+            setIsLoggedInUser({
+              username: username,
+              avatar: avatar,
+              email: email,
+              id: id,
+            })
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error)
+      }
+    }
+
+    fetchUserData()
+  }, [])
+
   const value = {
     loggedInUser: loggedInUser,
     setIsLoggedInUser: setIsLoggedInUser,
   }
-  return <sideContext.Provider value={value}>{children}</sideContext.Provider>
-}
-/** SIDE BAR CONTEXT
- * @returns {IpropLoggedInUer} - Trả về đối tượng IpropSidebar
- */
-export function getSidebarContext() {
-  const sideBar = useContext(sideContext)
-  return sideBar
+  return <userContext.Provider value={value}>{children}</userContext.Provider>
 }

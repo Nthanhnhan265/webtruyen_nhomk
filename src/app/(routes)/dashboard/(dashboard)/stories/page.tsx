@@ -1,17 +1,18 @@
 'use client'
 import UpdateStoryModal from '@/app/(routes)/dashboard/_components/story/UpdateStoryModal'
-import { deleteStory, getAllStories } from '@/app/_api/story.api'
-import { Button, Pagination } from 'flowbite-react'
+import { deleteStory, getAllStories, getStoryById } from '@/app/api/story.api'
+import { Avatar, Button, Pagination } from 'flowbite-react'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import { BsBoxArrowUpRight } from 'react-icons/bs'
+import { toast } from 'react-toastify'
 import Header from '../../_components/header'
 import ConfirmDeleteModal from '../../_components/story/ConfirmDeleteModal'
 import StoryModal from '../../_components/story/StoryModal'
 
 interface Storie {
   id: number
-  status: string
+  status: number
   author_id: number
   description: string
   story_name: string
@@ -22,44 +23,41 @@ interface Storie {
   slug: string
   created_at: string
   updated_at: string
+  Author: {
+    author_name: string
+  }
 }
-// import StoryModal from '../../_components/story/StoryModal'
-// import UpdateStoryModal from '../../_components/story/UpdateStoryModal'
-const storyPage = () => {
+const StoryPage = () => {
   //============ Declare variables and hooks ================//
   const [stories, setStories] = useState<Storie[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
   const [modalState, setModalState] = useState<{
     type: 'create' | 'update' | null
     story: Storie | null
   }>({ type: null, story: null })
-
-  const [sortOrder, setSortOrder] = useState('asc')
+  const [sortOrder, setSortOrder] = useState('ASC')
+  const [sortBy, setSortBy] = useState('id')
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, settotalPages] = useState(1)
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false)
+  const [showModalEdit, setShowModalEdit] = useState(false)
   const [storyIdToDelete, setStoryIdToDelete] = useState<number | null>(null)
   const [keyword, setKeyWord] = useState<string>('')
-  const [editingStory, setEditingStory] = useState(null) // State to hold the story being edited
-  const [selectedStory, setSelectedStory] = useState(null) // Add this line
-
+  const [editingStory, setEditingStory] = useState(null)
   const fetchStories = async () => {
-    setLoading(true)
     try {
       const response = await getAllStories({
         story_name: keyword,
         description: keyword,
+        sortBy: sortBy,
         sort: sortOrder,
         page: currentPage,
       })
       setStories(response.stories)
       settotalPages(response.totalPages)
-      setLoading(false)
       console.log(response.stories)
     } catch (err) {
-      setError('Đã xảy ra lỗi khi lấy dữ liệu.')
-      setLoading(false)
+      toast.error('Đã xảy ra lỗi khi lấy dữ liệu.')
+      console.log(err)
     }
   }
 
@@ -72,32 +70,49 @@ const storyPage = () => {
     setDeleteModalOpen(true)
   }
 
-  const handleEdit = (story) => {
-    // alert(JSON.stringify(story));
+  const handleEdit = async (id: number) => {
+    try {
+      // Indicate that the story is being loaded
+      const response = await getStoryById(id)
 
-    setEditingStory(story) // Set the story to be edited
-    setModalState({ type: 'update', story })
+      if (response?.data) {
+        setEditingStory(response.data)
+        setShowModalEdit(true)
+      } else {
+        toast.error('không tìm thấy id')
+      }
+    } catch (err) {
+      toast.error('khong tìm thấy tryện')
+      console.log(err);
+
+    }
   }
+
   const handleCloseModal = () => {
     setModalState({ type: null, story: null })
+    setShowModalEdit(false)
   }
   const handleConfirmDelete = async () => {
     setDeleteModalOpen(false)
     try {
-      await deleteStory(storyIdToDelete)
+      await deleteStory(storyIdToDelete ?? 0)
       setStories((prevStories) =>
         prevStories.filter((story) => story.id !== storyIdToDelete),
       )
+      toast.success('xóa thành công')
+
       // Update the stories state after successful deletion if needed
     } catch (err) {
-      console.error('Failed to delete the story', err)
+      toast.error('xóa thất bại')
+      console.log(err);
+
     }
   }
   const handleCreateSuccess = () => {
-    // fetchStories()
+    fetchStories()
   }
   const handleSuccess = () => {
-    // fetchStories()
+    fetchStories()
   }
   const onPageChange = (page: number) => setCurrentPage(page)
   const handleSearch = async (keyword: string) => {
@@ -105,11 +120,9 @@ const storyPage = () => {
     setKeyWord(keyword)
     fetchStories()
   }
-  const detailStory = () => {
-    alert('hiển thị chi tiết')
+  const detailStory = (id: Number) => {
+    window.location.href = `stories/${id}`
   }
-  // if (loading) return <p>Đang tải dữ liệu...</p>
-  // if (error) return <p>{error}</p>
 
   return (
     <>
@@ -131,12 +144,22 @@ const storyPage = () => {
         </div>
         <div className=" mb-4">
           <select
-            className="p-2 border border-gray-300 rounded text-sm"
+            className="p-2 border border-gray-300 rounded-xl text-sm mx-2"
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+          >
+            description: string story_name: string
+            {/* <option value="id">Id</option> */}
+            <option value="story_name">Tên truyện</option>
+            <option value="description">Mô tả</option>
+          </select>
+          <select
+            className="p-2 border border-gray-300 rounded-xl text-sm"
             value={sortOrder}
             onChange={(e) => setSortOrder(e.target.value)}
           >
-            <option value="asc">Sắp xếp theo tên A-Z</option>
-            <option value="desc">Sắp xếp theo tên Z-A</option>
+            <option value="ASC">Sắp xếp tăng dần</option>
+            <option value="DESC">Sắp xếp giảm dần</option>
           </select>
         </div>
 
@@ -147,7 +170,7 @@ const storyPage = () => {
           >
             <thead>
               <tr className="bg-white">
-                <th className="py-3 text-sm ">ID</th>
+                <th className="py-3 text-sm ">STT</th>
                 <th className="py-3 text-sm ">Bìa</th>
                 <th className="py-3 text-sm ">Tên câu chuyện</th>
                 <th className="py-3 text-sm ">Tác giả</th>
@@ -167,17 +190,17 @@ const storyPage = () => {
                   </td>
                 </tr>
               ) : (
-                stories?.map((story) => (
+                stories?.map((story, index) => (
                   <tr
                     className="bg-white"
                     key={story.id}
                   >
                     <td className="px-2 text-center">
                       <div className="flex items-center justify-center space-x-1">
-                        <span>{story.id}</span>
+                        <span>{index}</span>
                         <button
                           onClick={() => {
-                            detailStory()
+                            detailStory(story.id)
                           }}
                         >
                           <BsBoxArrowUpRight />
@@ -185,29 +208,35 @@ const storyPage = () => {
                       </div>
                     </td>
                     <td className="px-2 flex justify-center text-sm">
-                      <Image
-                        alt=""
-                        src={`http://localhost:3000/${story.cover}`}
-                        width={103}
-                        height={133}
-                        className="my-2 h-full"
-                      />
+                      {story?.cover ? (
+                        <Image
+                          alt={story.story_name || 'Story Image'}
+                          src={`http://localhost:3000/${story.cover}`}
+                          width={103}
+                          height={133}
+                          className="my-2 h-full"
+                        />
+                      ) : (
+                        <Avatar className="my-2 h-full w-full"
+                        />
+                      )}
                     </td>
+
                     <td className="px-2 text-center text-sm">
                       {story.story_name}
                     </td>
                     <td className="px-2 text-center text-sm">
-                      {story.author_id}
+                      {story?.Author?.author_name ? story?.Author?.author_name : "không tìm thấy"}
                     </td>
                     <td className="px-2 text-center text-sm">
-                      {story.status === 1 ? 'Đã xuất bản' : 'Chưa xuất bản'}
+                      {story.status === 0 ? 'hoàn thành' : 'Chưa xuất bản'}
                     </td>
                     <td className="px-2 text-center text-sm">{story.views}</td>
                     <td className="px-2 text-center text-sm">
                       <div className="flex justify-center space-x-1">
                         <Button
                           color="warning"
-                          onClick={() => handleEdit(story)}
+                          onClick={() => handleEdit(story.id)}
                         >
                           Sửa
                         </Button>
@@ -247,14 +276,12 @@ const storyPage = () => {
             onSuccess={handleCreateSuccess}
           />
         )}
-        {modalState.type === 'update' && modalState.story && (
-          <UpdateStoryModal
-            show={true}
-            onClose={handleCloseModal}
-            onSuccess={handleSuccess}
-            initialData={editingStory} // Pass the editing story data here
-          />
-        )}
+        <UpdateStoryModal
+          show={showModalEdit}
+          onClose={handleCloseModal}
+          onSuccess={handleSuccess}
+          initialData={editingStory} // Pass the editing story data here
+        />
 
         <ConfirmDeleteModal
           isOpen={isDeleteModalOpen}
@@ -266,4 +293,5 @@ const storyPage = () => {
   )
 }
 
-export default storyPage
+export default StoryPage
+

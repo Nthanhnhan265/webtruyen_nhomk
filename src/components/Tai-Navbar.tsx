@@ -6,11 +6,6 @@ import styles from './GenreDropdown.module.css'
 
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false)
-  const [isListOpen, setIsListOpen] = useState(false)
-  const [isCategoryOpen, setIsCategoryOpen] = useState(false)
-
-  const toggleList = () => setIsListOpen(!isListOpen)
-  const toggleCategory = () => setIsCategoryOpen(!isCategoryOpen)
 
   return (
     <nav className="flex justify-between items-center p-4 border-b-2 border-gray-200 bg-white px-[200px]">

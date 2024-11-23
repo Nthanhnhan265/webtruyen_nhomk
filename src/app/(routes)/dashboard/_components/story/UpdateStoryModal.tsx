@@ -1,18 +1,19 @@
+
 'use client'
 
 import React, { useState, useEffect } from 'react';
 import { FileInput, Label } from "flowbite-react";
-import { getAuthorsName } from '@/app/_api/authorService';
-import { getAllgenreByName } from '@/app/_api/genre.api';
+import { getAuthorsName } from '@/app/api/authorService';
+import { getAllgenreByName } from '@/app/api/genre.api';
 import { toast } from 'react-toastify';
-import { updateStory } from '@/app/_api/story.api';
+import { updateStory } from '@/app/api/story.api';
 import Image from 'next/image';
-
 interface StoryModalProps {
     show: boolean;
     onClose: () => void;
-    onSuccess: () => void;
+    onSuccess: (data: any) => void;
     initialData?: {
+        id: number,
         story_name: string;
         status: string;
         description: string;
@@ -24,15 +25,20 @@ interface StoryModalProps {
         cover: File | null;
     } | null;
 }
-
+interface Genre {
+    genre_name: string;
+    id: number;
+}
+interface Author {
+    author_name: string;
+    id: number;
+}
 const UpdateStoryModal: React.FC<StoryModalProps> = ({ show, onClose, onSuccess, initialData }) => {
     if (!show) return null;
 
     const [authors, setAuthors] = useState([]);
     const [categories, setCategories] = useState([]); // Assuming categories will be fetched or defined
-    const [error, setError] = useState('');
 
-    const [tags, setTags] = useState([]);
     const [status, setStatus] = useState('');
     const [authorId, setAuthorId] = useState('');
     const [description, setDescription] = useState('');
@@ -43,15 +49,26 @@ const UpdateStoryModal: React.FC<StoryModalProps> = ({ show, onClose, onSuccess,
     const [coverPreview, setCoverPreview] = useState<string | null>(null);
     const [keywords, setKeywords] = useState('');
     const [slug, setSlug] = useState('');
-    const [selectedCategories, setSelectedCategories] = useState([]);
+    const [genres, setGenres] = useState<Genre[]>([]);
+    const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
     const [showMore, setShowMore] = useState(false);
-
+    const [errors, setErrors] = useState({
+        storyName: "",
+        keywords: "",
+        description: "",
+        authorId: "",
+        status: "",
+        coverFile: "",
+        selectedCategories: "",
+        slug: "",
+    });
     const fetchAuthors = async () => {
         try {
             const response = await getAuthorsName();
             const responseGenre = await getAllgenreByName();
             setAuthors(response.data.authors)
             setCategories(responseGenre.data)
+            setGenres(responseGenre.data); // Assuming categories are included in initialData
             // alert(JSON.stringify(initialData))
             console.log(response.data.authors);
             if (initialData) {
@@ -72,23 +89,40 @@ const UpdateStoryModal: React.FC<StoryModalProps> = ({ show, onClose, onSuccess,
                     setCoverPreview(initialData.cover || null);
                     setCoverFile(null); // Clear cover file if it's not a File
                 }
-                setSelectedCategories(initialData.categories || []); // Assuming categories are included in initialData
             } else {
                 // Clear state if no initialData
                 setCoverFile(null);
                 setCoverPreview(null);
             }
         } catch (err) {
-            setError('Đã xảy ra lỗi khi lấy dữ liệu.')
+            toast.error('Đã xảy ra lỗi khi lấy dữ liệu.')
         }
     }
     useEffect(() => {
 
         fetchAuthors();
-        // alert("check initialData", initialData)
 
     }, [initialData]);
+    const validateFile = (file: File) => {
 
+
+        console.log(file)
+        const maxSize = 5 * 1024 * 1024
+        const validFormats = ['image/jpeg', 'image/png', 'image/webp']
+        if (!file) {
+            toast.error("MESSAGE.user.uploadError")
+            return false
+        }
+        if (!validFormats.includes(file.type)) {
+            toast.error("MESSAGE.user.formatError")
+            return false
+        }
+        if (file.size > maxSize) {
+            toast.error("MESSAGE.user.sizeError")
+            return false
+        }
+        return true
+    }
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const fileList = event.target.files;
         if (fileList && fileList.length > 0) {
@@ -98,7 +132,7 @@ const UpdateStoryModal: React.FC<StoryModalProps> = ({ show, onClose, onSuccess,
         }
     };
 
-    const handleCategoryChange = (event) => {
+    const handleCategoryChange = (event: any) => {
         const value = String(event.target.value); // Chuyển đổi giá trị thành chuỗi
         setSelectedCategories((prevSelected) => {
             if (prevSelected.includes(value)) {
@@ -108,41 +142,109 @@ const UpdateStoryModal: React.FC<StoryModalProps> = ({ show, onClose, onSuccess,
         });
     };
 
-
+    const generateSlug = (name: string) => {
+        return name
+            .normalize('NFD')
+            .toLowerCase() // Convert to lowercase
+            .trim() // Remove leading and trailing spaces
+            .replace(/[^\w\s-]/g, '') // Remove special characters
+            .replace(/\s+/g, '-') // Replace spaces with hyphens
+            .replace(/-+/g, '-'); // Avoid multiple consecutive hyphens
+    };
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!storyName.trim() || !description.trim() || !slug.trim() || !authorId) {
-            toast.error("Các trường tên truyện, mô tả, slug và tác giả không được để trống.");
-            return;
+
+        const newErrors: any = {};
+
+        // 1. Validate Story Name
+        if (!storyName.trim() || storyName.length < 1 || storyName.length > 255) {
+            newErrors.storyName = "Tên truyện không được để trống và phải từ 1-255 ký tự.";
+        } else if (/[!@#$%^&*(),.?":{}|<>]/.test(storyName)) {
+            newErrors.storyName = "Tên truyện chỉ bao gồm chữ, số và không chứa ký tự đặc biệt.";
         }
 
-        // 2. Kiểm tra ký tự đặc biệt
-        const specialCharRegex = /[!@#$%^&*(),.?":{}|<>]/; // Thay đổi biểu thức chính quy nếu cần
-        if (specialCharRegex.test(storyName) || specialCharRegex.test(description) || specialCharRegex.test(slug)) {
-            toast.error("Tên truyện, mô tả và slug không được chứa ký tự đặc biệt.");
-            return;
+        // 2. Validate Slug (letters, numbers, hyphen only)
+        const slugRegex = /^[a-zA-Z0-9-]+$/;
+        if (!slug.trim()) {
+            newErrors.slug = "Slug không được để trống.";
+        } else if (!slugRegex.test(slug)) {
+            newErrors.slug = "Slug chỉ được chứa chữ cái, số và dấu gạch ngang (-).";
         }
+
+        // 3. Validate Keywords
+        if (!keywords.trim()) {
+            newErrors.keywords = "Từ khóa không được để trống.";
+        }
+
+        // 4. Validate Cover File
+        if (!coverFile) {
+            newErrors.coverFile = "Vui lòng tải lên một ảnh bìa.";
+        } else if (coverFile.size > 5 * 1024 * 1024) {
+            newErrors.coverFile = "Kích thước ảnh bìa không được vượt quá 5MB.";
+        } else if (!["image/jpeg", "image/png", "image/webp"].includes(coverFile.type)) {
+            newErrors.coverFile = "Ảnh bìa phải có định dạng .jpg, .png hoặc .webp.";
+        }
+
+        // 5. Validate Description (Allow Vietnamese characters + common punctuation)
+        const allowedDescriptionRegex = /^[a-zA-Z0-9À-ỹà-ỹ\s.,!?()'"_-]+$/;
+        if (!description.trim() || description.length < 20) {
+            newErrors.description = "Mô tả truyện phải có ít nhất 20 ký tự.";
+        } else if (!allowedDescriptionRegex.test(description)) {
+            newErrors.description = "Mô tả không được chứa ký tự đặc biệt ngoài các dấu chấm, phẩy, chấm hỏi, dấu chấm than, ngoặc và gạch ngang.";
+        }
+
+        // 6. Validate Author
+        if (!authorId) {
+            newErrors.authorId = "Vui lòng chọn một tác giả từ danh sách.";
+        }
+
+        // 7. Validate Status
+        if (!status) {
+            newErrors.status = "Vui lòng chọn trạng thái cho truyện.";
+        }
+
+        setErrors(newErrors);
+
+        // Nếu có lỗi thì không thực hiện tiếp
+        if (Object.keys(newErrors).length > 0) {
+            return false;
+        }
+        // if (!validateFile(coverFile)) {
+        //     return
+        // }
+        // Chuẩn bị dữ liệu để gửi
         const formData = new FormData();
-        formData.append('story_name', storyName);
-        formData.append('status', status);
-        formData.append('description', description);
-        formData.append('author_id', authorId);
-        formData.append('total_chapters', totalChapters.toString());
-        formData.append('views', views.toString());
-        formData.append('keywords', keywords);
-        formData.append('slug', slug);
         if (coverFile) {
-            formData.append('cover', coverFile);
+            formData.append("cover", coverFile);
+        } else if (initialData?.cover && typeof initialData.cover === 'string') {
+            // Nếu không chọn hình mới, dùng hình cũ (URL của ảnh bìa cũ)
+            formData.append("cover", initialData.cover);
         }
+        formData.append("story_name", storyName);
+        formData.append("status", status);
+        formData.append("description", description);
+        formData.append("author_id", authorId);
+        formData.append("total_chapters", totalChapters.toString());
+        formData.append("views", views.toString());
+        formData.append("keywords", keywords);
+        formData.append("slug", slug);
+        // if (coverFile) {
+        //     formData.append("cover", coverFile);
+        // }
 
         try {
+            if (!initialData) {
+                throw new Error("Không tìm thấy dữ liệu truyện để cập nhật.");
+            }
             await updateStory(formData, initialData.id);
-            toast.success('cập nhật thành công !');
-            onSuccess();
+            toast.success("Cập nhật thành công!");
+            onSuccess(formData);
             onClose();
         } catch (err) {
-            toast.error('cập nhật thất bại');
+            toast.error("Cập nhật thất bại.");
         }
+
+        return true;
     };
 
     return (
@@ -164,8 +266,13 @@ const UpdateStoryModal: React.FC<StoryModalProps> = ({ show, onClose, onSuccess,
                                     type="text"
                                     className="w-full border p-2 rounded"
                                     value={storyName}
-                                    onChange={(e) => setStoryName(e.target.value)}
+                                    onChange={(e) => {
+                                        setStoryName(e.target.value);
+                                        setSlug(generateSlug(e.target.value)); // Automatically generate slug
+                                    }}
                                 />
+                                {errors.storyName && <p className="text-red-500 text-sm">{errors.keywords}</p>}
+
                             </div>
                             <div>
                                 <label className="block text-sm font-medium">Từ Khóa:</label>
@@ -175,6 +282,8 @@ const UpdateStoryModal: React.FC<StoryModalProps> = ({ show, onClose, onSuccess,
                                     value={keywords}
                                     onChange={(e) => setKeywords(e.target.value)}
                                 />
+                                {errors.keywords && <p className="text-red-500 text-sm">{errors.keywords}</p>}
+
                             </div>
                         </div>
                         <div className='md:flex w-full'>
@@ -186,12 +295,14 @@ const UpdateStoryModal: React.FC<StoryModalProps> = ({ show, onClose, onSuccess,
                                         onChange={(e) => setAuthorId(e.target.value)}
                                     >
                                         <option value="">Chọn tác giả</option>
-                                        {(Array.isArray(authors) ? authors : []).map((author) => (
+                                        {(Array.isArray(authors) ? authors : []).map((author: Author) => (
                                             <option key={author.id} value={author.id}>
                                                 {author.author_name}
                                             </option>
                                         ))}
                                     </select>
+                                    {errors.authorId && <p className="text-red-500 text-sm">{errors.authorId}</p>}
+
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium">Trạng Thái:</label>
@@ -201,9 +312,11 @@ const UpdateStoryModal: React.FC<StoryModalProps> = ({ show, onClose, onSuccess,
                                         onChange={(e) => setStatus(e.target.value)}
                                     >
                                         <option value="">Chọn trạng thái</option>
-                                        <option value="ongoing">Đang cập nhật</option>
-                                        <option value="completed">Hoàn thành</option>
+                                        <option value="1">Đang cập nhật</option>
+                                        <option value="0">Hoàn thành</option>
                                     </select>
+                                    {errors.status && <p className="text-red-500 text-sm">{errors.status}</p>}
+
                                 </div>
                             </div>
                             <div>
@@ -272,6 +385,8 @@ const UpdateStoryModal: React.FC<StoryModalProps> = ({ show, onClose, onSuccess,
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
                         />
+                        {errors.description && <p className="text-red-500 text-sm">{errors.description}</p>}
+
                     </div>
                     <div className='flex grid-cols-2'>
                         {/* {the loai} */}
@@ -280,17 +395,17 @@ const UpdateStoryModal: React.FC<StoryModalProps> = ({ show, onClose, onSuccess,
                             <label className="block text-sm font-medium">Thể loại</label>
                             <div className="max-h-32 overflow-y-auto border border-gray-300 rounded p-2">
                                 <div className="flex flex-col">
-                                    {categories.slice(0, showMore ? categories.length : 1).map((category) => (
-                                        <div key={category.id} className="flex items-center">
+                                    {genres.slice(0, showMore ? genres.length : 1).map((genre: Genre) => (
+                                        <div key={genre.id} className="flex items-center">
                                             <input
                                                 type="checkbox"
-                                                id={category.id}
-                                                value={category.id}
-                                                checked={selectedCategories.includes(String(category.id))} // Chuyển đổi thành chuỗi để so sánh
+                                                id={`${genre.id}`}
+                                                value={genre.id}
+                                                checked={selectedCategories.includes(String(genre.id))} // Chuyển đổi thành chuỗi để so sánh
                                                 onChange={handleCategoryChange}
                                                 className="mr-2"
                                             />
-                                            <label htmlFor={category.id} className="text-sm">{category.genre_name}</label>
+                                            <label htmlFor={`${genre.id}`} className="text-sm">{genre.genre_name}</label>
                                         </div>
                                     ))}
 
@@ -318,6 +433,8 @@ const UpdateStoryModal: React.FC<StoryModalProps> = ({ show, onClose, onSuccess,
                                 onChange={(e) => setSlug(e.target.value)}
 
                             />
+                            {errors.slug && <p className="text-red-500 text-sm">{errors.slug}</p>}
+
                         </div>
 
                     </div>

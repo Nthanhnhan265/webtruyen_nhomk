@@ -1,8 +1,12 @@
 // ConfirmDeleteModal.js
 
 import React from 'react';
-
-const ConfirmDeleteModal = ({ isOpen, onClose, onConfirm }) => {
+interface ConfirmDeleteModalProps {
+    isOpen: boolean;          // Whether the modal is open
+    onClose: () => void;      // Function to call when closing the modal
+    onConfirm: () => void;    // Function to call when confirming the delete
+}
+const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({ isOpen, onClose, onConfirm }) => {
     if (!isOpen) return null;
 
     return (

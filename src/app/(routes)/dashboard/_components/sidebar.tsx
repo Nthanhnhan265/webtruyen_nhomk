@@ -1,5 +1,5 @@
 'use client'
-import { getSidebarContext } from '@/context/navigation/sidebar.context'
+import { useSidebarContext } from '@/context/navigation/sidebar.context'
 import { Drawer, Sidebar as SidebarFlowBite } from 'flowbite-react'
 import Link from 'next/link'
 
@@ -7,7 +7,7 @@ import { usePathname } from 'next/navigation'
 import { AiOutlineComment, AiOutlineStar } from 'react-icons/ai'
 import { BiCog } from 'react-icons/bi'
 import { GoX } from 'react-icons/go'
-import { HiOutlineUsers } from 'react-icons/hi'
+import { HiMiniSquares2X2, HiOutlineUserGroup } from 'react-icons/hi2'
 import { LuTag, LuUserCircle2 } from 'react-icons/lu'
 import { MdBook } from 'react-icons/md'
 import LABEL from '../label'
@@ -21,9 +21,14 @@ const Sidebar = () => {
   //===================== DECLARE VARIABLE, HOOKS ====================//
   const navItems: INavItem[] = [
     {
+      href: '/dashboard/profile',
+      label: LABEL.sys.profile,
+      icon: HiMiniSquares2X2,
+    },
+    {
       href: '/dashboard/users',
       label: LABEL.user.label,
-      icon: HiOutlineUsers, // Pass the component constructor
+      icon: HiOutlineUserGroup,
     },
     {
       href: '/dashboard/authors',
@@ -58,7 +63,7 @@ const Sidebar = () => {
   ]
   const path = usePathname()
   const CENTER = 'flex items-center gap-2 justify-start ps-8 py-2'
-  const { isOpenProp, setIsOpenProp } = getSidebarContext()
+  const { isOpenProp, setIsOpenProp } = useSidebarContext()
   //===================== HANDLE FUNCTIONS ============================//
 
   //===================== RENDER COMPONENTS ===========================//
@@ -123,6 +128,7 @@ const Sidebar = () => {
                     <SidebarFlowBite.ItemGroup>
                       {navItems.map((item, index) => (
                         <Link
+                          key={index}
                           href={item.href}
                           className={
                             path === item.href

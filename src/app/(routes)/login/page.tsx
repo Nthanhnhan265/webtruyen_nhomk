@@ -1,18 +1,20 @@
 'use client'
 
-import axios, { AxiosError } from 'axios'
+import useUserContext from '@/hooks/users/userUserContext'
 import { Checkbox, Label, TextInput } from 'flowbite-react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { FcGoogle } from 'react-icons/fc'
-import NavbarComponent from '../../../components/navbar'
-import Message from '../../message'
+import { toast } from 'react-toastify'
+import { getAccessToken } from '../../../auth/token'
+import useLogin from '../../../hooks/users/useLogin'
+import MESSAGE from '../../message'
 import Footer from '../_component/footer'
-
 // Định nghĩa kiểu cho dữ liệu biểu mẫu
 interface FormData {
-  username: string
+  email: string
   password: string
   rememberMe: boolean
 }
@@ -22,56 +24,41 @@ const Login = () => {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-    setError,
   } = useForm<FormData>() // Sử dụng FormData làm kiểu cho useForm
   const router = useRouter()
-
+  const { login } = useLogin()
+  const { setIsLoggedInUser } = useUserContext()
+  useEffect(() => {
+    async function reloadData() {
+      console.log('rerender >> ', await getAccessToken())
+      if (!(await getAccessToken())) {
+        setIsLoggedInUser({
+          avatar: undefined,
+          email: undefined,
+          id: undefined,
+          username: undefined,
+        })
+      }
+    }
+    reloadData()
+  }, [])
   // Định nghĩa hàm onSubmit với kiểu SubmitHandler của FormData
-  const onSubmit: SubmitHandler<FormData> = async ({
-    username,
-    password,
-    rememberMe,
-  }) => {
+  const onSubmit: SubmitHandler<FormData> = async (data: FormData) => {
     try {
-      const response = await axios.post('http://localhost:3000/api/login', {
-        username,
-        password,
-      })
-
-      if (response.status === 200) {
-        const { token } = response.data
-        localStorage.setItem('token', token)
-
-        if (rememberMe) {
-          localStorage.setItem('username', username)
-        } else {
-          localStorage.removeItem('username')
-        }
-
-        setTimeout(() => {
-          router.push('/')
-        }, 1000)
-      }
+      await login(data.email, data.password)
+      toast.success(MESSAGE.auth.loginSuccess)
+      console.log('login ok')
+      router.push('/')
     } catch (error) {
-      if (error instanceof AxiosError && error.response) {
-        const errorMsg = error.response.data.message
-
-        if (errorMsg === 'Tên đăng nhập không tồn tại') {
-          setError('username', { message: Message.auth.nameError })
-        } else if (errorMsg === 'Mật khẩu không chính xác') {
-          setError('password', { message: 'Mật khẩu không chính xác' })
-        } else {
-          setError('username', {
-            message: 'Đăng nhập thất bại, vui lòng kiểm tra lại thông tin.',
-          })
-        }
+      if (error instanceof Error) {
+        toast.error(error.message)
       }
+      console.error(error)
     }
   }
 
   return (
     <>
-      <NavbarComponent></NavbarComponent>
       <div className="min-h-screen flex items-center justify-center bg-white">
         <div className="bg-white rounded-lg p-6 flex">
           {/* Form Đăng Nhập */}
@@ -82,25 +69,26 @@ const Login = () => {
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="mb-4">
                 <Label
-                  htmlFor="username"
-                  value="Tên đăng nhập:"
+                  htmlFor="email"
+                  value="Email:"
                   className="block text-gray-700 text-base"
                 />
                 <TextInput
-                  id="username"
-                  type="text"
-                  {...register('username', {
-                    required: 'Tên đăng nhập là bắt buộc',
+                  id="email"
+                  type="email"
+                  autoComplete="username"
+                  {...register('email', {
+                    required: 'Email là bắt buộc',
                     maxLength: {
                       value: 50,
-                      message: 'Tên đăng nhập không được quá 50 ký tự',
+                      message: 'Email không được quá 50 ký tự',
                     },
                   })}
                   className="text-gray-700 w-full"
                 />
-                {errors.username && (
+                {errors.email && (
                   <p className="text-red-500 mt-1 text-sm">
-                    {errors.username.message}
+                    {errors.email.message}
                   </p>
                 )}
               </div>
@@ -113,6 +101,7 @@ const Login = () => {
                 <TextInput
                   id="password"
                   type="password"
+                  autoComplete="current-password"
                   {...register('password', {
                     required: 'Mật khẩu là bắt buộc',
                     maxLength: {

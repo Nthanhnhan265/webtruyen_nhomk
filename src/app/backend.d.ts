@@ -12,21 +12,23 @@ interface IUser {
   created_at: string
 }
 interface ILoggedinUser {
-  userId: number
-  username: string
-  email: string
-  token: string
+  id: id | string | undefined
+  username: string | undefined
+  email: string | undefined
+  avatar: string | undefined
 }
 interface IChapter {
   id: number
-  order: number
-  name: string
-  status: string
+  chapter_order: number
+  chapter_name: string
+  status: boolean
   views: number
   reviews: number
   comments: number
-  create_at: string
+  created_at: string
   published_at: string
+  content: string
+  slug: string
 }
 interface IAuthor {
   id: number
@@ -39,9 +41,9 @@ interface IAuthor {
 interface IResponse {
   status: number
   success: boolean
-  data: any
+  data: object
   message: string
-  links: any
+  links: object
 }
 interface IDashboardUserForm {
   avatar: FileList
@@ -51,4 +53,10 @@ interface IDashboardUserForm {
   confirmPassword: string
   role_id: number
   status: string
+}
+
+interface IProfilePasswordChange {
+  currentPassword: string
+  newPassword: string
+  confirmPassword: string
 }

@@ -5,7 +5,6 @@ import { Label, TextInput } from 'flowbite-react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { SubmitHandler, useForm } from 'react-hook-form'
-import Navbar from '../../../components/navbar'
 import Message from '../../message'
 import Footer from '../_component/footer'
 
@@ -31,7 +30,7 @@ const Register = () => {
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     try {
       const newUserResponse = await axios.post(
-        'http://localhost:3000/api/register',
+        'http://localhost:3000/api/auth/register',
         data,
       )
 
@@ -62,7 +61,6 @@ const Register = () => {
 
   return (
     <>
-      <Navbar />
       <div className="min-h-screen flex items-center justify-center bg-white">
         <div className="bg-white rounded-lg p-6 flex">
           <div className="w-96 p-6">
