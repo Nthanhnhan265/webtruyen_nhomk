@@ -34,7 +34,7 @@ const StoryPage = () => {
     type: 'create' | 'update' | null
     story: Storie | null
   }>({ type: null, story: null })
-  const [sortOrder, setSortOrder] = useState('asc')
+  const [sortOrder, setSortOrder] = useState('ASC')
   const [sortBy, setSortBy] = useState('id')
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, settotalPages] = useState(1)
@@ -158,8 +158,8 @@ const StoryPage = () => {
             value={sortOrder}
             onChange={(e) => setSortOrder(e.target.value)}
           >
-            <option value="asc">Sắp xếp tăng dần</option>
-            <option value="desc">Sắp xếp giảm dần</option>
+            <option value="ASC">Sắp xếp tăng dần</option>
+            <option value="DESC">Sắp xếp giảm dần</option>
           </select>
         </div>
 

@@ -6,7 +6,7 @@ import NavbarComponent from '../../../../components/navbar'
 import Footer from '../../_component/footer'
 import RatingComponent from '../../../../components/ratings_auth'
 import { toast } from 'react-toastify'
-import { UserProvider } from '@/context/user/user.context' 
+import { UserProvider } from '@/context/user/user.context'
 import { Avatar } from 'flowbite-react'
 
 
@@ -26,6 +26,7 @@ interface Story {
   source?: string
   cover: string
   slug: string
+  views: number
 }
 
 const page = ({ params }: { params: { slug: string } }) => {
@@ -36,7 +37,7 @@ const page = ({ params }: { params: { slug: string } }) => {
   const [totalPages, setTotalPages] = useState<number>(1) // State for total pages
   const { slug } = params // Lấy slug từ params của route
   // const URL = `${}`;
-  
+
   useEffect(() => {
     // Log thông tin slug khi thay đổi
     console.log('check useparam', slug)
@@ -103,11 +104,14 @@ const page = ({ params }: { params: { slug: string } }) => {
               )}
             </div>
             <div className="space-y-4">
-              <h1 className="text-3xl font-bold">{story?.story_name}</h1> 
+              <h1 className="text-3xl font-bold">{story?.story_name}</h1>
               <p className="text-gray-600">Tác giả: {story?.author_name}</p>
               <p className="text-gray-600">Thể loại: {story?.keywords}</p>
               <p className="text-gray-600">
                 Số chương: {story?.total_chapters}
+              </p>
+              <p className="text-gray-600">
+                Lượt xem: {story?.views}
               </p>
               <p className="text-gray-600">
                 Nguồn: {story?.source || 'Sưu tầm'}
@@ -166,10 +170,10 @@ const page = ({ params }: { params: { slug: string } }) => {
               </button>
             </div>
             <UserProvider>
-            {story?.id && <RatingComponent storyId= {story.id}/>}</UserProvider>
+              {story?.id && <RatingComponent storyId={story.id} />}</UserProvider>
           </div>
         </div>
-              
+
         {/* Right Column */}
         <div
           className="w-1/3 bg-white p-3 rounded-lg shadow"

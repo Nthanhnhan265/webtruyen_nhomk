@@ -189,6 +189,14 @@ export const deleteStory = async (id: number) => {
     throw error;
   }
 };
+export const incrementStoryViews = async (storyId: number) => {
+  try {
+    const response = await api.post(`/story/${storyId}/increment-views`);
+    return response.data; // Trả về dữ liệu API
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || "Lỗi khi gọi API tăng lượt xem!");
+  }
+};
 export default {
   getStories,
   deleteStory,
@@ -198,6 +206,7 @@ export default {
   getStoryBySlug,
   createStory,
   getStoryById,
-  getSearchStorie
+  getSearchStorie,
+  incrementStoryViews
 }
 

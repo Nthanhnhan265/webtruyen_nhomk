@@ -5,11 +5,11 @@ import { Pagination } from 'flowbite-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
-import NavbarComponent from '../../../components/navbar'
 import styles from '../_component/GenreDropdown.module.css'
 import Footer from '../_component/footer'
-import { getSearchStorie } from '@/app/api/story.api'
+import { getSearchStorie, incrementStoryViews } from '@/app/api/story.api'
 interface Story {
+    id: number
     story_name: string
     slug: string
     cover: string
@@ -46,8 +46,12 @@ const GenrePage = ({ params }: { params: { slug: string } }) => {
     const onPageChange = (page: number) => {
         setCurrentPage(page) // Update current page when pagination changes
     }
-    const handleDetail = (slug: string) => {
+    const handleDetail = async (slug: string, id: number) => {
         window.location.href = `/stories/${slug}`;
+        const view = await incrementStoryViews(id)
+        if (!view) {
+            toast.error("lỗi khi tăng view")
+        }
     }
     // Fetch stories when `slug` or `currentPage` changes
     useEffect(() => {
@@ -76,7 +80,7 @@ const GenrePage = ({ params }: { params: { slug: string } }) => {
                             <div className="grid grid-cols-12 gap-4 mb-4" key={index}>
                                 <div className="col-span-2">
                                     <Image
-                                        onClick={() => handleDetail(story.slug)}
+                                        onClick={() => handleDetail(story.slug, story.id)}
                                         src={`http://localhost:3000/${story.cover}`} // Giả sử bạn có trường 'cover' cho ảnh
                                         alt={story.story_name}
                                         width={200}
