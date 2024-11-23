@@ -46,22 +46,22 @@ const addRating = async (data: { user_id: number, story_id: number, star: number
 //=======Get Ratings by Story========//
 const fetchRatingsByStory = async (storyId: number) => {
   try {
-    const accessToken = getCookie('accessToken') // Retrieve token from cookies
+    const accessToken = getCookie('accessToken'); // Lấy token từ cookies
     if (!accessToken) {
-      throw new Error('No access token found')
+      throw new Error('No access token found');
     }
 
-    const response = await api.get(`/ratings/story/${storyId}`, {
+    const response = await api.post(`/ratings/story/${ storyId }`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
-    })
-    return response.data
+    });
+    return response.data;
   } catch (error) {
-    console.error(MESSAGE.user.fetchUserError, error)
-    throw error
+    console.error(MESSAGE.user.fetchUserError, error);
+    throw error;
   }
-}
+};
 
 //=======Get Ratings by User========//
 const fetchRatingsByUser = async (userId: number) => {
