@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useContext } from "react";
-import { addRating, fetchRatingsByStory, editRating, removeRating } from "@/app/api/ratings.api";
-import { userContext } from "@/context/user/user.context";
+import React, { useState, useEffect } from "react";
+import { addRating, fetchRatingsByStory } from "@/app/api/ratings.api";
+import useUserContext from "@/hooks/users/userUserContext";
 
 interface Rating {
   id: number;
@@ -24,9 +24,7 @@ const StarRating = ({
           key={value}
           type="button"
           onClick={() => setStar(value)}
-          className={`text-2xl ${
-            value <= star ? "text-yellow-400" : "text-gray-400"
-          } hover:text-yellow-500`}
+          className={`text-2xl ${value <= star ? "text-yellow-400" : "text-gray-400"} hover:text-yellow-500`}
         >
           ★
         </button>
@@ -38,22 +36,28 @@ const StarRating = ({
 const RatingComponent = ({ storyId }: { storyId: number }) => {
   const [ratings, setRatings] = useState<Rating[]>([]);
   const [newRating, setNewRating] = useState({ star: 0, comment: "" });
-  const [isEditing, setIsEditing] = useState<Rating | null>(null);
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const { loggedInUser } = useContext(userContext);
+  const { loggedInUser } = useUserContext();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
+        // Giả sử fetchRatingsByStory trả về một mảng các đánh giá hợp lệ
         // const data = await fetchRatingsByStory(storyId);
-        // setRatings(data.ratings || []);
+        // if (data?.ratings && Array.isArray(data.ratings)) {
+        //   // Kiểm tra dữ liệu đánh giá trước khi set
+        //   const validRatings = data.ratings.filter((rating: any) => rating.star && rating.comment);
+        //   setRatings(validRatings);
+        // } else {
+        //   setRatings([]); // Nếu không có đánh giá nào hoặc không có dữ liệu hợp lệ
+        // }
         setLoading(false);
       } catch (err: any) {
-        setError(err.message);
+        setError("Không thể tải đánh giá. Vui lòng thử lại!");
         setLoading(false);
       }
     };
@@ -61,20 +65,30 @@ const RatingComponent = ({ storyId }: { storyId: number }) => {
   }, [storyId]);
 
   const handleAddRating = async () => {
+    if (!loggedInUser) {
+      setError("Bạn phải đăng nhập để thêm đánh giá.");
+      return;
+    }
+
+    if (newRating.star === 0) {
+      setError("Bạn phải chọn số sao để đánh giá.");
+      return;
+    }
+
     try {
       setLoading(true);
       const result = await addRating({
         ...newRating,
         story_id: storyId,
-        user_id: loggedInUser.id, // Lấy user_id từ context
+        user_id: loggedInUser.id,
       });
       setRatings((prev) => [...prev, result.rating]);
       setNewRating({ star: 0, comment: "" });
       setSuccessMessage("Đánh giá của bạn đã được thêm thành công!");
-      setLoading(false);
-      setTimeout(() => setSuccessMessage(null), 3000); // Xóa thông báo sau 3 giây
+      setTimeout(() => setSuccessMessage(null), 3000);
     } catch (err: any) {
-      setError(err.message);
+      setError(err.message || "Đã xảy ra lỗi. Vui lòng thử lại!");
+    } finally {
       setLoading(false);
     }
   };
@@ -87,34 +101,18 @@ const RatingComponent = ({ storyId }: { storyId: number }) => {
       {successMessage && <p className="text-green-500">{successMessage}</p>}
       {loading && <p>Đang tải...</p>}
 
-      {/* Display list of ratings */}
       <ul className="space-y-4">
-        {ratings.map((rating) => (
-          <li key={rating.id} className="border p-4 rounded-md shadow">
-            <p className="font-semibold">⭐ {rating.star} sao</p>
-            <p>{rating.comment}</p>
-            <div className="flex gap-2 mt-2">
-              <button
-                className="text-blue-500"
-                onClick={() => {
-                  setIsEditing(rating);
-                  setNewRating({ star: rating.star, comment: rating.comment });
-                }}
-              >
-                Sửa
-              </button>
-              <button
-                className="text-red-500"
-                onClick={() => handleDeleteRating(rating.id, rating.user_id)}
-              >
-                Xóa
-              </button>
-            </div>
-          </li>
-        ))}
+        {ratings.length > 0 &&
+          ratings.map((rating, index) => (
+            <li key={index} className="border p-4 rounded-md shadow">
+              <p className="font-semibold">
+                ⭐ {rating?.star ?? "Chưa đánh giá"}
+              </p>
+              <p>{rating?.comment ?? "Không có nhận xét"}</p>
+            </li>
+          ))}
       </ul>
 
-      {/* Form for adding/editing a rating */}
       <div className="mt-4">
         <h3 className="text-lg font-bold">Thêm đánh giá mới</h3>
         <div className="mt-2">
@@ -133,7 +131,7 @@ const RatingComponent = ({ storyId }: { storyId: number }) => {
           <button
             onClick={handleAddRating}
             className="bg-blue-500 text-white px-4 py-2 rounded mt-2"
-            disabled={loading}
+            disabled={loading || newRating.star === 0}
           >
             Thêm đánh giá
           </button>
@@ -144,4 +142,3 @@ const RatingComponent = ({ storyId }: { storyId: number }) => {
 };
 
 export default RatingComponent;
-
