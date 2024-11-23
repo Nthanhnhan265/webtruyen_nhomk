@@ -26,6 +26,7 @@ interface Story {
   source?: string
   cover: string
   slug: string
+  views: number
 }
 
 const page = ({ params }: { params: { slug: string } }) => {
@@ -107,6 +108,9 @@ const page = ({ params }: { params: { slug: string } }) => {
               <p className="text-gray-600">Thể loại: {story?.keywords}</p>
               <p className="text-gray-600">
                 Số chương: {story?.total_chapters}
+              </p>
+              <p className="text-gray-600">
+                Lượt xem: {story?.views}
               </p>
               <p className="text-gray-600">
                 Nguồn: {story?.source || 'Sưu tầm'}
