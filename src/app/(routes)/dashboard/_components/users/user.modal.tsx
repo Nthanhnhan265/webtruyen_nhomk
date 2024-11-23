@@ -211,6 +211,7 @@ function UserModal(prop: IModalProps) {
                 <TextInput
                   id="username"
                   type="text"
+                  disabled={prop.isEdit ? true : false}
                   {...register('username', {
                     required: MESSAGE.user.usernameRequired,
                     validate: (value) => {
@@ -238,6 +239,7 @@ function UserModal(prop: IModalProps) {
                 <TextInput
                   id="email"
                   type="email"
+                  disabled={prop.isEdit ? true : false}
                   {...register('email', {
                     required: MESSAGE.user.emailRequired,
                     pattern: {

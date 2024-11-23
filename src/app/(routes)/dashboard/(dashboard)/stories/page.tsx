@@ -23,7 +23,7 @@ interface Storie {
   slug: string
   created_at: string
   updated_at: string
-  Author: {
+  author: {
     author_name: string
   }
 }
@@ -83,8 +83,7 @@ const StoryPage = () => {
       }
     } catch (err) {
       toast.error('khong tìm thấy tryện')
-      console.log(err);
-
+      console.log(err)
     }
   }
 
@@ -104,8 +103,7 @@ const StoryPage = () => {
       // Update the stories state after successful deletion if needed
     } catch (err) {
       toast.error('xóa thất bại')
-      console.log(err);
-
+      console.log(err)
     }
   }
   const handleCreateSuccess = () => {
@@ -217,8 +215,7 @@ const StoryPage = () => {
                           className="my-2 h-full"
                         />
                       ) : (
-                        <Avatar className="my-2 h-full w-full"
-                        />
+                        <Avatar className="my-2 h-full w-full" />
                       )}
                     </td>
 
@@ -226,7 +223,9 @@ const StoryPage = () => {
                       {story.story_name}
                     </td>
                     <td className="px-2 text-center text-sm">
-                      {story?.Author?.author_name ? story?.Author?.author_name : "không tìm thấy"}
+                      {story?.author?.author_name
+                        ? story?.author?.author_name
+                        : 'không tìm thấy'}
                     </td>
                     <td className="px-2 text-center text-sm">
                       {story.status === 0 ? 'hoàn thành' : 'Chưa xuất bản'}
@@ -294,4 +293,3 @@ const StoryPage = () => {
 }
 
 export default StoryPage
-
