@@ -1,3 +1,4 @@
+// export default GenrePage
 'use client' // Đảm bảo chạy trên client
 import CustomButton from '@/app/(routes)/_component/CustomButton'
 import Pagination from '@/app/(routes)/_component/Pagination'
@@ -7,6 +8,7 @@ import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import styles from '../../_component/GenreDropdown.module.css'
+
 const GenrePage = () => {
   const { slug } = useParams() // Lấy slug thể loại từ URL
 
@@ -102,37 +104,19 @@ const GenrePage = () => {
 
       {/* <Navbar /> */}
       <div>
-        {books.map((book, index) => (
-          <p
-            key={index}
-            className="bg-gray-100 py-2 border-t border-gray-400 border-b pl-4 sm:pl-14 text-center sm:text-left"
-          >
-            Truyện {book.genres[0].genre_name} / Trang 1
-          </p>
-        ))}
-
-        {books.map((book, index) => (
-          <div
-            key={index}
-            className="ml-4 sm:ml-14 mt-8 mb-4"
-          >
-            <span className="font-bold">
-              Truyện thể loại{' '}
-              <span className="font-bold">{book.genres[0].genre_name}</span>
-            </span>
-          </div>
-        ))}
-
+        {/* Chỉ render thông tin thể loại và mô tả một lần */}
+        <p className="bg-gray-100 py-2 border-t border-gray-400 border-b pl-4 sm:pl-14 text-center sm:text-left">
+          Truyện {genreName} / Trang {currentPage}
+        </p>
+        <div className="ml-4 sm:ml-14 mt-8 mb-4">
+          <span className="font-bold">
+            Truyện thể loại <span className="font-bold">{genreName}</span>
+          </span>
+        </div>
         <hr className="ml-4 sm:ml-14" />
-
-        {books.map((book, index) => (
-          <p
-            key={index}
-            className="ml-4 sm:ml-14 my-3 text-center sm:text-left"
-          >
-            {book.description}
-          </p>
-        ))}
+        <p className="ml-4 sm:ml-14 my-3 text-center sm:text-left">
+          {books[0]?.description}
+        </p>
 
         <div className="font-sans bg-gray-100 ml-14">
           <div className="background-body bg-gray-100 py-5 px-4 sm:px-5 ml-8">
@@ -173,9 +157,7 @@ const GenrePage = () => {
                     </Link>
                     <br />
                     <span>Thể loại:</span>{' '}
-                    <Link href={`/genre/${slug}`}>
-                      {book.genres[0].genre_name}
-                    </Link>
+                    <Link href={`/genre/${slug}`}>{genreName}</Link>
                     <br />
                     <span>Số chương:</span>
                     <Link href={`/story/${book.slug}`}>
@@ -194,9 +176,9 @@ const GenrePage = () => {
       </div>
 
       {/* Footer với SEO cải tiến */}
-      <footer className="bg-gray-100 p-4 grid grid-cols-1 sm:grid-cols-2 mt-5 pl-4 sm:pl-14 ml-14">
+      <footer className="bg-gray-100 p-4 grid grid-cols-1 sm:grid-cols-2 mt-5 pl-4 sm:pl-14 ml-12">
         <div className="mb-4 sm:mb-0">
-          Truyện Chom – Trang đọc truyện online, thường xuyên cập nhật những bộ
+          Truyện Plus – Trang đọc truyện online, thường xuyên cập nhật những bộ
           truyện hay nhất thuộc các thể loại đặc sắc như: action , adventure ,
           romance…
           <br />
@@ -204,39 +186,36 @@ const GenrePage = () => {
           <span className={styles.textFoot}>truyenchomonline@gmail.com</span>
         </div>
         <div>
-          {books.map((book, index) => (
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 ">
-              <CustomButton
-                href={`/genre/${book.genres[0].slug}`}
-                title="Go to top page"
-                text="Action"
-              />
-              <CustomButton
-                href={`/genre/${book.genres[0].slug}`}
-                title="Go to top page"
-                text="Adventure"
-              />
-              <CustomButton
-                href={`/genre/${book.genres[0].slug}`}
-                title="Go to top page"
-                text="Romance"
-              />
-              <CustomButton
-                href={`/genre/${book.genres[0].slug}`}
-                title="Go to top page"
-                text="Fantansy"
-              />
-            </div>
-          ))}
-          {books.map((book, index) => (
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-2">
-              <CustomButton
-                href={`/genre/${book.genres[0].slug}`}
-                title="Go to top page"
-                text="Horror"
-              />
-            </div>
-          ))}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <CustomButton
+              href="/some-page"
+              title=""
+              text="Action"
+            />
+            <CustomButton
+              href="/some-page"
+              title=""
+              text="Adventure"
+            />
+            <CustomButton
+              href="/some-page"
+              title=""
+              text="Romance"
+            />
+            <CustomButton
+              href="/some-page"
+              title=""
+              text="Fantasy"
+            />
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-2">
+            <CustomButton
+              href="/some-page"
+              title=""
+              text="Horror"
+            />
+          </div>
+
           <div className={styles.contact}>
             <a
               href="/contact"
