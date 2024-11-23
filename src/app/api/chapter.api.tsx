@@ -127,7 +127,6 @@ export async function getStoryAndChapters(
     if (!result.success) {
       throw new Error(result.message)
     }
-
     const { story, chapters } = result.data
     const pagination = result.pagination
     return { story, chapters, pagination }

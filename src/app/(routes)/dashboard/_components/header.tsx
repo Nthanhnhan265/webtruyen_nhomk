@@ -1,5 +1,6 @@
 'use client'
 import { useSidebarContext } from '@/context/navigation/sidebar.context'
+import useUserContext from '@/hooks/users/userUserContext'
 import { Avatar, TextInput } from 'flowbite-react'
 import { IoSearchOutline } from 'react-icons/io5'
 import { RxHamburgerMenu } from 'react-icons/rx'
@@ -10,6 +11,8 @@ interface IHeaderProp {
 export default function Header(prop: IHeaderProp) {
   //==============declare vars, hooks=============//
   const { isOpenProp, setIsOpenProp } = useSidebarContext()
+  const { loggedInUser } = useUserContext()
+
   //==============handle function=================//
   /*
     HandleChange: search record when typing 
@@ -37,6 +40,7 @@ export default function Header(prop: IHeaderProp) {
           <Avatar
             className="shadow items-center"
             status="online"
+            img={'http://localhost:3001/' + loggedInUser.avatar}
           ></Avatar>
           <button
             onClick={() => {

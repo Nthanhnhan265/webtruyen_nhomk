@@ -193,7 +193,7 @@ const UserPage = () => {
       closeDModal()
     } catch (error) {
       console.error(error)
-      toast.error(MESSAGE.user.deleteError + '\n' + error.message)
+      toast.error(error.message)
     }
   }
 

@@ -1,11 +1,11 @@
-"use client";
-import React, { useEffect, useState } from 'react';
+'use client'
+import { useEffect, useState } from 'react'
 // import { toast } from 'react-toastify'; // ĐÚNG
-import Footer from '@/app/(routes)/_component/footer';
-import Modal from '../../compoment/chapterModal';
-import { getAllStorieView } from '@/app/api/story.api';
-import { getChapterBySlug, getChapterByStoryidAll } from '@/app/api/chapter.api';
-import { toast } from 'react-toastify';
+import Footer from '@/app/(routes)/_component/footer'
+import { getChapterBySlug, getChapterByStoryidAll } from '@/app/api/chapter.api'
+import { getAllStorieView } from '@/app/api/story.api'
+import { toast } from 'react-toastify'
+import Modal from '../../compoment/chapterModal'
 
 interface Chapter {
   id: number
@@ -22,9 +22,9 @@ interface Chapter {
   }
 }
 interface Story {
-  id: number;
-  story_name: string;
-  cover: string;
+  id: number
+  story_name: string
+  cover: string
   slug: string
 }
 
@@ -44,11 +44,11 @@ const ChapterPage = ({
     page: 1,
   }
   const fetchStory = async () => {
-    const { chapter } = params;
+    const { chapter } = params
     // alert(chapter)
     try {
-      const response = await getChapterBySlug(chapter); // Get chapter details from API
-      setChapter(response.data);
+      const response = await getChapterBySlug(chapter) // Get chapter details from API
+      setChapter(response.data)
       // console.log(response);
 
       // toast.success("Lấy dữ liệu thành công");
@@ -59,7 +59,7 @@ const ChapterPage = ({
       const responseChapter = await getChapterByStoryidAll(
         response.data.story_id,
       )
-      console.log(responseChapter);
+      console.log(responseChapter)
 
       setChapters(responseChapter.data.chapters)
 
@@ -67,15 +67,15 @@ const ChapterPage = ({
       setStorys(storynew.stories)
       // console.log(storynew)
     } catch (error) {
-      console.log(error);
+      console.log(error)
 
       toast.error('Lấy chương truyện thất bại')
     }
   }
 
   useEffect(() => {
-    fetchStory();
-  }, [params]);
+    fetchStory()
+  }, [params])
   const handleRead = (slug: string) => {
     window.location.href = `/stories/${slug}`
   }
@@ -83,23 +83,25 @@ const ChapterPage = ({
     const currentIndex = chapters.findIndex((chap) => chap.slug === slug)
 
     if (currentIndex === -1) {
-      console.error("Không tìm thấy nội dung chương!");
-      return;
+      console.error('Không tìm thấy nội dung chương!')
+      return
     }
 
     if (direction === 'next') {
       if (currentIndex < chapters.length - 1) {
-        window.location.href = `/stories/${chapter?.Story?.slug}/${chapters[currentIndex + 1]?.slug
-          }`
+        window.location.href = `/stories/${chapter?.Story?.slug}/${
+          chapters[currentIndex + 1]?.slug
+        }`
       } else {
-        console.log("Đây là chương cuối cùng.");
+        console.log('Đây là chương cuối cùng.')
       }
     } else if (direction === 'previous') {
       if (currentIndex > 0) {
-        window.location.href = `/stories/${chapter?.Story?.slug}/${chapters[currentIndex - 1]?.slug
-          }`
+        window.location.href = `/stories/${chapter?.Story?.slug}/${
+          chapters[currentIndex - 1]?.slug
+        }`
       } else {
-        console.log("đây là chương đầu tiên.");
+        console.log('đây là chương đầu tiên.')
       }
     }
   }
@@ -161,7 +163,9 @@ const ChapterPage = ({
             </div>
 
             <div className="prose prose-lg text-justify leading-relaxed mb-3 text-2xl max-w-full">
-              <p>{chapter?.content}</p>
+              <div
+                dangerouslySetInnerHTML={{ __html: chapter?.content || '' }}
+              ></div>
             </div>
           </div>
 
@@ -207,7 +211,9 @@ const ChapterPage = ({
             <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
               {storys.map((story, index) => {
                 return (
-                  <div key={index} className="bg-white p-2 rounded shadow hover:shadow-md"
+                  <div
+                    key={index}
+                    className="bg-white p-2 rounded shadow hover:shadow-md"
                     onClick={() => handleRead(story.slug)}
                   >
                     <img
