@@ -108,7 +108,7 @@ const AuthorPage = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-4 mb-5" key={index}>
                   <div className="col-span-1 sm:col-span-3">
                     <Image
-                      src={"https://truyenplus.vn/media/book/do-thi-tu-chan-y-thanh.jpeg"}
+                      src={book.cover_url || "https://truyenplus.vn/media/book/do-thi-tu-chan-y-thanh.jpeg"}
                       alt={book.story_name}
                       width={300}
                       height={150}
