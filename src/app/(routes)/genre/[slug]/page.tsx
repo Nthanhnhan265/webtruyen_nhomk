@@ -120,11 +120,29 @@ const GenrePage = () => {
       </div>
 
       <footer className="bg-gray-100 p-4 grid grid-cols-1 sm:grid-cols-2 mt-5 pl-4 sm:pl-14 ml-12">
-        <div className="mb-4 sm:mb-0">
-          Truyện Plus – Trang đọc truyện online, thường xuyên cập nhật những bộ truyện hay nhất thuộc các thể loại đặc sắc như: action , adventure , romance…
-          <br />
-          Mọi vấn đề vi phạm bản quyền vui lòng liên hệ qua email: <span className={styles.textFoot}>truyenchomonline@gmail.com</span>
-        </div>
+         <div className="mb-4 sm:mb-0">
+           Truyện Plus – Trang đọc truyện online, thường xuyên cập nhật những bộ truyện hay nhất thuộc các thể loại đặc sắc như: action , adventure , romance…
+           <br />
+           Mọi vấn đề vi phạm bản quyền vui lòng liên hệ qua email: <span className={styles.textFoot}>truyenchomonline@gmail.com</span>
+         </div>
+         <div>
+           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+             <CustomButton href="/some-page" title="" text="Action" />
+             <CustomButton href="/some-page" title="" text="Adventure" />
+             <CustomButton href="/some-page" title="" text="Romance" />
+             <CustomButton href="/some-page" title="" text="Fantasy" />
+           </div>
+           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-2">
+             <CustomButton href="/some-page" title="" text="Horror" />
+           </div>
+
+           <div className={styles.contact}>
+             <a href="/contact" title="Contact">Contact</a>
+             <span>-</span>
+             <a href="/tos" title="Terms of Service">ToS</a>
+             <a className="backtop" title="Trở lên đầu trang" href="#" rel="nofollow" aria-label="Trở về đầu trang">⬆</a>
+           </div>
+         </div>
       </footer>
     </div>
   );
