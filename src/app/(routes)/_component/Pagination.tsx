@@ -52,3 +52,42 @@ const Pagination = ({ currentPage, totalPages }) => {
 };
 
 export default Pagination;
+
+
+// import Link from 'next/link';
+// import { GrFormPrevious } from "react-icons/gr";
+// import { GrFormNext } from "react-icons/gr";
+
+// const Pagination = ({ currentPage, totalPages, onPageChange }: any) => {
+//   const handlePageClick = (page: number) => {
+//     onPageChange(page); // Gọi callback từ parent khi thay đổi trang
+//   };
+
+//   return (
+//     <div className="pagination flex justify-center">
+//       <button
+//         className="prev-button flex items-center px-4 py-2 bg-gray-200 rounded"
+//         disabled={currentPage === 1}
+//         onClick={() => handlePageClick(currentPage - 1)}
+//       >
+//         <GrFormPrevious />
+//         <span className="ml-1">Trang trước</span>
+//       </button>
+
+//       <div className="page-info mx-2 my-3">
+//         <span className="text-sm text-gray-600">Trang {currentPage} / {totalPages}</span>
+//       </div>
+
+//       <button
+//         className="next-button flex items-center px-4 py-2 bg-gray-200 rounded"
+//         disabled={currentPage === totalPages}
+//         onClick={() => handlePageClick(currentPage + 1)}
+//       >
+//         <span className="mr-1">Trang tiếp</span>
+//         <GrFormNext />
+//       </button>
+//     </div>
+//   );
+// };
+
+// export default Pagination;
