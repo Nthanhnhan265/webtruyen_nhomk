@@ -24,9 +24,9 @@ const AuthorPage = () => {
   const { slug } = useParams() // Lấy slug từ URL
   const searchParams = useSearchParams() // Lấy query params
   const currentPage = parseInt(searchParams.get('page') || '1', 10) // Lấy trang hiện tại từ query, mặc định là 1
-  const limit = 2 // Số lượng câu chuyện mỗi trang
-  const [author, setAuthor] = useState<author>() // Thông tin tác giả
-  const [books, setBooks] = useState<author[]>([]) // Sách của tác giả
+  const limit = 3 // Số lượng câu chuyện mỗi trang
+  const [author, setAuthor] = useState<any>(null) // Thông tin tác giả
+  const [books, setBooks] = useState<any[]>([]) // Sách của tác giả
   const [totalPages, setTotalPages] = useState<number>(0) // Tổng số trang
   const [loading, setLoading] = useState<boolean>(true) // Trạng thái loading
   const [error, setError] = useState<string | null>(null) // Trạng thái lỗi

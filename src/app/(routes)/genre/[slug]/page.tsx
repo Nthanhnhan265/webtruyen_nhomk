@@ -1,123 +1,87 @@
-// export default GenrePage
 'use client' // Đảm bảo chạy trên client
 import CustomButton from '@/app/(routes)/_component/CustomButton'
 import Pagination from '@/app/(routes)/_component/Pagination'
-import Head from 'next/head' // Thêm Head component để quản lý SEO
+import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import styles from '../../_component/GenreDropdown.module.css'
-interface genres {
-  genres: [{ genre_name: string }]
-  description: []
-  cover_url: string
-  story_name: string
-  slug: string
-  author: {
-    author_slug: string
-    author_name: string
-  }
-  total_chapters: number
-}
+
 const GenrePage = () => {
   const { slug } = useParams() // Lấy slug thể loại từ URL
-  const [books, setBooks] = useState<genres[]>([]) // Khởi tạo books là một mảng
+  const [books, setBooks] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
-  const [currentPage, setCurrentPage] = useState(1) // Số trang hiện tại từ API
-  const [totalPages, setTotalPages] = useState(1) // Tổng số trang từ API
-  console.log(setCurrentPage)
-  useEffect(() => {
-    const fetchBooks = async () => {
-      try {
-        // Gọi API để lấy danh sách truyện của thể loại này
-        const res = await fetch(
-          `http://localhost:5000/api/story/genre/${slug}?page=${currentPage}`,
-        )
+  const [currentPage, setCurrentPage] = useState(1) // Trang hiện tại
+  const [totalPages, setTotalPages] = useState(1) // Tổng số trang
+  const router = useRouter()
+  const searchParams = useSearchParams() // Lấy query từ URL
 
-        if (!res.ok) {
-          throw new Error('Không thể tải dữ liệu từ API.')
-        }
+  // Hàm lấy thông tin truyện
+  const fetchBooks = async () => {
+    try {
+      const page = searchParams.get('page')
+        ? parseInt(searchParams.get('page') as string, 10)
+        : 1
+      setCurrentPage(page) // Cập nhật lại currentPage từ query params
 
-        const data = await res.json()
-        console.log(
-          'Dữ liệu nhận được từ API(danh sách truyện theo thể loại):',
-          data,
-        )
+      const res = await fetch(
+        `http://localhost:3000/api/story/genre/${slug}?page=${page}`,
+      )
+      if (!res.ok) throw new Error('Không thể tải dữ liệu từ API.')
 
-        // Kiểm tra và đảm bảo data có trường stories là mảng
-        if (data && data.data && Array.isArray(data.data.stories)) {
-          setBooks(data.data.stories)
-          setTotalPages(data.pagination.totalPages) // Cập nhật tổng số trang từ API
-        } else {
-          setBooks([]) // Nếu không có truyện, đặt books là mảng rỗng
-        }
-      } catch (err) {
-        console.error('Lỗi khi tải dữ liệu:', err)
-        setBooks([]) // Đặt books là mảng rỗng trong trường hợp lỗi
-      } finally {
-        setLoading(false)
+      const data = await res.json()
+      console.log(
+        'Dữ liệu nhận được từ API(danh sách truyện theo thể loại):',
+        data,
+      )
+
+      if (data && data.data && Array.isArray(data.data.stories)) {
+        setBooks(data.data.stories)
+        setTotalPages(data.pagination.totalPages) // Cập nhật tổng số trang từ API
+      } else {
+        setBooks([]) // Nếu không có truyện, đặt books là mảng rỗng
       }
+    } catch (err) {
+      console.error('Lỗi khi tải dữ liệu:', err)
+      setBooks([]) // Đặt books là mảng rỗng trong trường hợp lỗi
+    } finally {
+      setLoading(false)
     }
+  }
 
+  // Khi slug hoặc page thay đổi, gọi lại API
+  useEffect(() => {
     if (slug) {
       fetchBooks()
     }
-  }, [slug, currentPage]) // Thêm currentPage vào dependency để khi chuyển trang sẽ gọi lại API
+  }, [slug, searchParams]) // Thêm searchParams vào dependencies
 
   if (loading) {
     return <div>Đang tải dữ liệu...</div>
   }
 
   if (books.length === 0) {
-    return (
-      <div>
-        {/* <Navbar /> */}
-        <p>Không có truyện nào trong thể loại này.</p>
-      </div>
-    )
+    return <p>Không có truyện nào trong thể loại này.</p>
   }
 
-  // Lấy tên thể loại để cập nhật SEO
   const genreName = books[0]?.genres[0]?.genre_name || 'Thể loại không xác định'
 
   return (
     <div>
-      {/* SEO phần đầu trang */}
       <Head>
         <title>{`Truyện Chom - ${genreName} - Danh sách truyện`}</title>
         <meta
           name="description"
           content={`Xem các truyện ${genreName} hay nhất trên Truyện Chom`}
         />
-        <meta
-          property="og:title"
-          content={`Truyện Chom - ${genreName} - Danh sách truyện`}
-        />
-        <meta
-          property="og:description"
-          content={`Xem các truyện ${genreName} hay nhất trên Truyện Chom`}
-        />
-        <meta
-          property="og:image"
-          content="https://truyenplus.vn/path-to-image.jpg"
-        />
-        <meta
-          property="og:url"
-          content={`https://truyenplus.vn/genre/${slug}`}
-        />
-        <meta
-          name="robots"
-          content="index, follow"
-        />
       </Head>
 
-      {/* <Navbar /> */}
       <div>
-        {/* Chỉ render thông tin thể loại và mô tả một lần */}
         <p className="bg-gray-100 py-2 border-t border-gray-400 border-b pl-4 sm:pl-14 text-center sm:text-left">
           Truyện {genreName} / Trang {currentPage}
         </p>
+
         <div className="ml-4 sm:ml-14 mt-8 mb-4">
           <span className="font-bold">
             Truyện thể loại <span className="font-bold">{genreName}</span>
@@ -141,7 +105,7 @@ const GenrePage = () => {
                       src={
                         book.cover_url ||
                         'https://truyenplus.vn/media/book/do-thi-tu-chan-y-thanh.jpeg'
-                      } // Thêm ảnh cover thực tế
+                      }
                       alt={book.story_name}
                       width={300}
                       height={150}
@@ -149,7 +113,6 @@ const GenrePage = () => {
                     />
                   </div>
                   <div className="col-span-1 sm:col-span-9">
-                    {/* sang trang chi tiết truyện */}
                     <Link
                       href={`/story/${book.slug}`}
                       className={styles.hoverNameTitle}
@@ -157,7 +120,6 @@ const GenrePage = () => {
                       {book.story_name}
                     </Link>
                     <br />
-                    {/* sang trang tác giả */}
                     <span>Tác giả:</span>
                     <Link
                       className={styles.hoverName}
@@ -177,6 +139,8 @@ const GenrePage = () => {
                 </div>
               ))}
             </div>
+
+            {/* Pagination */}
             <Pagination
               currentPage={currentPage}
               totalPages={totalPages}
@@ -185,7 +149,6 @@ const GenrePage = () => {
         </div>
       </div>
 
-      {/* Footer với SEO cải tiến */}
       <footer className="bg-gray-100 p-4 grid grid-cols-1 sm:grid-cols-2 mt-5 pl-4 sm:pl-14 ml-12">
         <div className="mb-4 sm:mb-0">
           Truyện Plus – Trang đọc truyện online, thường xuyên cập nhật những bộ
