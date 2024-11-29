@@ -132,7 +132,7 @@ export default function DetailStory({ params }: { params: { id: number } }) {
           {/* cover */}
           {!imageErrors ? (
             <Image
-              src={'http://localhost:3000/' + story?.cover}
+              src={'http://localhost:5000/' + story?.cover}
               alt="avatar"
               width={400}
               height={400}

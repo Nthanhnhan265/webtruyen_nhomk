@@ -1,11 +1,25 @@
+import UserSidebar from '@/app/(routes)/_component/sidebar_profile'
 import useProfile from '@/hooks/users/useProfile'
 import ProfileComponent from '../_component/profile/ProfileComponent'
-import UserSidebar from '../_component/sidebar_profile'
-const ProfilePage = async () => {
+const ProfilePage = () => {
   //------------- DECLARE VARIABES ---------------//
-  const { userProfile, accessToken } = await useProfile()
+  const { accessToken } = useProfile()
+  const userProfile: {
+    email: string
+    username: string
+    role_id: number
+    createdAt: string
+    avatar: string
+  } = {
+    email: '',
+    username: '',
+    role_id: 1,
+    avatar: '',
+    createdAt: '',
+  }
 
   //------------- HANDLE FUNCTIONS ---------------//
+  // console.log('profile::', userProfile)
   return (
     <>
       <div className="flex flex-col min-h-screen">

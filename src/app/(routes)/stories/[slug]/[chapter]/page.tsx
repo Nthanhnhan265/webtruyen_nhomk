@@ -63,7 +63,12 @@ const ChapterPage = ({
 
       setChapters(responseChapter.data.chapters)
 
-      const storynew = await getAllStorieView(data)
+      const storynew = await getAllStorieView({
+        author_storie: data.author_storie,
+        description: data.description,
+        page: data.page,
+        sort: data.sort,
+      })
       setStorys(storynew.stories)
       // console.log(storynew)
     } catch (error) {
@@ -105,7 +110,7 @@ const ChapterPage = ({
       }
     }
   }
-  const selectChapter = (chapterSlug: any) => {
+  const selectChapter = (chapterSlug: unknown) => {
     if (chapterSlug) {
       // Redirect to the selected chapter's page
       window.location.href = `/stories/${chapter?.Story?.slug}/${chapterSlug}`
@@ -219,7 +224,7 @@ const ChapterPage = ({
                     <img
                       src={
                         story?.cover
-                          ? `http://localhost:3000/${story.cover}`
+                          ? `http://localhost:5000/${story.cover}`
                           : '/default-cover.jpg'
                       }
                       alt="Story Thumbnail"

@@ -2,20 +2,23 @@ import { useDeleteModal } from '@/hooks/modals/useDeleteModal'
 import { Button } from 'flowbite-react'
 import LABEL from '../label'
 import MESSAGE from '../message'
+interface IHeader {
+  label: string
+  name: string
+  hidden?: boolean
+  render?: (item: unknown) => JSX.Element
+}
 
-interface Iprops {
-  tbHeaderCells: Array<{
-    label: string
-    name: string
-    hidden?: boolean
-    render?: (item: any) => JSX.Element
-  }>
-  tbCells: Array<any>
-  handleClickUpdate: (id: number) => void
+interface Iprops<T extends Record<string, unknown>> {
+  tbHeaderCells: Array<IHeader>
+  tbCells: T[] | undefined
+  handleClickUpdate?: (selected: T) => void
   readOnly: boolean
 }
 
-export default function Table(props: Iprops) {
+export default function Table<T extends Record<string, unknown>>(
+  props: Iprops<T>,
+) {
   const { openDeleteModal } = useDeleteModal()
 
   return (
@@ -45,19 +48,21 @@ export default function Table(props: Iprops) {
         </thead>
         <tbody>
           {/* RENDER ROWS OF THE TABLE */}
-          {props.tbCells?.map((item, rowIndex) => (
+          {props.tbCells?.map((item: T, rowIndex) => (
             <tr
               className="bg-white"
               key={rowIndex}
             >
               {props.tbHeaderCells?.map(
-                (header, colIndex) =>
+                (header: IHeader, colIndex) =>
                   !header.hidden && (
                     <td
                       key={colIndex}
                       className="py-2 px-3 text-center text-sm"
                     >
-                      {header.render ? header.render(item) : item[header.name]}
+                      {header.render
+                        ? header.render(item)
+                        : (item[header.name] as React.ReactNode)}
                     </td>
                   ),
               )}
@@ -65,11 +70,12 @@ export default function Table(props: Iprops) {
                 {!props.readOnly && (
                   <Button
                     color="warning"
-                    onClick={() => props.handleClickUpdate(item)}
+                    onClick={() => props.handleClickUpdate?.(item)}
                   >
                     {LABEL.sys.edit}
                   </Button>
                 )}
+
                 <Button
                   color="failure"
                   onClick={() => openDeleteModal(item)}

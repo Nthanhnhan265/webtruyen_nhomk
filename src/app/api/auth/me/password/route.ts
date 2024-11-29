@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from 'next/server'
 
 const api = axios.create({
   baseURL: process.env.NODE_API_URL,
-  timeout: 3000,
+  timeout: 5000,
 })
 
 export async function PATCH(request: NextRequest) {

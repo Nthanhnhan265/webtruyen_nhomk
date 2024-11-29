@@ -4,17 +4,19 @@ import { DeleteModal } from '../../app/(routes)/dashboard/_components/delete.mod
 
 interface IDeleteModalContext<T> {
   isOpen: boolean
-  openDeleteModal: (selected: T) => void
+  openDeleteModal: (selected: T | unknown) => void
   closeDeleteModal: () => void
-  setHandleDelete: React.Dispatch<React.SetStateAction<(selected: T) => void>>
-  selected: T | null
+  setHandleDelete: React.Dispatch<
+    React.SetStateAction<(selected: T | unknown) => void>
+  >
+  selected: T | unknown | null
   message: string
   setMessage: React.Dispatch<React.SetStateAction<string>>
 }
 
 // Sử dụng generic <T> để linh hoạt hơn
 export const DeleteModalContext =
-  createContext<IDeleteModalContext<any> | null>(null)
+  createContext<IDeleteModalContext<unknown> | null>(null)
 
 export const DeleteModalProvider = <T,>({
   children,
@@ -23,12 +25,12 @@ export const DeleteModalProvider = <T,>({
 }) => {
   const [isOpen, setIsOpen] = useState(false)
   const [message, setMessage] = useState('')
-  const [handleDelete, setHandleDelete] = useState<(selected: any) => void>(
+  const [handleDelete, setHandleDelete] = useState<(selected: unknown) => void>(
     () => {},
   )
-  const [selected, setSelected] = useState<any | null>(null)
+  const [selected, setSelected] = useState<unknown | null>(null)
 
-  const openDeleteModal = (selected: T) => {
+  const openDeleteModal = (selected: T | unknown) => {
     setIsOpen(true)
     setSelected(selected)
   }

@@ -5,7 +5,7 @@ import Message from '../message'
 
 // Tạo instance axios
 const api = axios.create({
-  baseURL: 'http://localhost:3000/api',
+  baseURL: 'http://localhost:5000/api',
   timeout: 5000,
 })
 
@@ -135,7 +135,7 @@ export { checkEmail, checkUsername, loginUser, registerUser }
 
 export const loginUser = async (username: string, password: string) => {
   try {
-    const response = await fetch('http://localhost:3000/api/login', {
+    const response = await fetch('http://localhost:5000/api/login', {
       // Gọi tới API Next.js
       method: 'POST',
       headers: {

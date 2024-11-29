@@ -1,12 +1,21 @@
 // components/Pagination.js
-{/* <i class="fa-solid fa-angle-left"></i> */}
-{/* <i class="fa-solid fa-angle-right"></i> */}
-import Link from 'next/link';
-import { GrFormPrevious } from "react-icons/gr";
-import { GrFormNext } from "react-icons/gr";
+{
+  /* <i class="fa-solid fa-angle-left"></i> */
+}
+{
+  /* <i class="fa-solid fa-angle-right"></i> */
+}
+import Link from 'next/link'
+import { GrFormNext, GrFormPrevious } from 'react-icons/gr'
 
-const Pagination = ({ currentPage, totalPages }) => {
-  const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
+const Pagination = ({
+  currentPage,
+  totalPages,
+}: {
+  currentPage: number
+  totalPages: number
+}) => {
+  const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1)
 
   return (
     <nav aria-label="Page navigation example">
@@ -15,7 +24,9 @@ const Pagination = ({ currentPage, totalPages }) => {
         <li>
           <Link
             href={`?page=${currentPage - 1}`}
-            className={`flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white ${currentPage === 1 && 'pointer-events-none opacity-50'}`}
+            className={`flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white ${
+              currentPage === 1 && 'pointer-events-none opacity-50'
+            }`}
           >
             <GrFormPrevious />
           </Link>
@@ -41,14 +52,16 @@ const Pagination = ({ currentPage, totalPages }) => {
         <li>
           <Link
             href={`?page=${currentPage + 1}`}
-            className={`flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white ${currentPage === totalPages && 'pointer-events-none opacity-50'}`}
+            className={`flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white ${
+              currentPage === totalPages && 'pointer-events-none opacity-50'
+            }`}
           >
             <GrFormNext />
           </Link>
         </li>
       </ul>
     </nav>
-  );
-};
+  )
+}
 
-export default Pagination;
+export default Pagination

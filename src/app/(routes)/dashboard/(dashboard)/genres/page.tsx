@@ -1,4 +1,3 @@
-
 'use client'
 import {
   createGenre,
@@ -14,12 +13,7 @@ import ConfirmDeleteModal from '../../_components/genres/ConfirmDeleteModal'
 import CreateModalGenre from '../../_components/genres/CreateModalGenre'
 import UpdateGenreModal from '../../_components/genres/UpdateModalGenre'
 import Header from '../../_components/header'
-interface Genre {
-  id: number
-  genre_name: string
-  description: string
-  slug: string
-}
+
 const AuthorPage = () => {
   //============ Declare variables and hooks ================//
   const [Genres, setGenres] = useState<Genre[]>([])
@@ -49,8 +43,7 @@ const AuthorPage = () => {
       settotalPages(response.pagination.totalPages)
     } catch (err) {
       console.log('Đã xảy ra lỗi khi lấy dữ liệu.')
-      console.log(err);
-
+      console.log(err)
     }
   }
 
@@ -58,20 +51,21 @@ const AuthorPage = () => {
     fetchGenre()
   }, [sortOrder, sortBy, currentPage, keyword])
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: number | undefined) => {
     try {
-      const response = await getByGenreId(id)
-      if (response.data) {
-        setGenreToDelete(id)
-        setShowDeleteModal(true) // Open the delete confirmation modal
+      if (id) {
+        const response = await getByGenreId(id)
+        if (response.data) {
+          setGenreToDelete(id)
+          setShowDeleteModal(true) // Open the delete confirmation modal
+        }
       }
     } catch (err) {
       toast.error('thể loại không tồn tại')
-      console.log(err);
-
+      console.log(err)
     }
   }
-  const handleCreateSuccess = async (data) => {
+  const handleCreateSuccess = async (data: Genre) => {
     const { genre_name, description, slug } = data
     console.log(data)
     console.log(genre_name, description, slug)
@@ -82,8 +76,7 @@ const AuthorPage = () => {
       fetchGenre() // Refresh the genre list or handle success as needed
     } catch (error) {
       toast.error('Đã xảy ra lỗi khi thêm thể loại.')
-      console.log(error);
-
+      console.log(error)
     }
   }
   const handleUpdateSuccess = async (id: number, data: Genre) => {
@@ -94,23 +87,22 @@ const AuthorPage = () => {
       fetchGenre()
     } catch (err) {
       toast.error('cập nhật thất bại')
-      console.log(err);
-
+      console.log(err)
     }
   }
-  const handleEdit = async (id: number) => {
+  const handleEdit = async (id: number | undefined) => {
     try {
-      const response = await getByGenreId(id)
-      if (response.data) {
-        setSelectedGenre(response.data)
-        setShowUpdateModal(true)
+      if (id) {
+        const response = await getByGenreId(id)
+        if (response.data) {
+          setSelectedGenre(response.data)
+          setShowUpdateModal(true)
+        }
+        console.log(response)
       }
-      console.log(response);
-
     } catch (err) {
       toast.error('thể loại không tồn tại')
-      console.log(err);
-
+      console.log(err)
     }
   }
   const handleSearch = async (keyword: string) => {
@@ -140,8 +132,7 @@ const AuthorPage = () => {
       } catch (err) {
         // Handle any errors that occur during deletion
         toast.error('Đã xảy ra lỗi khi xóa thể loại.')
-        console.log(err);
-
+        console.log(err)
       }
     }
   }
@@ -206,7 +197,10 @@ const AuthorPage = () => {
               </tr>
             ) : (
               Genres.map((genre, index) => (
-                <tr className="bg-white" key={genre.id}>
+                <tr
+                  className="bg-white"
+                  key={genre.id}
+                >
                   <td className="py-2 px-1 text-center">{index}</td>
                   <td className="py-2 px-1 text-center">{genre.genre_name}</td>
                   <td className="py-2 px-1 text-center">{genre.description}</td>
@@ -246,12 +240,19 @@ const AuthorPage = () => {
         onClose={() => setShowUpdateModal(false)}
         // onSuccess={handleSuccess}
         initialData={selectedGenre}
-        onSuccess={(id: number, data) => handleUpdateSuccess(id, data)}
+        onSuccess={(id: number, data: Genre) => {
+          handleUpdateSuccess(id, data)
+        }}
       />
       <CreateModalGenre
         show={showCreateModal}
         onClose={() => setShowCreateModal(false)}
-        onSuccess={(data) => handleCreateSuccess(data)}
+        onSuccess={(data?: Genre) => {
+          if (!data) {
+            return
+          }
+          handleCreateSuccess(data)
+        }}
       />
       <ConfirmDeleteModal
         isOpen={showDeleteModal}

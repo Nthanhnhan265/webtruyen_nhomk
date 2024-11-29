@@ -53,7 +53,7 @@ export default function UserTable(props: Iprops) {
                     ) : (
                       <div className="w-7 h-7 overflow-hidden rounded-full mx-auto">
                         <Image
-                          src={`http://localhost:3000/${user.avatar}`}
+                          src={`http://localhost:5000/${user.avatar}`}
                           alt="user's image"
                           width={50}
                           height={50}

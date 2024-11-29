@@ -3,7 +3,7 @@ import MESSAGE from '../(routes)/dashboard/message'
 
 // Create an instance of axios
 const api = axios.create({
-  baseURL: 'http://localhost:3000/api',
+  baseURL: 'http://localhost:5000/api',
   timeout: 2000,
 })
 
@@ -16,7 +16,12 @@ const getCookie = (name: string): string | null => {
 }
 
 //=======Add Rating========//
-const addRating = async (data: { user_id: number, story_id: number, star: number, comment: string }) => {
+const addRating = async (data: {
+  user_id: number
+  story_id: number
+  star: number
+  comment: string
+}) => {
   try {
     const accessToken = getCookie('accessToken') // Retrieve token from cookies
     if (!accessToken) {
@@ -46,22 +51,22 @@ const addRating = async (data: { user_id: number, story_id: number, star: number
 //=======Get Ratings by Story========//
 const fetchRatingsByStory = async (storyId: number) => {
   try {
-    const accessToken = getCookie('accessToken'); // Lấy token từ cookies
+    const accessToken = getCookie('accessToken') // Lấy token từ cookies
     if (!accessToken) {
-      throw new Error('No access token found');
+      throw new Error('No access token found')
     }
 
-    const response = await api.post(`/ratings/story/${ storyId }`, {
+    const response = await api.post(`/ratings/story/${storyId}`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
-    });
-    return response.data;
+    })
+    return response.data
   } catch (error) {
-    console.error(MESSAGE.user.fetchUserError, error);
-    throw error;
+    console.error(MESSAGE.user.fetchUserError, error)
+    throw error
   }
-};
+}
 
 //=======Get Ratings by User========//
 const fetchRatingsByUser = async (userId: number) => {
@@ -84,18 +89,27 @@ const fetchRatingsByUser = async (userId: number) => {
 }
 
 //=======Update Rating========//
-const editRating = async (storyId: number, userId: number, star: number, comment: string) => {
+const editRating = async (
+  storyId: number,
+  userId: number,
+  star: number,
+  comment: string,
+) => {
   try {
     const accessToken = getCookie('accessToken') // Retrieve token from cookies
     if (!accessToken) {
       throw new Error('No access token found')
     }
 
-    const response = await api.patch(`/ratings/${storyId}`, { user_id: userId, star, comment }, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
+    const response = await api.patch(
+      `/ratings/${storyId}`,
+      { user_id: userId, star, comment },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
       },
-    })
+    )
     return response.data
   } catch (error) {
     if (error instanceof AxiosError) {
@@ -119,7 +133,7 @@ const removeRating = async (storyId: number, userId: number) => {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
-      data: { user_id: userId }
+      data: { user_id: userId },
     })
     return response.data
   } catch (error) {
@@ -132,4 +146,10 @@ const removeRating = async (storyId: number, userId: number) => {
   }
 }
 
-export { addRating, fetchRatingsByStory, fetchRatingsByUser, editRating, removeRating }
+export {
+  addRating,
+  editRating,
+  fetchRatingsByStory,
+  fetchRatingsByUser,
+  removeRating,
+}

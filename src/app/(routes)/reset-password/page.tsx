@@ -1,5 +1,5 @@
 // src/app/login/page.tsx
-
+'use client'
 import { Button, Label, TextInput } from 'flowbite-react'
 import { useForm } from 'react-hook-form'
 import { HiMail } from 'react-icons/hi'
@@ -14,7 +14,7 @@ const ForgotPassword = () => {
     // getValues,
     // setValue,
     // register,
-    formState: { errors },
+    // formState: { errors },
     // reset,
     handleSubmit,
   } = useForm<IForgotForm>()

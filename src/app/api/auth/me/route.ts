@@ -1,9 +1,10 @@
+export const dynamic = 'force-dynamic'
 import axios, { AxiosError } from 'axios'
 import { NextRequest, NextResponse } from 'next/server'
 import MESSAGE from '../../../message'
 const apiNode = axios.create({
   baseURL: process.env.NODE_API_URL,
-  timeout: 3000,
+  timeout: 5000,
 })
 export async function GET(request: NextRequest) {
   try {

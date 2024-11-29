@@ -3,7 +3,7 @@ import MESSAGE from '../(routes)/dashboard/message'
 
 // Create an instance of axios
 const api = axios.create({
-  baseURL: 'http://localhost:3000/api',
+  baseURL: 'http://localhost:5000/api',
   timeout: 2000,
 })
 
@@ -35,7 +35,11 @@ const createUser = async (data: FormData) => {
       username: result.data.username,
       email: result.data.email,
       status: result.data.status,
-      role_id: result.data.role_id,
+      Role: {
+        id: result.data.role_id,
+        description: '',
+        role_name: '',
+      },
       created_at: result.data.createdAt,
       id: result.data.id,
       avatar: '',
@@ -130,7 +134,7 @@ const updateUser = async (id: number, data: FormData) => {
   } catch (error) {
     if (error instanceof AxiosError) {
       throw new Error(error?.response?.data?.message)
-    } else if (error.message) {
+    } else if (error instanceof Error) {
       throw new Error(error.message)
     } else {
       console.error(error)
@@ -152,7 +156,7 @@ const deleteUser = async (id: number) => {
         Authorization: `Bearer ${accessToken}`,
       },
     })
-    const result = response.data
+    const result = response.data as IResponse
     console.log(result)
     if (!result.success) {
       throw new Error(result.message)

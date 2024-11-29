@@ -28,7 +28,7 @@ const refreshToken = async (): Promise<string | null> => {
     console.log('Refreshing token...')
 
     // Khởi tạo headers
-    let headers: Record<string, string> = {}
+    const headers: Record<string, string> = {}
 
     // Nếu chạy trên server-side
     if (typeof window === 'undefined') {

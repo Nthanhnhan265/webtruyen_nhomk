@@ -27,8 +27,6 @@ const Modal: React.FC<ModalProps> = ({
   closeModal,
   selectChapter,
 }) => {
-  if (!isOpen) return null
-
   const [chapters, setChapters] = useState<Chapter[]>([])
   // alert(JSON.stringify(data))
   console.log(data)
@@ -48,6 +46,7 @@ const Modal: React.FC<ModalProps> = ({
     fetchChapter()
   }, [data])
 
+  if (!isOpen) return null
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-600 bg-opacity-50">
       <div className="bg-white rounded-lg p-6 w-3/4 max-w-lg relative">

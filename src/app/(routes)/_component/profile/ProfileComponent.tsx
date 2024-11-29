@@ -24,7 +24,7 @@ export default function ProfileComponent(props: {
   //========================= DECLARE VARS, HOOKS ======================//
   const [imageErrors, setImageErrors] = useState<boolean>(false)
 
-  const [avatarFile, setAvatarFile] = useState()
+  const [avatarFile, setAvatarFile] = useState<File>()
   const { validateFile, error } = useFile({
     maxSizeMB: 5,
     allowedTypes: ['image/png', 'image/jpeg', 'image/jpg', 'image/webp'],
@@ -137,7 +137,7 @@ export default function ProfileComponent(props: {
                 (props.avatar && !avatarFile ? (
                   <Avatar
                     rounded
-                    img={'http://localhost:3000/' + props.avatar}
+                    img={'http://localhost:5000/' + props.avatar}
                     alt="avatar"
                     className="object-cover"
                   />

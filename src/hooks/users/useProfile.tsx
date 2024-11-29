@@ -7,10 +7,11 @@ import { handleGetProfileInfo } from '../../auth/auth.services'
  * chỉ dùng cho server components
  * @returns userProfie
  */
-export default async function useProfile() {
+export default function useProfile() {
   const cookieStore = cookies()
   const accessToken = cookieStore.get('accessToken')?.value
-  const userProfile = await handleGetProfileInfo(accessToken || '')
-
-  return { userProfile, accessToken }
+  const getProfile = () => {
+    handleGetProfileInfo(accessToken || '')
+  }
+  return { getProfile, accessToken }
 }

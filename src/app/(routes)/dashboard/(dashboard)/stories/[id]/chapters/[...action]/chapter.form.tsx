@@ -27,7 +27,7 @@ export function ChapterForm({
   initialData,
 }: {
   story_id: number
-  initialData?: IChapter
+  initialData?: IChapter | null
 }) {
   //========================== DECLARES VARS, HOOKS =========================//
   const isEditMode = !initialData ? false : true
@@ -54,7 +54,9 @@ export function ChapterForm({
         try {
           const result = await getStories(story_id)
           setStoryName(result.data.story_name)
-        } catch (error) {}
+        } catch (error) {
+          console.log(error)
+        }
       }
     }
     getStoryName()

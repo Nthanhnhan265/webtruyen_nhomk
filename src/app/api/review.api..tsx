@@ -4,7 +4,7 @@ import MESSAGE from '../(routes)/dashboard/message'
 
 // Create an instance of axios
 const api = axios.create({
-  baseURL: 'http://localhost:3000/api',
+  baseURL: 'http://localhost:5000/api',
   timeout: 2000,
 })
 
@@ -183,7 +183,7 @@ const deleteReview = async (user_id: number, story_id: number) => {
         },
       )
 
-      const result = response.data
+      const result = response.data as IResponse
 
       if (!result.success) {
         throw new Error(result.message || 'Failed to delete story')

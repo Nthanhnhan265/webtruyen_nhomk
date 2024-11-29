@@ -1,12 +1,12 @@
 import axios, { AxiosError } from 'axios'
 import MESSAGE from '../app/message'
 const apiNext = axios.create({
-  baseURL: 'http://localhost:3001',
-  timeout: 3001,
+  baseURL: 'http://localhost:3000',
+  timeout: 3000,
 })
 const apiNode = axios.create({
-  baseURL: 'http://localhost:3000/',
-  timeout: 3000,
+  baseURL: 'http://localhost:5000/',
+  timeout: 5000,
 })
 /** Handle login
  * Xử lý đăng nhập khi truyền vào email và password

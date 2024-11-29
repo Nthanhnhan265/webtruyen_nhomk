@@ -20,6 +20,9 @@ const MESSAGE = {
     unexpectedError: 'Đã xảy ra lỗi không mong muốn.',
     loginSuccess: 'Đăng nhập thành công',
     loginFailed: 'Đăng nhập thất bại',
+    nameExists: 'Tên đăng nhập đã tồn tại',
+    emailExists: 'Tên đăng nhập đã tồn tại',
+    passwordNotMatch: 'Mật khẩu không khớp',
   },
   chapter: {
     createSuccess: 'Tạo chương mới thành công.',

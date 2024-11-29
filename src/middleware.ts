@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server'
 import { handleGetProfileInfo } from './auth/auth.services'
 export async function middleware(request: NextRequest) {
   const accessToken = request.cookies.get('accessToken')
-  const refreshToken = request.cookies.get('refreshToken')
+  // const refreshToken = request.cookies.get('refreshToken')
   const reqRoute = request.nextUrl.pathname
   const res = NextResponse.next()
   // Nếu không có accessToken và yêu cầu vào các route liên quan đến dashboard hoặc profile

@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
     }
     // Gửi refreshToken đến Node.js API qua axios
     const response = await axios.post(
-      'http://localhost:3000/api/auth/refresh-token',
+      'http://localhost:5000/api/auth/refresh-token',
       {
         refreshToken,
       },
@@ -47,4 +47,5 @@ export async function GET(req: NextRequest) {
       )
     }
   }
+  return NextResponse.json({})
 }

@@ -25,7 +25,7 @@ type LoginResponse = {
 
 const api = axios.create({
   baseURL: process.env.NODE_API_URL,
-  timeout: 3000,
+  timeout: 5000,
 })
 
 export async function POST(request: NextRequest) {
@@ -34,7 +34,10 @@ export async function POST(request: NextRequest) {
     const { email, password } = body
 
     // Gửi request đến Node.js server
-    const res: { data: LoginResponse } = await api.post('auth/login', { email, password })
+    const res: { data: LoginResponse } = await api.post('auth/login', {
+      email,
+      password,
+    })
     const result = res.data
 
     if (!result.success) {

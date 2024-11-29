@@ -19,7 +19,7 @@ export default function ReviewsPage() {
   const [orderBy, setOrderBy] = useState<string>('DESC')
   const [currentPage, setCurrentPage] = useState(1)
   const [sortBy, setSortBy] = useState<string>('created_at')
-  const [reviews, setReviews] = useState([])
+  const [reviews, setReviews] = useState<IReview[]>()
 
   const [totalPages, setTotalPages] = useState<number>(0)
   const MAXIMUM_RECORDS = 10
@@ -34,7 +34,7 @@ export default function ReviewsPage() {
             currentPage,
             MAXIMUM_RECORDS,
           )
-          const data = response.data.map((rv) => {
+          const data = response.data.map((rv: IReview) => {
             return {
               user_id: rv.user_id,
               username: rv.User?.username,
@@ -59,7 +59,7 @@ export default function ReviewsPage() {
             currentPage,
             MAXIMUM_RECORDS,
           )
-          const data = response.data.map((rv) => {
+          const data = response.data.map((rv: IReview) => {
             return {
               user_id: rv.user_id,
               username: rv.User?.username,
@@ -135,14 +135,12 @@ export default function ReviewsPage() {
   const handleSearch = (keyword: string) => {
     setKeyWord(keyword)
   }
-  const handleUpdate = (id: number) => {
-    console.log(id)
-  }
-  const handleDelete = async (selected: object) => {
+
+  const handleDelete = async (selected: IReview) => {
     try {
       await deleteReview(selected.user_id, selected.story_id)
       setReviews((prev) =>
-        prev.filter((item) => {
+        prev?.filter((item: IReview) => {
           if (
             item.user_id !== selected.user_id ||
             item.story_id !== selected.story_id
@@ -221,7 +219,6 @@ export default function ReviewsPage() {
         <Table
           tbHeaderCells={headerCells}
           tbCells={reviews}
-          handleClickUpdate={handleUpdate}
           readOnly={true}
         ></Table>
         <div className="flex overflow-x-auto justify-center">

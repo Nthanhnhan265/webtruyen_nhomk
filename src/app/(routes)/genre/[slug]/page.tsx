@@ -8,21 +8,31 @@ import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import styles from '../../_component/GenreDropdown.module.css'
-
+interface genres {
+  genres: [{ genre_name: string }]
+  description: []
+  cover_url: string
+  story_name: string
+  slug: string
+  author: {
+    author_slug: string
+    author_name: string
+  }
+  total_chapters: number
+}
 const GenrePage = () => {
   const { slug } = useParams() // Lấy slug thể loại từ URL
-
-  const [books, setBooks] = useState<any[]>([]) // Khởi tạo books là một mảng
+  const [books, setBooks] = useState<genres[]>([]) // Khởi tạo books là một mảng
   const [loading, setLoading] = useState(true)
   const [currentPage, setCurrentPage] = useState(1) // Số trang hiện tại từ API
   const [totalPages, setTotalPages] = useState(1) // Tổng số trang từ API
-
+  console.log(setCurrentPage)
   useEffect(() => {
     const fetchBooks = async () => {
       try {
         // Gọi API để lấy danh sách truyện của thể loại này
         const res = await fetch(
-          `http://localhost:3000/api/story/genre/${slug}?page=${currentPage}`,
+          `http://localhost:5000/api/story/genre/${slug}?page=${currentPage}`,
         )
 
         if (!res.ok) {

@@ -14,18 +14,13 @@ import AuthorModal from '../../_components/author/AuthorModal'
 import UpdateAuthorModal from '../../_components/author/UpdateAuthorModal'
 import Header from '../../_components/header'
 import ConfirmDeleteModal from '../../_components/story/ConfirmDeleteModal'
-interface Author {
-  id: number
-  author_name: string
-  description: string
-  slug: string
-}
+
 const AuthorPage = () => {
   //============ Declare variables and hooks ================//
-  const [authors, setAuthors] = useState<Author[]>([])
+  const [authors, setAuthors] = useState<IAuthor[]>([])
   const [showUpdateModal, setShowUpdateModal] = useState(false)
   const [showCreateModal, setShowCreateModal] = useState(false) // New state for Create Modal
-  const [selectedAuthor, setSelectedAuthor] = useState<Author | null>(null)
+  const [selectedAuthor, setSelectedAuthor] = useState<IAuthor | null>(null)
   const [sortOrder, setSortOrder] = useState('asc')
   const [sortBy, setSortBy] = useState('id')
   const [keyword, setKeyWord] = useState<string>('')
@@ -56,11 +51,13 @@ const AuthorPage = () => {
     fetchAuthors()
   }, [sortOrder, currentPage, keyword])
 
-  const handleDelete = (id: number) => {
-    setAuthorToDelete(id)
-    setShowDeleteModal(true) // Open the delete confirmation modal
+  const handleDelete = (id: number | undefined) => {
+    if (id) {
+      setAuthorToDelete(id)
+      setShowDeleteModal(true) // Open the delete confirmation modal
+    }
   }
-  const handleCreateAuthor = async (data: Author) => {
+  const handleCreateAuthor = async (data: IAuthor) => {
     // Handle success, maybe update state or refetch data
     // const newAuthor = { author_name: authorName, description, slug };
     try {
@@ -73,7 +70,7 @@ const AuthorPage = () => {
       console.log(err)
     }
   }
-  const handalUpdateAuthor = async (id: number, data: Author) => {
+  const handalUpdateAuthor = async (id: number, data: IAuthor) => {
     // Call the updateAuthor API and pass the author ID and updated data
     try {
       console.log('check', id, data)
@@ -86,13 +83,15 @@ const AuthorPage = () => {
       console.log(err)
     }
   }
-  const handleEdit = async (id: number) => {
+  const handleEdit = async (id: number | undefined) => {
     try {
-      const response = await getAuthorByid(id)
-      console.log('check data', response.data)
-      if (response.data) {
-        setSelectedAuthor(response.data)
-        setShowUpdateModal(true)
+      if (id) {
+        const response = await getAuthorByid(id)
+        console.log('check data', response.data)
+        if (response.data) {
+          setSelectedAuthor(response.data)
+          setShowUpdateModal(true)
+        }
       }
     } catch (err) {
       console.log(err)
@@ -229,7 +228,9 @@ const AuthorPage = () => {
       <UpdateAuthorModal
         show={showUpdateModal}
         onClose={() => setShowUpdateModal(false)}
-        onSuccess={(id, data) => handalUpdateAuthor(id, data)}
+        onSuccess={(id, data: IAuthor) => {
+          handalUpdateAuthor(id, data)
+        }}
         initialData={selectedAuthor}
       />
       <AuthorModal

@@ -1,21 +1,21 @@
-import React, { useState, useEffect } from "react";
-import { addRating, fetchRatingsByStory } from "@/app/api/ratings.api";
-import useUserContext from "@/hooks/users/userUserContext";
+import { addRating } from '@/app/api/ratings.api'
+import useUserContext from '@/hooks/users/userUserContext'
+import { useEffect, useState } from 'react'
 
 interface Rating {
-  id: number;
-  user_id: number;
-  story_id: number;
-  star: number;
-  comment: string;
+  id: number
+  user_id: number
+  story_id: number
+  star: number
+  comment: string
 }
 
 const StarRating = ({
   star,
   setStar,
 }: {
-  star: number;
-  setStar: (value: number) => void;
+  star: number
+  setStar: (value: number) => void
 }) => {
   return (
     <div className="flex gap-1">
@@ -24,26 +24,29 @@ const StarRating = ({
           key={value}
           type="button"
           onClick={() => setStar(value)}
-          className={`text-2xl ${value <= star ? "text-yellow-400" : "text-gray-400"} hover:text-yellow-500`}
+          className={`text-2xl ${
+            value <= star ? 'text-yellow-400' : 'text-gray-400'
+          } hover:text-yellow-500`}
         >
           ★
         </button>
       ))}
     </div>
-  );
-};
+  )
+}
 
 const RatingComponent = ({ storyId }: { storyId: number }) => {
-  const [ratings, setRatings] = useState<Rating[]>([]);
-  const [newRating, setNewRating] = useState({ star: 0, comment: "" });
-  const [loading, setLoading] = useState(false);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [ratings, setRatings] = useState<Rating[]>([])
+  const [newRating, setNewRating] = useState({ star: 0, comment: '' })
+  const [loading, setLoading] = useState(false)
+  const [successMessage, setSuccessMessage] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null)
 
-  const { loggedInUser } = useUserContext();
+  const { loggedInUser } = useUserContext()
 
   useEffect(() => {
     const fetchData = async () => {
+      console.log(ratings)
       try {
         // setLoading(true);
         // const data = await fetchRatingsByStory(storyId);
@@ -55,42 +58,45 @@ const RatingComponent = ({ storyId }: { storyId: number }) => {
         //   setRatings([]);
         // }
         // setLoading(false);
-      } catch (err: any) {
-        setError("Không thể tải đánh giá. Vui lòng thử lại!");
-        setLoading(false);
+      } catch (err) {
+        setError('Không thể tải đánh giá. Vui lòng thử lại!')
+        setLoading(false)
+        console.log(err)
       }
-    };
-    fetchData();
-  }, [storyId]);
+    }
+    fetchData()
+  }, [storyId])
 
   const handleAddRating = async () => {
     if (!loggedInUser) {
-      setError("Bạn phải đăng nhập để thêm đánh giá.");
-      return;
+      setError('Bạn phải đăng nhập để thêm đánh giá.')
+      return
     }
 
     if (newRating.star === 0) {
-      setError("Bạn phải chọn số sao để đánh giá.");
-      return;
+      setError('Bạn phải chọn số sao để đánh giá.')
+      return
     }
 
     try {
-      setLoading(true);
+      setLoading(true)
       const result = await addRating({
         ...newRating,
         story_id: storyId,
         user_id: loggedInUser.id,
-      });
-      setRatings((prev) => [...prev, result.rating]);
-      setNewRating({ star: 0, comment: "" });
-      setSuccessMessage("Đánh giá của bạn đã được thêm thành công!");
-      setTimeout(() => setSuccessMessage(null), 3000);
-    } catch (err: any) {
-      setError(err.message || "Đã xảy ra lỗi. Vui lòng thử lại!");
+      })
+      setRatings((prev) => [...prev, result.rating])
+      setNewRating({ star: 0, comment: '' })
+      setSuccessMessage('Đánh giá của bạn đã được thêm thành công!')
+      setTimeout(() => setSuccessMessage(null), 5000)
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message || 'Đã xảy ra lỗi. Vui lòng thử lại!')
+      }
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
     <div className="p-4">
@@ -137,7 +143,7 @@ const RatingComponent = ({ storyId }: { storyId: number }) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default RatingComponent;
+export default RatingComponent

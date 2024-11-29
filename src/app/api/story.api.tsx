@@ -1,47 +1,47 @@
-
-
 import axios, { AxiosError } from 'axios'
 import MESSAGE from '../message'
-import { log } from 'console'
 
 const api = axios.create({
-  baseURL: "http://localhost:3000/api", // API address
+  baseURL: 'http://localhost:5000/api', // API address
   timeout: 10000, // Timeout (milliseconds)
-});
+})
 interface getAllStorieView {
   author_storie: string
   description: string
-  sort: number
+  sort: string
   page: number
 }
 interface getAllStories {
-  author_storie: string
+  author_storie?: string
   description: string
   story_name: string
   sortBy: string
-  sort: number
+  sort: string
   page: number
 }
 //  v
 //=======Create========//
-export const createStory = async (data: FormData, selectedGenre: any) => {
+export const createStory = async (data: FormData, selectedGenre: string[]) => {
   try {
     const response = await api.post('/story/create', data)
-    console.log("check tao cau truyen, ", response);
-    {
-      selectedGenre && selectedGenre.map(async (genre: number) => {
-        const newGenreStory = { story_id: response.data.story.data.id, genre_id: genre }
+    console.log('check tao cau truyen, ', response)
+    if (selectedGenre) {
+      selectedGenre.map(async (genre) => {
+        const newGenreStory = {
+          story_id: response.data.story.data.id,
+          genre_id: genre,
+        }
         const GenreStory = await api.post('/story-genre', newGenreStory)
+        console.log(GenreStory)
       })
     }
     if (response.data.success == true) {
-      console.log();
-      ("Tạo câu truyện thành công")
+      console.log('Tạo câu truyện thành công')
     }
     const result = response.data
     console.log(result)
     return null
-  } catch (error: any) {
+  } catch (error) {
     if (error instanceof AxiosError) {
       throw new Error(error?.response?.data?.message)
     } else {
@@ -55,13 +55,12 @@ export const updateStory = async (data: FormData, id: number) => {
     const response = await api.put(`/story/update/${id}`, data)
 
     if (response.data.success == true) {
-      console.log();
-      ("cập nhật câu truyện thành công")
+      console.log('cập nhật câu truyện thành công')
     }
     const result = response.data
     console.log(result)
     return null
-  } catch (error: any) {
+  } catch (error) {
     if (error instanceof AxiosError) {
       throw new Error(error?.response?.data?.message)
     } else {
@@ -72,31 +71,31 @@ export const updateStory = async (data: FormData, id: number) => {
 }
 export const getStories = async (id: number) => {
   try {
-    const response = await api.get(`/story/${id}`);
-    return response.data;
+    const response = await api.get(`/story/${id}`)
+    return response.data
   } catch (error) {
-    console.error("Error fetching stories:", error);
-    throw error;
+    console.error('Error fetching stories:', error)
+    throw error
   }
-};
+}
 export const getStoryBySlug = async (slug: string) => {
   try {
-    const response = await api.get(`/story/getStoryBySlug/${slug}`);
-    return response.data;
+    const response = await api.get(`/story/getStoryBySlug/${slug}`)
+    return response.data
   } catch (error) {
-    console.error("Error fetching stories:", error);
-    throw error;
+    console.error('Error fetching stories:', error)
+    throw error
   }
-};
+}
 export const getStoryById = async (id: number) => {
   try {
-    const response = await api.get(`/story/${id}`);
-    return response.data;
+    const response = await api.get(`/story/${id}`)
+    return response.data
   } catch (error) {
-    console.error("Error fetching stories:", error);
-    throw error;
+    console.error('Error fetching stories:', error)
+    throw error
   }
-};
+}
 export const getAllStorieView = async ({
   author_storie,
   description,
@@ -109,15 +108,15 @@ export const getAllStorieView = async ({
         author_storie,
         description,
         sort,
-        page
+        page,
       },
-    });
-    return response.data;
+    })
+    return response.data
   } catch (error) {
-    console.error("Error fetching stories:", error);
-    throw error;
+    console.error('Error fetching stories:', error)
+    throw error
   }
-};
+}
 export const getAllStorieNew = async ({
   author_storie,
   description,
@@ -133,13 +132,13 @@ export const getAllStorieNew = async ({
         sort, // Sắp xếp
         page, // Trang hiện tại   // Giới hạn số lượng tác giả trên mỗi trang
       },
-    }); // Adjust endpoint to fetch stories
-    return response.data; // Return the data
+    }) // Adjust endpoint to fetch stories
+    return response.data // Return the data
   } catch (error) {
-    console.error("Error fetching stories:", error);
-    throw error; // Rethrow error for handling elsewhere
+    console.error('Error fetching stories:', error)
+    throw error // Rethrow error for handling elsewhere
   }
-};
+}
 export const getAllStories = async ({
   story_name,
   description,
@@ -156,48 +155,53 @@ export const getAllStories = async ({
         sort,
         page,
       },
-    });
-    return response.data;
+    })
+    return response.data
   } catch (error) {
-    console.error("Error fetching stories:", error);
-    throw error;
+    console.error('Error fetching stories:', error)
+    throw error
   }
-};
-export const getSearchStorie = async (
-  keyword: string,
-  page: number
-) => {
+}
+export const getSearchStorie = async (keyword: string, page: number) => {
   try {
     const response = await api.get(`/story/search/${keyword}`, {
       params: {
         page,
       },
-    });
-    return response.data;
+    })
+    return response.data
   } catch (error) {
-    console.error("Error fetching stories:", error);
-    throw error;
+    console.error('Error fetching stories:', error)
+    throw error
   }
-};
+}
 
 export const deleteStory = async (id: number) => {
   try {
-    const response = await api.delete(`/story/delete/${id}`);
-    const deleteStoryId = await api.delete(`/chapters/handleDeleteStoryId/${id}`);
-    return response.data;
+    const response = await api.delete(`/story/delete/${id}`)
+    const deleteStoryId = await api.delete(
+      `/chapters/handleDeleteStoryId/${id}`,
+    )
+    console.log(deleteStoryId)
+    return response.data
   } catch (error) {
-    console.error("Error deleting story:", error);
-    throw error;
+    console.error('Error deleting story:', error)
+    throw error
   }
-};
+}
 export const incrementStoryViews = async (storyId: number) => {
   try {
-    const response = await api.post(`/story/${storyId}/increment-views`);
-    return response.data; // Trả về dữ liệu API
-  } catch (error: any) {
-    throw new Error(error.response?.data?.message || "Lỗi khi gọi API tăng lượt xem!");
+    const response = await api.post(`/story/${storyId}/increment-views`)
+    return response.data // Trả về dữ liệu API
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      throw new Error(
+        error.response?.data?.message || 'Lỗi khi gọi API tăng lượt xem!',
+      )
+    }
+    console.log(error)
   }
-};
+}
 export default {
   getStories,
   deleteStory,
@@ -208,6 +212,5 @@ export default {
   createStory,
   getStoryById,
   getSearchStorie,
-  incrementStoryViews
+  incrementStoryViews,
 }
-

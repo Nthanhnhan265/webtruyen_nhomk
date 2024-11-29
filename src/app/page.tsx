@@ -31,8 +31,20 @@ export default function HomePage() {
       page: currentPage,
     }
     try {
-      const response = await getAllStorieView(params)
-      const responseNew = await getAllStorieNew(params)
+      const response = await getAllStorieView({
+        author_storie: params.author_storie,
+        description: params.description,
+        page: params.page,
+        sort: params.sort,
+      })
+      const responseNew = await getAllStorieNew({
+        author_storie: params.author_storie,
+        description: params.description,
+        page: params.page,
+        sort: params.sort,
+        sortBy: '',
+        story_name: '',
+      })
       setNewStories(responseNew.stories || [])
       setHotStories(response.stories || [])
       setTotalPages(response.totalPages || 1)
@@ -79,7 +91,7 @@ export default function HomePage() {
                 <div className="relative w-[140px] h-[200px] mx-auto">
                   {story?.cover ? (
                     <Image
-                      src={`http://localhost:3000/${story.cover}`}
+                      src={`http://localhost:5000/${story.cover}`}
                       alt={story.story_name || 'Story Image'}
                       fill
                       className="rounded-md shadow object-cover"

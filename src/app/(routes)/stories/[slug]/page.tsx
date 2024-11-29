@@ -1,14 +1,12 @@
 'use client'
 import { chapterByStory } from '@/app/api/chapter.api' // Import API functions
 import { getStoryBySlug } from '@/app/api/story.api' // Import API functions
-import { useEffect, useState } from 'react'
-import NavbarComponent from '../../../../components/navbar'
-import Footer from '../../_component/footer'
-import RatingComponent from '../../../../components/ratings_auth'
-import { toast } from 'react-toastify'
 import { UserProvider } from '@/context/user/user.context'
 import { Avatar } from 'flowbite-react'
-
+import { useEffect, useState } from 'react'
+import { toast } from 'react-toastify'
+import RatingComponent from '../../../../components/ratings_auth'
+import Footer from '../../_component/footer'
 
 interface Chapter {
   chapter_title: string
@@ -29,7 +27,7 @@ interface Story {
   views: number
 }
 
-const page = ({ params }: { params: { slug: string } }) => {
+const Page = ({ params }: { params: { slug: string } }) => {
   const [story, setStory] = useState<Story | null>(null)
   const [chapters, setChapters] = useState<Chapter[]>([])
 
@@ -50,25 +48,26 @@ const page = ({ params }: { params: { slug: string } }) => {
           data.data.id, // Truyền id của story vào hàm getChapters
           currentPage,
         )
-        console.log(chapters);
+        console.log(chapters)
 
         setChapters(chapters) // Lưu danh sách chương vào state
         setTotalPages(totalPages) // Lưu tổng số trang vào state
-      } catch (_error: unknown) {
+      } catch (error: unknown) {
         toast.error('lay du lieu that bai') // Xử lý lỗi nếu không lấy được dữ liệu
+        console.log(error)
       }
     }
     fetchStory()
   }, [currentPage]) // Thêm slug và story vào dependency array để theo dõi sự thay đổi
-  const readBook = (slug: any) => {
+  const readBook = (slug: unknown) => {
     if (!slug) {
       if (chapters && chapters.length > 0) {
-        window.location.href = `/stories/${story?.slug}/${chapters[0]?.slug}`;
+        window.location.href = `/stories/${story?.slug}/${chapters[0]?.slug}`
       } else {
-        console.error("No chapters found for this story.");
+        console.error('No chapters found for this story.')
       }
     } else {
-      window.location.href = `/stories/${story?.slug}/${slug}`;
+      window.location.href = `/stories/${story?.slug}/${slug}`
     }
   }
   const handlePageChange = (newPage: number) => {
@@ -92,14 +91,13 @@ const page = ({ params }: { params: { slug: string } }) => {
             <div className="w-48 h-64 rounded overflow-hidden">
               {story?.cover ? (
                 <img
-                  src={`http://localhost:3000/${story.cover}`}
+                  src={`http://localhost:5000/${story.cover}`}
                   alt={story.story_name || 'Book Cover'}
                   className="w-full h-full object-cover"
                 />
               ) : (
                 // Nếu không có ảnh bìa, hiển thị Avatar với kích thước cố định
                 <Avatar className="w-full h-full rounded-md shadow object-cover" />
-
               )}
             </div>
             <div className="space-y-4">
@@ -109,9 +107,7 @@ const page = ({ params }: { params: { slug: string } }) => {
               <p className="text-gray-600">
                 Số chương: {story?.total_chapters}
               </p>
-              <p className="text-gray-600">
-                Lượt xem: {story?.views}
-              </p>
+              <p className="text-gray-600">Lượt xem: {story?.views}</p>
               <p className="text-gray-600">
                 Nguồn: {story?.source || 'Sưu tầm'}
               </p>
@@ -153,8 +149,9 @@ const page = ({ params }: { params: { slug: string } }) => {
               {Array.from({ length: totalPages }, (_, i) => (
                 <button
                   key={i}
-                  className={`px-3 py-1 border rounded ${i + 1 === currentPage ? 'bg-gray-300' : ''
-                    }`}
+                  className={`px-3 py-1 border rounded ${
+                    i + 1 === currentPage ? 'bg-gray-300' : ''
+                  }`}
                   onClick={() => handlePageChange(i + 1)}
                 >
                   {i + 1}
@@ -169,7 +166,8 @@ const page = ({ params }: { params: { slug: string } }) => {
               </button>
             </div>
             <UserProvider>
-              {story?.id && <RatingComponent storyId={story.id} />}</UserProvider>
+              {story?.id && <RatingComponent storyId={story.id} />}
+            </UserProvider>
           </div>
         </div>
 
@@ -183,11 +181,11 @@ const page = ({ params }: { params: { slug: string } }) => {
           </h2>
           {/* Other elements */}
         </div>
-      </main >
+      </main>
 
       <Footer></Footer>
-    </div >
+    </div>
   )
 }
 
-export default page
+export default Page

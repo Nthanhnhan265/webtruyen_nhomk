@@ -8,6 +8,7 @@ interface IUser {
     role_name: string
     description: string
   }
+
   status: boolean
   created_at: string
 }
@@ -30,12 +31,33 @@ interface IChapter {
   content: string
   slug: string
 }
+interface Genre {
+  id?: number
+  genre_name: string
+  description: string
+  slug: string
+}
+interface IReview {
+  user_id: number
+  story_id: number
+  star: number
+  comment: string
+  created_at: string
+  User: {
+    username: string
+  }
+  Story: {
+    story_id: number
+    story_name: string
+  }
+  [key: string]: unknown
+}
 interface IAuthor {
-  id: number
+  id?: number
   author_name: string
   description: string
   slug: string
-  created_at: string
+  created_at?: string
 }
 
 interface IResponse {
@@ -59,4 +81,14 @@ interface IProfilePasswordChange {
   currentPassword: string
   newPassword: string
   confirmPassword: string
+}
+interface StoryError {
+  storyName: string
+  keywords: string
+  description: string
+  authorId: string
+  status: string
+  coverFile: string
+  selectedCategories: string
+  slug: string
 }

@@ -7,13 +7,6 @@ interface FormErrors {
   slug?: string
 }
 
-interface Author {
-  id: number
-  author_name: string
-  description: string
-  slug: string
-}
-
 interface Erorr {
   authorName?: string
   description?: string
@@ -23,8 +16,8 @@ interface Erorr {
 interface AuthorModalProps {
   show: boolean // Indicates whether the modal is visible
   onClose: () => void // Function to call when closing the modal
-  onSuccess: (data: Author) => void // Function to call on successful author creation
-  initialData?: Author | null // Optional initial data for editing
+  onSuccess: (id: number, data: IAuthor) => void // Function to call on successful author creation
+  initialData?: IAuthor | null // Optional initial data for editing
 }
 
 const UpdateAuthorModal: React.FC<AuthorModalProps> = ({
@@ -109,8 +102,8 @@ const UpdateAuthorModal: React.FC<AuthorModalProps> = ({
       .trim() // Remove leading and trailing spaces
       .replace(/[^\w\s-]/g, '') // Remove special characters
       .replace(/\s+/g, '-') // Replace spaces with hyphens
-      .replace(/-+/g, '-'); // Avoid multiple consecutive hyphens
-  };
+      .replace(/-+/g, '-') // Avoid multiple consecutive hyphens
+  }
   // Handle the form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -119,14 +112,14 @@ const UpdateAuthorModal: React.FC<AuthorModalProps> = ({
     if (!validateForm()) return
 
     // Prepare updated author object
-    const updatedAuthor = {
+    const updatedAuthor: IAuthor = {
       author_name: authorName,
       description,
       slug,
     }
 
     // Call onSuccess with the updated author data
-    onSuccess(initialData?.id, updatedAuthor)
+    onSuccess(initialData?.id || -1, updatedAuthor)
   }
 
   const handleCancel = () => {
@@ -149,8 +142,9 @@ const UpdateAuthorModal: React.FC<AuthorModalProps> = ({
                 setAuthorName(e.target.value)
                 setSlug(generateSlug(e.target.value))
               }}
-              className={`w-full p-2 border ${errors.authorName ? 'border-red-500' : 'border-gray-300'
-                } rounded`}
+              className={`w-full p-2 border ${
+                errors.authorName ? 'border-red-500' : 'border-gray-300'
+              } rounded`}
               placeholder="Nhập tên tác giả"
               required
             />
@@ -163,8 +157,9 @@ const UpdateAuthorModal: React.FC<AuthorModalProps> = ({
             <input
               value={slug}
               onChange={(e) => setSlug(e.target.value)}
-              className={`w-full p-2 border ${errors.slug ? 'border-red-500' : 'border-gray-300'
-                } rounded`}
+              className={`w-full p-2 border ${
+                errors.slug ? 'border-red-500' : 'border-gray-300'
+              } rounded`}
               placeholder="tac-gia/..."
               required
             />
@@ -175,8 +170,9 @@ const UpdateAuthorModal: React.FC<AuthorModalProps> = ({
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className={`w-full p-2 border ${errors.description ? 'border-red-500' : 'border-gray-300'
-                } rounded`}
+              className={`w-full p-2 border ${
+                errors.description ? 'border-red-500' : 'border-gray-300'
+              } rounded`}
               rows={5}
               placeholder="Mô tả không vượt quá 500 ký tự"
             ></textarea>

@@ -1,7 +1,15 @@
 // components/CustomButton.js
 import Link from 'next/link'
 
-const CustomButton = ({ href, title, text }) => {
+const CustomButton = ({
+  href,
+  title,
+  text,
+}: {
+  href: string
+  title: string
+  text: string
+}) => {
   return (
     <Link
       href={href}

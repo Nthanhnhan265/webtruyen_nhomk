@@ -46,11 +46,16 @@ const StoryPage = () => {
   const fetchStories = async () => {
     try {
       const response = await getAllStories({
-        story_name: keyword,
         description: keyword,
-        sortBy: sortBy,
-        sort: sortOrder,
+        story_name: keyword,
         page: currentPage,
+        sort: sortOrder,
+        sortBy: sortBy,
+        // story_name: keyword,
+        // description: keyword,
+        // sortBy: sortBy,
+        // sort: sortOrder,
+        // page: currentPage,
       })
       setStories(response.stories)
       settotalPages(response.totalPages)
@@ -118,7 +123,7 @@ const StoryPage = () => {
     setKeyWord(keyword)
     fetchStories()
   }
-  const detailStory = (id: Number) => {
+  const detailStory = (id: number) => {
     window.location.href = `stories/${id}`
   }
 
@@ -209,7 +214,7 @@ const StoryPage = () => {
                       {story?.cover ? (
                         <Image
                           alt={story.story_name || 'Story Image'}
-                          src={`http://localhost:3000/${story.cover}`}
+                          src={`http://localhost:5000/${story.cover}`}
                           width={103}
                           height={133}
                           className="my-2 h-full"

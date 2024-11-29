@@ -181,7 +181,9 @@ const UserPage = () => {
       }
       closeModal()
     } catch (error) {
-      toast.error(error.message)
+      if (error instanceof AxiosError) {
+        toast.error(error.message)
+      }
     }
   }
   /* Submit: delete the user by Id*/
@@ -192,8 +194,9 @@ const UserPage = () => {
       toast.success(MESSAGE.user.deleteSuccess)
       closeDModal()
     } catch (error) {
-      console.error(error)
-      toast.error(error.message)
+      if (error instanceof AxiosError) {
+        toast.error(error.message)
+      }
     }
   }
 

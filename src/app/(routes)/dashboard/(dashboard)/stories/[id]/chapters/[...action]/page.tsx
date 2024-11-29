@@ -2,18 +2,19 @@ import { getChapterId } from '@/app/api/chapter.api'
 import useProfile from '@/hooks/users/useProfile'
 import { redirect } from 'react-router-dom'
 import { ChapterForm } from './chapter.form'
-export default async function CreateChapterPage({
+export default function CreateChapterPage({
   params,
 }: {
   params: { id: number; action: Array<string> }
 }) {
-  console.log('page called>>')
-  const { accessToken } = await useProfile()
+  const { accessToken } = useProfile()
   let chapter = null
   if (params.action[1] == 'update') {
     try {
       const id = Number(params.action[0])
-      chapter = await getChapterId(id, accessToken)
+      getChapterId(id, accessToken)
+        .then((data) => (chapter = data))
+        .catch((err) => console.log(err))
     } catch (error) {
       if (error instanceof Error) {
         console.error(error.message)

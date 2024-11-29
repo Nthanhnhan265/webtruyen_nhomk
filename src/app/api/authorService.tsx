@@ -2,12 +2,24 @@
 import axios from 'axios'
 
 const api = axios.create({
-  baseURL: 'http://localhost:3000/api', // Địa chỉ API
+  baseURL: 'http://localhost:5000/api', // Địa chỉ API
   timeout: 10000, // Thời gian chờ (mili giây)
 })
 
 // Hàm để gọi API lấy danh sách tác giả
-export const getAuthors = async ({ author_name, description, sortBy, sort, page }) => {
+export const getAuthors = async ({
+  author_name,
+  description,
+  sortBy,
+  sort,
+  page,
+}: {
+  author_name: string
+  description: string
+  sortBy: string
+  sort: string
+  page: number
+}) => {
   console.log('check sortOrder', sort)
   console.log('check author_name', author_name)
   console.log('check description', description)
@@ -19,7 +31,7 @@ export const getAuthors = async ({ author_name, description, sortBy, sort, page 
       params: {
         author_name, // Tìm kiếm theo tên tác giả
         description,
-        sortBy,// Tìm kiếm theo mô tả (nếu cần)
+        sortBy, // Tìm kiếm theo mô tả (nếu cần)
         sort, // Sắp xếp
         page, // Trang hiện tại   // Giới hạn số lượng tác giả trên mỗi trang
       },
@@ -32,8 +44,7 @@ export const getAuthors = async ({ author_name, description, sortBy, sort, page 
 }
 export const getAuthorsName = async () => {
   try {
-    const response = await api.get('/authors/authorsName', {
-    })
+    const response = await api.get('/authors/authorsName', {})
     return response.data // Trả về dữ liệu
   } catch (error) {
     console.error('Lỗi khi lấy danh sách tác giả:', error)
@@ -42,8 +53,7 @@ export const getAuthorsName = async () => {
 }
 export const getAuthorByid = async (id: number) => {
   try {
-    const response = await api.get(`/authors/${id}`, {
-    })
+    const response = await api.get(`/authors/${id}`, {})
     return response.data // Trả về dữ liệu
   } catch (error) {
     console.error('Lỗi khi lấy danh sách tác giả:', error)
@@ -61,7 +71,7 @@ export const deleteAuthor = async (id: number) => {
   }
 }
 
-export const createAuthor = async (authorData: any) => {
+export const createAuthor = async (authorData: unknown) => {
   try {
     const response = await api.post('/authors/create', authorData) // Adjust the endpoint if necessary
     return response.data // Return the response data
@@ -70,7 +80,7 @@ export const createAuthor = async (authorData: any) => {
     throw error // Throw error for handling in the calling function
   }
 }
-export const updateAuthor = async (id: number, authorData: any) => {
+export const updateAuthor = async (id: number, authorData: unknown) => {
   try {
     const response = await api.put(`/authors/update/${id}`, authorData) // Adjust the endpoint if necessary
     return response.data // Return the response data
@@ -87,7 +97,7 @@ export default {
   updateAuthor,
   createAuthor,
   deleteAuthor,
-  getAuthorByid
+  getAuthorByid,
 }
 
 // Bạn có thể thêm nhiều hàm gọi API khác ở đây (thêm, sửa, xóa tác giả)

@@ -28,7 +28,7 @@ interface IModalProps {
 
 function UserModal(prop: IModalProps) {
   // ===================== Declare hooks, variables ==================//
-  const [avatarFile, setAvatarFile] = useState()
+  const [avatarFile, setAvatarFile] = useState<File | undefined>()
   const [imageErrors, setImageErrors] = useState<boolean>(false)
   const {
     register,
@@ -92,7 +92,7 @@ function UserModal(prop: IModalProps) {
    *  @param {File} file - Đối tượng kiểu File
    *  @returns {Boolean}
    * */
-  const validateFile = (file: File) => {
+  const validateFile = (file: File | Blob | undefined) => {
     console.log(file)
     const maxSize = 5 * 1024 * 1024
     const validFormats = ['image/jpeg', 'image/png', 'image/webp']
@@ -132,7 +132,7 @@ function UserModal(prop: IModalProps) {
    */
   const clearModal = () => {
     prop.closeModal()
-    setAvatarFile('')
+    setAvatarFile(undefined)
     setImageErrors(false)
     reset()
   }
@@ -159,7 +159,7 @@ function UserModal(prop: IModalProps) {
       admin điền các thông tin và chọn hình ảnh, sau đó ấn submit, 
       lấy thông tin user và hình ảnh avatar cho vào đối tượng formData và gửi lên server
     */
-    if (!prop.isEdit) {
+    if (!prop.isEdit && avatarFile instanceof File) {
       formData.append('avatar', avatarFile)
     }
     // Chỉnh sửa người dùng
@@ -315,7 +315,7 @@ function UserModal(prop: IModalProps) {
                 {!imageErrors &&
                   (prop.user?.avatar && !avatarFile ? (
                     <Image
-                      src={'http://localhost:3000/' + prop.user.avatar}
+                      src={'http://localhost:5000/' + prop.user.avatar}
                       alt="avatar"
                       width={400}
                       height={400}

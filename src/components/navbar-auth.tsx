@@ -1,13 +1,12 @@
 'use client'
 
-import { useState, useEffect } from 'react'
 import styles from '@/app/(routes)/_component/GenreDropdown.module.css'
 import useUserContext from '@/hooks/users/userUserContext'
 import { Avatar } from 'flowbite-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { FaSearch } from 'react-icons/fa'
 import { RxHamburgerMenu } from 'react-icons/rx'
 
@@ -15,18 +14,16 @@ export default function NavBar() {
   const pathname = usePathname()
   const [keyword, setKeyword] = useState('')
   const { loggedInUser } = useUserContext()
-  const [genres, setGenres] = useState<any[]>([]) // Lưu trữ danh sách thể loại
+  const [genres, setGenres] = useState([])
   const isDashboardPage = pathname?.includes('dashboard')
-
-  if (isDashboardPage) return null
 
   // Fetch genres từ API
   useEffect(() => {
     const fetchGenres = async () => {
       try {
-        const res = await fetch('http://localhost:3000/api/genres') // API trả về dữ liệu thể loại
+        const res = await fetch('http://localhost:5000/api/genres') // API trả về dữ liệu thể loại
         const data = await res.json()
-        console.log("Dữ liệu nhận được từ API (Danh sách thể loại):", data)
+        console.log('Dữ liệu nhận được từ API (Danh sách thể loại):', data)
 
         // Kiểm tra xem dữ liệu có phải là mảng không và cập nhật state
         if (Array.isArray(data.data)) {
@@ -62,17 +59,26 @@ export default function NavBar() {
     }
   }
 
+  if (isDashboardPage) return null
   return (
     <nav className="flex flex-col gap-8 sm:flex-row justify-between items-center border-b-2 border-gray-200 bg-white px-5 md:px-10 lg:px-20">
       <div className="flex justify-center py-2 basis-1/5 md:justify-start items-center w-full text-2xl font-bold">
-        <Link href="/" className="flex items-center">
-          <Image alt="logo" src={'/images/logo-no-background.svg'} width={222} height={451} />
+        <Link
+          href="/"
+          className="flex items-center"
+        >
+          <Image
+            alt="logo"
+            src={'/images/logo-no-background.svg'}
+            width={222}
+            height={451}
+          />
         </Link>
       </div>
 
       <div className="flex w-full gap-1 basis-4/5 md:w-auto items-center justify-between ">
         <ul className="flex space-x-6">
-        {/* <div className={styles.dropdownContent}>
+          {/* <div className={styles.dropdownContent}>
                   {genres.length === 0 ? (
                     <div>Đang tải thể loại...</div>
                   ) : (
@@ -95,11 +101,18 @@ export default function NavBar() {
                 {genres.length === 0 ? (
                   <li className="px-4 py-2">Đang tải thể loại...</li>
                 ) : (
-                  genres.map((genre, index) => (
-                    <li key={index} className="px-4 py-2 hover:bg-slate-100">
-                      <Link href={`/genre/${genre.slug}`}>{genre.genre_name}</Link>
-                    </li>
-                  ))
+                  genres.map(
+                    (genre: { slug: string; genre_name: string }, index) => (
+                      <li
+                        key={index}
+                        className="px-4 py-2 hover:bg-slate-100"
+                      >
+                        <Link href={`/genre/${genre.slug}`}>
+                          {genre.genre_name}
+                        </Link>
+                      </li>
+                    ),
+                  )
                 )}
               </ul>
             </div>
@@ -114,7 +127,10 @@ export default function NavBar() {
             onChange={handleSearch}
             onKeyDown={handleKeyPress}
           />
-          <button className="bg-gray-300 px-3 py-2 rounded-r-md border" onClick={handleClick}>
+          <button
+            className="bg-gray-300 px-3 py-2 rounded-r-md border"
+            onClick={handleClick}
+          >
             <FaSearch />
           </button>
         </div>
@@ -125,16 +141,24 @@ export default function NavBar() {
               <Avatar rounded>
                 <div className="font-medium dark:text-white hidden md:block">
                   <span className="text-sm font-bold">Xin chào!</span>
-                  <div className="text-sm text-gray-500 dark:text-gray-400">{loggedInUser.username}</div>
+                  <div className="text-sm text-gray-500 dark:text-gray-400">
+                    {loggedInUser.username}
+                  </div>
                 </div>
               </Avatar>
             </Link>
           ) : (
             <>
-              <Link href="/login" className="hover:text-red-500">
+              <Link
+                href="/login"
+                className="hover:text-red-500"
+              >
                 Đăng nhập
               </Link>
-              <Link href="/register" className="hover:text-red-500">
+              <Link
+                href="/register"
+                className="hover:text-red-500"
+              >
                 Đăng ký
               </Link>
             </>
@@ -170,7 +194,7 @@ const NavBar = () => {
   useEffect(() => {
     const fetchGenres = async () => {
       try {
-        const res = await fetch(`http://localhost:3000/api/genres`);
+        const res = await fetch(`http://localhost:5000/api/genres`);
         const data = await res.json();
         console.log("Dữ liệu nhận được từ API(danh sách truyện theo thể loại):", data);
 
