@@ -4,17 +4,24 @@ import Pagination from '@/app/(routes)/_component/Pagination'
 import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useParams, useRouter, useSearchParams } from 'next/navigation'
+import { useParams, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import styles from '../../_component/GenreDropdown.module.css'
-
+interface IBook {
+  genres: [Genre]
+  description: string
+  cover_url: string
+  story_name: string
+  slug: string
+  author: { author_slug: string; author_name: string }
+  total_chapters: number
+}
 const GenrePage = () => {
   const { slug } = useParams() // Lấy slug thể loại từ URL
-  const [books, setBooks] = useState<any[]>([])
+  const [books, setBooks] = useState<IBook[]>([])
   const [loading, setLoading] = useState(true)
   const [currentPage, setCurrentPage] = useState(1) // Trang hiện tại
   const [totalPages, setTotalPages] = useState(1) // Tổng số trang
-  const router = useRouter()
   const searchParams = useSearchParams() // Lấy query từ URL
 
   // Hàm lấy thông tin truyện

@@ -25,8 +25,8 @@ const AuthorPage = () => {
   const searchParams = useSearchParams() // Lấy query params
   const currentPage = parseInt(searchParams.get('page') || '1', 10) // Lấy trang hiện tại từ query, mặc định là 1
   const limit = 3 // Số lượng câu chuyện mỗi trang
-  const [author, setAuthor] = useState<any>(null) // Thông tin tác giả
-  const [books, setBooks] = useState<any[]>([]) // Sách của tác giả
+  const [author, setAuthor] = useState<author>() // Thông tin tác giả
+  const [books, setBooks] = useState<author[]>([]) // Sách của tác giả
   const [totalPages, setTotalPages] = useState<number>(0) // Tổng số trang
   const [loading, setLoading] = useState<boolean>(true) // Trạng thái loading
   const [error, setError] = useState<string | null>(null) // Trạng thái lỗi
@@ -136,7 +136,7 @@ const AuthorPage = () => {
         <div className="font-sans bg-gray-100 ml-9">
           <div className="backgroundBody bg-gray-100 py-5 px-4 sm:px-5">
             {books.length > 0 ? (
-              books.map((book: author, index) => (
+              books.map((book, index) => (
                 <div
                   className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-4 mb-5"
                   key={index}
